@@ -185,6 +185,79 @@
             box-shadow: 0 4px 12px rgba(0,120,212,0.3);
         }
 
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .team-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .team-card:hover {
+            box-shadow: 0 4px 12px rgba(0,120,212,0.15);
+            border-color: var(--copilot-light);
+            transform: translateY(-2px);
+        }
+
+        .team-header {
+            margin-bottom: 0.75rem;
+        }
+
+        .team-name {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--copilot-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .team-role {
+            font-size: 0.85rem;
+            color: var(--copilot-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .team-links {
+            display: flex;
+            gap: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .team-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            color: var(--copilot-blue);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .team-link:hover {
+            background: var(--copilot-blue);
+            color: white;
+            transform: scale(1.1);
+        }
+
         footer {
             text-align: center;
             padding: 2rem 0;
@@ -342,6 +415,170 @@
                         <span class="tech-tag">Chat Analytics</span>
                         <span class="tech-tag">Conversation Intelligence</span>
                         <span class="tech-tag">Usage Patterns</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Team Members</h2>
+            <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
+                <p style="color: var(--text-secondary); margin: 0;">
+                    Collaborating with an exceptional team dedicated to Copilot growth and analytics.
+                    View our team projects at <a href="https://www.ainroi.com/" target="_blank" style="color: var(--copilot-blue); font-weight: 600; text-decoration: underline;">ainroi.com</a>
+                </p>
+            </div>
+
+            <div class="team-grid">
+                <!-- Manager -->
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Shailendra Hedge</div>
+                            <div class="team-role">Manager</div>
+                            <div class="team-title">Principal Product Manager - Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/shailendrahegde/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.ainroi.com/" target="_blank" class="team-link" title="Website">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Team Members (Alphabetical) -->
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Fernando Berdugo Manzano</div>
+                            <div class="team-title">Copilot Incubation & ROI Advisor | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/fernando-berdugo/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Stephanie Downy, Ph.D.</div>
+                            <div class="team-title">Principal Copilot Analytics Consultant | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/stephanie-downey-ph-d-2290134b/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Luz Lorenz</div>
+                            <div class="team-title">Copilot ROI and Org Advisory | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/luz-lorenz-30581894/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Keith McGrane</div>
+                            <div class="team-title">Copilot + Value Advisory | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/keith-mcgrane-46184029/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.ainroi.com/" target="_blank" class="team-link" title="Website">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Brian Middendorf</div>
+                            <div class="team-title">AI Business Value Advisor | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/brianmiddendorf/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="https://data-analytics.tech/" target="_blank" class="team-link" title="Website">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Stephanie Smith</div>
+                            <div class="team-title">Copilot ROI and Org Advisory | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/stephanie-brandl-smith-906a6a3/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-header">
+                        <div class="team-info">
+                            <div class="team-name">Jennifer Stoll</div>
+                            <div class="team-title">Principal Business Value Advisor | Copilot Growth, Analytics & ROI</div>
+                        </div>
+                    </div>
+                    <div class="team-links">
+                        <a href="https://www.linkedin.com/in/jennifer-stoll/" target="_blank" class="team-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
