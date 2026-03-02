@@ -19,12 +19,7 @@
       --gray: #9ca3af;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--navy);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--navy); color: var(--text); min-height: 100vh; }
 
     /* ── Header ── */
     header {
@@ -35,142 +30,100 @@
       overflow: hidden;
     }
     header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.15) 0%, transparent 70%);
       pointer-events: none;
     }
     .header-badge {
       display: inline-block;
-      background: rgba(201,168,76,0.15);
-      border: 1px solid rgba(201,168,76,0.4);
-      color: var(--gold-light);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.9rem;
-      border-radius: 999px;
-      margin-bottom: 0.9rem;
+      background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold-light); font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 999px; margin-bottom: 0.9rem;
     }
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.5rem, 6vw, 2.4rem);
-      color: #fff;
-      line-height: 1.2;
-      margin-bottom: 0.3rem;
-    }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem,6vw,2.4rem); color: #fff; line-height: 1.2; margin-bottom: 0.3rem; }
     header h1 span { color: var(--gold); }
     header p { color: rgba(255,255,255,0.5); font-size: 0.82rem; }
 
+    /* ── Control bar shared styles ── */
+    .control-wrap { padding: 1rem 1.25rem 0; max-width: 700px; margin: 0 auto; }
+    .control-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 0.5rem; font-weight: 500; }
+
     /* ── Week Toggle ── */
-    .week-toggle-wrap {
-      padding: 1.1rem 1.25rem 0;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .week-toggle-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
     .week-toggle-group {
-      display: flex;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 4px;
-      gap: 4px;
+      display: flex; background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 4px; gap: 4px;
     }
     .week-btn {
-      flex: 1;
-      padding: 0.65rem 0.75rem;
-      border: none;
-      border-radius: 9px;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: transparent;
-      color: rgba(255,255,255,0.5);
-      text-align: center;
-      line-height: 1.35;
+      flex: 1; padding: 0.65rem 0.75rem; border: none; border-radius: 9px;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s;
+      background: transparent; color: rgba(255,255,255,0.5); text-align: center; line-height: 1.35;
     }
     .week-btn .week-name { display: block; font-size: 0.85rem; font-weight: 600; }
     .week-btn .week-sub  { display: block; font-size: 0.68rem; font-weight: 400; opacity: 0.7; margin-top: 0.1rem; }
-    .week-btn.active {
-      background: #fff;
-      color: var(--navy);
-    }
+    .week-btn.active { background: #fff; color: var(--navy); }
     .week-btn.active .week-sub { opacity: 0.6; }
-    .week-btn.cheaper { position: relative; }
     .week-btn.cheaper .week-name::after {
-      content: '· Cheaper';
-      display: inline-block;
-      margin-left: 0.4rem;
-      background: #dcfce7;
-      color: #15803d;
-      font-size: 0.6rem;
-      padding: 0.1rem 0.4rem;
-      border-radius: 999px;
-      font-weight: 700;
-      vertical-align: middle;
+      content: '· Cheaper'; display: inline-block; margin-left: 0.4rem;
+      background: #dcfce7; color: #15803d; font-size: 0.6rem; padding: 0.1rem 0.4rem;
+      border-radius: 999px; font-weight: 700; vertical-align: middle;
     }
-    .week-btn.active.cheaper .week-name::after {
-      background: rgba(22,163,74,0.15);
-      color: #15803d;
-    }
+    .week-btn.active.cheaper .week-name::after { background: rgba(22,163,74,0.15); color: #15803d; }
+    body.view-table .week-toggle-wrap { display: none; }
 
-    /* ── Price switching ── */
+    /* ── Room Toggle ── */
+    .toggle-group {
+      display: flex; background: rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 3px; gap: 3px;
+    }
+    .toggle-btn {
+      flex: 1; padding: 0.55rem 0.5rem; border: none; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; background: transparent;
+      color: rgba(255,255,255,0.5); text-align: center; line-height: 1.3;
+    }
+    .toggle-btn.active { background: #fff; color: var(--navy); font-weight: 600; }
+
+    /* ── View Toggle ── */
+    .view-toggle-wrap { padding: 0.75rem 1.25rem 0; max-width: 700px; margin: 0 auto; }
+    .view-toggle-group {
+      display: flex; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 3px; gap: 3px;
+    }
+    .view-btn {
+      flex: 1; padding: 0.45rem 0.5rem; border: none; border-radius: 6px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; background: transparent;
+      color: rgba(255,255,255,0.4); text-align: center;
+    }
+    .view-btn.active { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); }
+
+    /* ── Price switching (card mode) ── */
     body.week-nov .p-aug { display: none; }
     body.week-aug .p-nov { display: none; }
 
     /* ── Savings strip ── */
     .savings-strip {
-      display: none;
-      background: #f0fdf4;
-      border-bottom: 1px solid #dcfce7;
-      padding: 0.45rem 1.1rem;
-      font-size: 0.75rem;
-      color: #15803d;
-      font-weight: 600;
+      display: none; background: #f0fdf4; border-bottom: 1px solid #dcfce7;
+      padding: 0.45rem 1.1rem; font-size: 0.75rem; color: #15803d; font-weight: 600;
     }
     body.week-aug .savings-strip { display: block; }
 
+    /* ── View switching ── */
+    body.view-cards .cards-container  { display: flex; }
+    body.view-cards .table-container  { display: none; }
+    body.view-table .cards-container  { display: none; }
+    body.view-table .table-container  { display: block; }
+    body.view-cards .legend-box       { display: block; }
+    body.view-table .legend-box       { display: none; }
+
     /* ── Legend ── */
-    .legend-box {
-      margin: 1rem auto 0;
-      max-width: 700px;
-      padding: 0 1.25rem;
-    }
     .legend-inner {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 0.9rem 1rem;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 0.9rem 1rem;
     }
-    .legend-title {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 0.6rem;
-      font-weight: 500;
-    }
-    .legend-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.45rem 1rem;
-    }
-    .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.77rem;
-      color: rgba(255,255,255,0.75);
-    }
+    .legend-title { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); margin-bottom: 0.6rem; font-weight: 500; }
+    .legend-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem 1rem; }
+    .legend-row   { display: flex; align-items: center; gap: 0.5rem; font-size: 0.77rem; color: rgba(255,255,255,0.75); }
     .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .dot-green  { background: #4ade80; }
     .dot-amber  { background: #fbbf24; }
@@ -179,99 +132,24 @@
     .dot-purple { background: #c4b5fd; }
     .legend-divider { grid-column: 1/-1; border-top: 1px solid rgba(255,255,255,0.1); margin: 0.2rem 0; }
 
-    /* ── Room Toggle ── */
-    .toggle-wrap {
-      padding: 1rem 1.25rem 0;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .toggle-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    .toggle-group {
-      display: flex;
-      background: rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 3px;
-      gap: 3px;
-    }
-    .toggle-btn {
-      flex: 1;
-      padding: 0.55rem 0.5rem;
-      border: none;
-      border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: transparent;
-      color: rgba(255,255,255,0.5);
-      text-align: center;
-      line-height: 1.3;
-    }
-    .toggle-btn.active { background: #fff; color: var(--navy); font-weight: 600; }
-
     /* ── Cards ── */
-    .cards-container {
-      padding: 1rem 1.25rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
+    .cards-container { padding: 1rem 1.25rem 1rem; flex-direction: column; gap: 1rem; max-width: 700px; margin: 0 auto; }
     .resort-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
-      animation: fadeUp 0.4s ease both;
+      background: var(--card-bg); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35); animation: fadeUp 0.4s ease both;
     }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .resort-card:nth-child(1){animation-delay:.05s}
-    .resort-card:nth-child(2){animation-delay:.10s}
-    .resort-card:nth-child(3){animation-delay:.15s}
-    .resort-card:nth-child(4){animation-delay:.20s}
-    .resort-card:nth-child(5){animation-delay:.25s}
-    .resort-card:nth-child(6){animation-delay:.30s}
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    .resort-card:nth-child(1){animation-delay:.05s} .resort-card:nth-child(2){animation-delay:.10s}
+    .resort-card:nth-child(3){animation-delay:.15s} .resort-card:nth-child(4){animation-delay:.20s}
+    .resort-card:nth-child(5){animation-delay:.25s} .resort-card:nth-child(6){animation-delay:.30s}
     .resort-card:nth-child(7){animation-delay:.35s}
     .resort-card.sky  { border-left: 4px solid #2563eb; }
     .resort-card.mono { border-left: 4px solid #7c3aed; }
 
-    /* Card header */
-    .card-header {
-      padding: 1rem 1.1rem 0.7rem;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .resort-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.3rem;
-    }
+    .card-header { padding: 1rem 1.1rem 0.7rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; border-bottom: 1px solid var(--border); }
+    .resort-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
     .badges-row { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-bottom: 0.4rem; }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      font-size: 0.68rem;
-      font-weight: 500;
-    }
+    .badge { display: inline-flex; align-items: center; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.68rem; font-weight: 500; }
     .badge-sky  { background: rgba(37,99,235,0.1);  color: #1d4ed8; border: 1px solid rgba(37,99,235,0.25); }
     .badge-mono { background: rgba(124,58,237,0.1); color: #6d28d9; border: 1px solid rgba(124,58,237,0.25); }
     .badge-val  { background: rgba(22,163,74,0.1);  color: #15803d; border: 1px solid rgba(22,163,74,0.25); }
@@ -279,139 +157,131 @@
     .badge-del  { background: rgba(201,168,76,0.12);color: #92691c; border: 1px solid rgba(201,168,76,0.3); }
     .badge-best { background: linear-gradient(90deg,#c9a84c,#f0d080); color: #1a1a2e; border: none; font-weight: 700; }
 
-    /* Star rating */
     .star-row { display: flex; align-items: center; gap: 0.3rem; }
     .stars { display: inline-flex; gap: 1px; font-size: 0.82rem; line-height: 1; }
-    .star-filled { color: #f59e0b; }
-    .star-empty  { color: #d1d5db; }
-    .star-score  { font-size: 0.78rem; font-weight: 600; color: var(--text); }
-    .star-count  { font-size: 0.7rem; color: var(--muted); }
+    .star-filled { color: #f59e0b; } .star-empty { color: #d1d5db; }
+    .star-score { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+    .star-count { font-size: 0.7rem; color: var(--muted); }
 
     .price-block { text-align: right; flex-shrink: 0; }
     .price-label { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.1rem; }
     .price-value { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--navy); line-height: 1; }
     .price-value small { font-size: 0.7rem; font-weight: 400; color: var(--muted); font-family: 'DM Sans', sans-serif; }
 
-    /* Park times */
-    .card-parks {
-      padding: 0.7rem 1.1rem;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.6rem 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .parks-section-label {
-      grid-column: 1 / -1;
-      font-size: 0.62rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      font-weight: 500;
-      margin-bottom: 0.1rem;
-    }
+    .card-parks { padding: 0.7rem 1.1rem; display: grid; grid-template-columns: repeat(2,1fr); gap: 0.6rem 0.5rem; border-bottom: 1px solid var(--border); }
+    .parks-section-label { grid-column: 1/-1; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 0.1rem; }
     .park-name   { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 0.1rem; }
     .park-time   { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.05rem; }
-    .park-time.t-green { color: var(--green); }
-    .park-time.t-amber { color: var(--amber); }
+    .park-time.t-green { color: var(--green); } .park-time.t-amber { color: var(--amber); }
     .park-time.t-gray  { color: var(--gray); font-size: 0.78rem; font-weight: 400; font-style: italic; }
     .park-method { font-size: 0.62rem; color: var(--muted); }
 
-    /* Rooms */
     .card-rooms { padding: 0.7rem 1.1rem; border-bottom: 1px solid var(--border); }
     .rooms-title { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 0.5rem; }
-    .room-option {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid #f3f4f6;
-      font-size: 0.82rem;
-      gap: 0.5rem;
-    }
+    .room-option { display: flex; align-items: flex-start; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #f3f4f6; font-size: 0.82rem; gap: 0.5rem; }
     .room-option:last-child { border-bottom: none; padding-bottom: 0; }
     .room-desc { color: var(--text); flex: 1; }
     .room-desc small { display: block; color: var(--muted); font-size: 0.7rem; margin-top: 0.05rem; line-height: 1.4; }
     .room-price { font-weight: 600; color: var(--navy); font-size: 0.85rem; white-space: nowrap; text-align: right; }
     .room-na { color: var(--muted); font-style: italic; font-size: 0.78rem; }
-    .room-na-aug { color: var(--muted); font-style: italic; font-size: 0.72rem; }
 
-    /* AI Review Summary */
-    .card-review {
-      padding: 0.75rem 1.1rem;
-      border-bottom: 1px solid var(--border);
-      background: #fafafa;
-    }
-    .review-label {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.62rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      font-weight: 500;
-      margin-bottom: 0.45rem;
-    }
-    .review-label .ai-chip {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(99,102,241,0.1);
-      border: 1px solid rgba(99,102,241,0.25);
-      color: #4f46e5;
-      font-size: 0.6rem;
-      padding: 0.1rem 0.4rem;
-      border-radius: 999px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
+    .card-review { padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--border); background: #fafafa; }
+    .review-label { display: flex; align-items: center; gap: 0.35rem; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 0.45rem; }
+    .review-label .ai-chip { display: inline-flex; align-items: center; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); color: #4f46e5; font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 999px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
     .review-text { font-size: 0.8rem; color: #374151; line-height: 1.6; }
 
-    /* Book button */
     .card-book { padding: 0.75rem 1.1rem; }
-    .book-btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      color: #fff;
-      text-align: center;
-      border-radius: 10px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: opacity 0.2s, transform 0.1s;
-    }
+    .book-btn { display: block; width: 100%; padding: 0.75rem; color: #fff; text-align: center; border-radius: 10px; font-size: 0.84rem; font-weight: 600; text-decoration: none; letter-spacing: 0.02em; transition: opacity 0.2s, transform 0.1s; }
     .book-btn:active { transform: scale(0.98); opacity: 0.9; }
     .book-btn.sky-btn  { background: #1d4ed8; }
     .book-btn.mono-btn { background: #6d28d9; }
     .book-btn .arrow { opacity: 0.7; font-weight: 400; margin-left: 0.4rem; font-size: 0.78rem; }
-
-    /* Note */
     .card-note { padding: 0.4rem 1.1rem 0.8rem; font-size: 0.73rem; color: var(--muted); font-style: italic; }
 
-    /* Toggle visibility */
     .rooms-1, .rooms-2 { display: none; }
     body.show-1 .rooms-1 { display: block; }
     body.show-2 .rooms-2 { display: block; }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 1.25rem 1.25rem 3rem;
-      color: rgba(255,255,255,0.28);
-      font-size: 0.7rem;
-      line-height: 1.7;
-      max-width: 700px;
-      margin: 0 auto;
+    /* ── Table ── */
+    .table-container { padding: 1rem 1.25rem 1rem; max-width: 700px; margin: 0 auto; }
+    .table-scroll { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+    .price-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 0.78rem; min-width: 560px; }
+
+    .price-table thead tr { background: var(--navy); }
+    .price-table thead th {
+      padding: 0.75rem 0.7rem; text-align: left; font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.6);
+      font-weight: 500; white-space: nowrap; border-bottom: 2px solid rgba(255,255,255,0.08);
     }
+    .price-table thead th.col-save { color: #86efac; }
+    .price-table thead th.align-right { text-align: right; }
+
+    /* Resort group header rows */
+    .tr-group { background: #f8fafc; }
+    .tr-group td {
+      padding: 0.5rem 0.7rem; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: #374151;
+      border-top: 2px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .tr-group.sky td  { border-left: 4px solid #2563eb; color: #1d4ed8; }
+    .tr-group.mono td { border-left: 4px solid #7c3aed; color: #6d28d9; }
+
+    /* Data rows */
+    .price-table tbody tr.tr-data { border-bottom: 1px solid #f3f4f6; }
+    .price-table tbody tr.tr-data:hover { background: #fafafa; }
+    .price-table tbody tr.tr-data.sky-row  td:first-child { border-left: 4px solid #dbeafe; }
+    .price-table tbody tr.tr-data.mono-row td:first-child { border-left: 4px solid #ede9fe; }
+
+    .price-table td { padding: 0.55rem 0.7rem; color: var(--text); vertical-align: middle; }
+    .td-room { font-size: 0.76rem; color: #374151; }
+    .td-price { font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--navy); white-space: nowrap; text-align: right; }
+    .td-price-aug { color: #15803d; }
+    .td-na { color: var(--gray); font-style: italic; font-size: 0.7rem; text-align: right; }
+
+    /* Savings cells */
+    .td-save { text-align: right; white-space: nowrap; font-weight: 700; }
+    .td-save .save-bar { display: block; height: 3px; border-radius: 2px; margin-top: 3px; min-width: 4px; }
+    .save-low  { color: #6b7280; }
+    .save-low  .save-bar { background: #d1d5db; }
+    .save-med  { color: #d97706; }
+    .save-med  .save-bar { background: #fbbf24; }
+    .save-high { color: #16a34a; }
+    .save-high .save-bar { background: #4ade80; }
+    .save-na   { color: #d1d5db; font-style: italic; font-weight: 400; font-size: 0.7rem; }
+
+    /* 6-night savings pill */
+    .save6-pill {
+      display: inline-block; padding: 0.15rem 0.45rem; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    }
+    .save6-low  { background: #f3f4f6; color: #6b7280; }
+    .save6-med  { background: #fffbeb; color: #d97706; }
+    .save6-high { background: #f0fdf4; color: #15803d; }
+    .save6-na   { background: transparent; color: #d1d5db; font-weight: 400; font-style: italic; }
+
+    /* Hide 1-room or 2-room table rows */
+    body.show-1 .tr-2room { display: none; }
+    body.show-2 .tr-1room { display: none; }
+
+    /* Table caption */
+    .table-note {
+      margin-top: 0.75rem; font-size: 0.7rem; color: rgba(255,255,255,0.3);
+      line-height: 1.6; text-align: center;
+    }
+
+    /* ── Footer ── */
+    footer { text-align: center; padding: 1.25rem 1.25rem 3rem; color: rgba(255,255,255,0.28); font-size: 0.7rem; line-height: 1.7; max-width: 700px; margin: 0 auto; }
     .footer-nov, .footer-aug { display: none; }
     body.week-nov .footer-nov { display: block; }
     body.week-aug .footer-aug { display: block; }
+    body.view-table .footer-nov,
+    body.view-table .footer-aug { display: none; }
+    body.view-table .footer-table { display: block; }
+    .footer-table { display: none; }
     .footer-shared { display: block; }
   </style>
 </head>
-<body class="show-1 week-nov">
+<body class="show-1 week-nov view-cards">
 
 <header>
   <div class="header-badge">Trip Planning Guide</div>
@@ -420,8 +290,8 @@
 </header>
 
 <!-- Week Toggle -->
-<div class="week-toggle-wrap">
-  <div class="week-toggle-label">Select travel week</div>
+<div class="week-toggle-wrap control-wrap">
+  <div class="control-label">Select travel week</div>
   <div class="week-toggle-group">
     <button class="week-btn active" onclick="setWeek('nov',this)">
       <span class="week-name">Nov 2–8, 2026</span>
@@ -434,33 +304,262 @@
   </div>
 </div>
 
-<!-- Legend -->
-<div class="legend-box">
-  <div class="legend-inner">
-    <div class="legend-title">How to read the travel times</div>
-    <div class="legend-grid">
-      <div class="legend-row"><span class="dot dot-green"></span> Green = under 10 min</div>
-      <div class="legend-row"><span class="dot dot-amber"></span> Orange = 10–20 min</div>
-      <div class="legend-row"><span class="dot dot-gray"></span> Gray = bus only, no direct transit</div>
-      <div class="legend-divider"></div>
-      <div class="legend-row"><span class="dot dot-blue"></span> 🚡 Blue border = Skyliner resort</div>
-      <div class="legend-row"><span class="dot dot-purple"></span> 🚝 Purple border = Monorail resort</div>
-    </div>
-  </div>
-</div>
-
 <!-- Room Toggle -->
-<div class="toggle-wrap">
-  <div class="toggle-label">Number of rooms needed</div>
+<div class="control-wrap" style="padding-top:0.85rem;">
+  <div class="control-label">Number of rooms needed</div>
   <div class="toggle-group">
     <button class="toggle-btn active" onclick="setRooms(1,this)">1 Room</button>
     <button class="toggle-btn" onclick="setRooms(2,this)">2 Rooms (connecting)</button>
   </div>
 </div>
 
+<!-- View Toggle -->
+<div class="view-toggle-wrap">
+  <div class="view-toggle-group">
+    <button class="view-btn active" onclick="setView('cards',this)">▦ Card View</button>
+    <button class="view-btn" onclick="setView('table',this)">≡ Table View · Price Breakdown</button>
+  </div>
+</div>
+
+<!-- Legend (cards only) -->
+<div class="legend-box control-wrap" style="padding-top:1rem;">
+  <div class="legend-inner">
+    <div class="legend-title">How to read the travel times</div>
+    <div class="legend-grid">
+      <div class="legend-row"><span class="dot dot-green"></span> Green = under 10 min</div>
+      <div class="legend-row"><span class="dot dot-amber"></span> Orange = 10–20 min</div>
+      <div class="legend-row"><span class="dot dot-gray"></span> Gray = bus only</div>
+      <div class="legend-divider"></div>
+      <div class="legend-row"><span class="dot dot-blue"></span> 🚡 Blue = Skyliner resort</div>
+      <div class="legend-row"><span class="dot dot-purple"></span> 🚝 Purple = Monorail resort</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ TABLE VIEW ═══════════════════════════════ -->
+<div class="table-container">
+  <div class="table-scroll">
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th style="width:32%">Room Type</th>
+          <th class="align-right">Nov 2–8</th>
+          <th class="align-right">Aug 17–Sep 6</th>
+          <th class="col-save align-right">Save / night</th>
+          <th class="col-save align-right">Save / 6 nights</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Pop Century -->
+        <tr class="tr-group sky"><td colspan="5">🚡 Pop Century Resort · Value · ★ 4.2</td></tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Standard Room<br><small style="color:#9ca3af;font-weight:400">1Q + 1Q table bed · Sleeps 4</small></td>
+          <td class="td-price">$241–$296</td>
+          <td class="td-price td-price-aug">$212–$258</td>
+          <td class="td-save save-low">~$34/nt<span class="save-bar" style="width:18%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-low">~$204</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Preferred / Pool View<br><small style="color:#9ca3af;font-weight:400">Same beds · Closer to Skyliner</small></td>
+          <td class="td-price">$282–$328</td>
+          <td class="td-price td-price-aug">$245–$282</td>
+          <td class="td-save save-low">~$41/nt<span class="save-bar" style="width:22%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-low">~$246</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-2room">
+          <td class="td-room">2× Standard Connecting<br><small style="color:#9ca3af;font-weight:400">Not guaranteed · Call (407) 939-1936</small></td>
+          <td class="td-price">$482–$592</td>
+          <td class="td-price td-price-aug">$424–$516</td>
+          <td class="td-save save-low">~$67/nt<span class="save-bar" style="width:30%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-low">~$402</span></td>
+        </tr>
+
+        <!-- Art of Animation -->
+        <tr class="tr-group sky"><td colspan="5">🚡 Art of Animation · Value · ⭐ Best Pick · ★ 4.5</td></tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Little Mermaid Room<br><small style="color:#9ca3af;font-weight:400">2 Queen beds · Sleeps 4</small></td>
+          <td class="td-price">$292–$328</td>
+          <td class="td-price td-price-aug">$254–$298</td>
+          <td class="td-save save-low">~$34/nt<span class="save-bar" style="width:18%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-low">~$204</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Family Suite – Lion King / Cars<br><small style="color:#9ca3af;font-weight:400">Private bedroom · Kitchenette · Sleeps 6</small></td>
+          <td class="td-price">$586–$678</td>
+          <td class="td-price td-price-aug">$536–$613</td>
+          <td class="td-save save-med">~$57/nt<span class="save-bar" style="width:26%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$342</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Family Suite – Finding Nemo<br><small style="color:#9ca3af;font-weight:400">Same layout · Closer to Skyliner</small></td>
+          <td class="td-price">$646–$736</td>
+          <td class="td-price td-price-aug">$549–$638</td>
+          <td class="td-save save-med">~$97/nt<span class="save-bar" style="width:44%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$582</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-2room">
+          <td class="td-room">Family Suite (recommended)<br><small style="color:#9ca3af;font-weight:400">No connecting lottery needed</small></td>
+          <td class="td-price">$586–$736</td>
+          <td class="td-price td-price-aug">$536–$638</td>
+          <td class="td-save save-med">~$74/nt<span class="save-bar" style="width:34%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$444</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-2room">
+          <td class="td-room">2× Little Mermaid Connecting<br><small style="color:#9ca3af;font-weight:400">Not guaranteed · Call (407) 939-1936</small></td>
+          <td class="td-price">$584–$656</td>
+          <td class="td-price td-price-aug">$508–$596</td>
+          <td class="td-save save-med">~$68/nt<span class="save-bar" style="width:31%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$408</span></td>
+        </tr>
+
+        <!-- Caribbean Beach -->
+        <tr class="tr-group sky"><td colspan="5">🚡 Caribbean Beach Resort · Moderate · ★ 4.1</td></tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Standard Room<br><small style="color:#9ca3af;font-weight:400">2 Queen beds · Sleeps 4</small></td>
+          <td class="td-price">$392–$442</td>
+          <td class="td-price td-price-aug">$331–$367</td>
+          <td class="td-save save-med">~$68/nt<span class="save-bar" style="width:31%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$408</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Preferred Room<br><small style="color:#9ca3af;font-weight:400">Closer to hub &amp; Skyliner station</small></td>
+          <td class="td-price">$505–$542</td>
+          <td class="td-price td-price-aug">$426–$458</td>
+          <td class="td-save save-med">~$82/nt<span class="save-bar" style="width:37%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$492</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-2room">
+          <td class="td-room">2× Standard Connecting<br><small style="color:#9ca3af;font-weight:400">Not guaranteed · Call (407) 939-1936</small></td>
+          <td class="td-price">$784–$884</td>
+          <td class="td-price td-price-aug">$662–$734</td>
+          <td class="td-save save-med">~$136/nt<span class="save-bar" style="width:62%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$816</span></td>
+        </tr>
+
+        <!-- Riviera -->
+        <tr class="tr-group sky"><td colspan="5">🚡 Riviera Resort · Deluxe Villa · ★ 4.4</td></tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">Deluxe Studio – Resort View<br><small style="color:#9ca3af;font-weight:400">Queen + sofa sleeper · Sleeps 5</small></td>
+          <td class="td-price">$810–$954</td>
+          <td class="td-price td-price-aug">$728–$735</td>
+          <td class="td-save save-high">~$150/nt<span class="save-bar" style="width:68%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$900</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-1room">
+          <td class="td-room">1-Bedroom Villa – Resort View<br><small style="color:#9ca3af;font-weight:400">King bedroom + full kitchen · Sleeps 4</small></td>
+          <td class="td-price">$1,074–$1,225</td>
+          <td class="td-price td-price-aug">$1,027–$1,065</td>
+          <td class="td-save save-med">~$104/nt<span class="save-bar" style="width:47%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$624</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-2room">
+          <td class="td-room">2-Bedroom Villa – Resort View<br><small style="color:#9ca3af;font-weight:400">Guaranteed separation · Sleeps 8</small></td>
+          <td class="td-price">$1,785–$2,094</td>
+          <td class="td-na">See mousesavers.com</td>
+          <td class="td-save save-na">—</td>
+          <td class="td-save"><span class="save6-pill save6-na">—</span></td>
+        </tr>
+        <tr class="tr-data sky-row tr-2room">
+          <td class="td-room">2× Deluxe Studios (connecting)<br><small style="color:#9ca3af;font-weight:400">Not guaranteed · Call (407) 939-1936</small></td>
+          <td class="td-price">$1,620–$1,908</td>
+          <td class="td-price td-price-aug">$1,456–$1,470</td>
+          <td class="td-save save-high">~$301/nt<span class="save-bar" style="width:100%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$1,806</span></td>
+        </tr>
+
+        <!-- Contemporary -->
+        <tr class="tr-group mono"><td colspan="5">🚝 Contemporary Resort · Deluxe · ★ 4.3</td></tr>
+        <tr class="tr-data mono-row tr-1room">
+          <td class="td-room">Garden Wing Standard<br><small style="color:#9ca3af;font-weight:400">2 Queen beds · Garden view · Sleeps 4</small></td>
+          <td class="td-price">$773–$868</td>
+          <td class="td-price td-price-aug">$626–$641</td>
+          <td class="td-save save-high">~$187/nt<span class="save-bar" style="width:85%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$1,122</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-1room">
+          <td class="td-room">Tower Room – Water View<br><small style="color:#9ca3af;font-weight:400">Queen or King · Inside the A-frame tower</small></td>
+          <td class="td-price">$1,032–$1,151</td>
+          <td class="td-price td-price-aug">$863–$889</td>
+          <td class="td-save save-high">~$216/nt<span class="save-bar" style="width:98%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$1,296</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-2room">
+          <td class="td-room">2× Standard Connecting<br><small style="color:#9ca3af;font-weight:400">Not guaranteed · Call (407) 939-1936</small></td>
+          <td class="td-price">$1,546–$1,736</td>
+          <td class="td-price td-price-aug">$1,252–$1,282</td>
+          <td class="td-save save-high">~$374/nt<span class="save-bar" style="width:100%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$2,244</span></td>
+        </tr>
+
+        <!-- Polynesian -->
+        <tr class="tr-group mono"><td colspan="5">🚝 Polynesian Village Resort · Deluxe · ★ 4.6</td></tr>
+        <tr class="tr-data mono-row tr-1room">
+          <td class="td-room">Deluxe Studio – Resort View<br><small style="color:#9ca3af;font-weight:400">Queen + sofa sleeper · DVC villa unit</small></td>
+          <td class="td-price">$920–$939</td>
+          <td class="td-price td-price-aug">$756–$806</td>
+          <td class="td-save save-med">~$149/nt<span class="save-bar" style="width:68%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-med">~$894</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-1room">
+          <td class="td-room">Deluxe Studio – Theme Park View<br><small style="color:#9ca3af;font-weight:400">Magic Kingdom &amp; lagoon views</small></td>
+          <td class="td-price">$1,272–$1,329</td>
+          <td class="td-price td-price-aug">$1,051–$1,084</td>
+          <td class="td-save save-high">~$233/nt<span class="save-bar" style="width:100%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$1,398</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-2room">
+          <td class="td-room">1-Bedroom Villa – Resort View<br><small style="color:#9ca3af;font-weight:400">King bedroom + full kitchen · Sleeps 4</small></td>
+          <td class="td-price">$1,326–$1,352</td>
+          <td class="td-na">See mousesavers.com</td>
+          <td class="td-save save-na">—</td>
+          <td class="td-save"><span class="save6-pill save6-na">—</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-2room">
+          <td class="td-room">1-Bedroom Villa – Theme Park View<br><small style="color:#9ca3af;font-weight:400">Magic Kingdom &amp; lagoon views</small></td>
+          <td class="td-price">$1,655–$1,688</td>
+          <td class="td-na">See mousesavers.com</td>
+          <td class="td-save save-na">—</td>
+          <td class="td-save"><span class="save6-pill save6-na">—</span></td>
+        </tr>
+
+        <!-- Grand Floridian -->
+        <tr class="tr-group mono"><td colspan="5">🚝 Grand Floridian Resort &amp; Spa · Deluxe · ★ 4.4</td></tr>
+        <tr class="tr-data mono-row tr-1room">
+          <td class="td-room">Standard Room – Resort View<br><small style="color:#9ca3af;font-weight:400">2Q or 1K + daybed · Sleeps 5</small></td>
+          <td class="td-price">$960–$1,098</td>
+          <td class="td-price td-price-aug">$816–$875</td>
+          <td class="td-save save-high">~$183/nt<span class="save-bar" style="width:83%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$1,098</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-1room">
+          <td class="td-room">Theme Park View Room<br><small style="color:#9ca3af;font-weight:400">Magic Kingdom fireworks views</small></td>
+          <td class="td-price">$1,226–$1,400</td>
+          <td class="td-price td-price-aug">$984–$1,054</td>
+          <td class="td-save save-high">~$294/nt<span class="save-bar" style="width:100%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$1,764</span></td>
+        </tr>
+        <tr class="tr-data mono-row tr-2room">
+          <td class="td-room">2× Standard Connecting<br><small style="color:#9ca3af;font-weight:400">Not guaranteed · Call (407) 939-1936</small></td>
+          <td class="td-price">$1,920–$2,196</td>
+          <td class="td-price td-price-aug">$1,632–$1,750</td>
+          <td class="td-save save-high">~$367/nt<span class="save-bar" style="width:100%"></span></td>
+          <td class="td-save"><span class="save6-pill save6-high">~$2,202</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="table-note">
+    Savings = Nov 2–8 midpoint minus Aug 17–Sep 6 midpoint · 6-night estimate · All rates include 12.5% tax · Source: MouseSavers.com<br/>
+    — = Aug/Sep rate not yet published · Color: <span style="color:#d97706">orange = $50–$149/nt</span> · <span style="color:#16a34a">green = $150+/nt saved</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CARD VIEW ═══════════════════════════════ -->
 <div class="cards-container">
 
-  <!-- ── Pop Century ── -->
+  <!-- Pop Century -->
   <div class="resort-card sky">
     <div class="card-header">
       <div>
@@ -471,8 +570,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
-          <span class="star-score">4.2</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.2</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -486,69 +584,40 @@
     <div class="savings-strip">✦ Saves ~$210 for a 6-night stay vs. November 2–8</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~30–40 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-amber">~15 min</div>
-        <div class="park-method">Skyliner</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-amber">~10 min</div>
-        <div class="park-method">Skyliner (transfer at CBR)</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~30–40 min</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-amber">~15 min</div><div class="park-method">Skyliner</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-amber">~10 min</div><div class="park-method">Skyliner (transfer at CBR)</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Standard Room<small>1 Queen + 1 Queen table bed · Sleeps up to 4</small></div>
-          <div class="room-price">
-            <span class="p-nov">$241–$296/nt</span>
-            <span class="p-aug">$212–$258/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$241–$296/nt</span><span class="p-aug">$212–$258/nt</span></div>
         </div>
         <div class="room-option">
           <div class="room-desc">Pool View / Preferred Room<small>Same beds · Closer to lobby & Skyliner</small></div>
-          <div class="room-price">
-            <span class="p-nov">$282–$328/nt</span>
-            <span class="p-aug">$245–$282/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$282–$328/nt</span><span class="p-aug">$245–$282/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">2× Standard Connecting Rooms<small>1 Queen + 1 Queen table bed each · Connecting door not guaranteed — call (407) 939-1936 to request</small></div>
-          <div class="room-price">
-            <span class="p-nov">$482–$592/nt</span>
-            <span class="p-aug">$424–$516/nt</span>
-          </div>
+          <div class="room-desc">2× Standard Connecting Rooms<small>1 Queen + 1 Queen table bed each · Not guaranteed — call (407) 939-1936</small></div>
+          <div class="room-price"><span class="p-nov">$482–$592/nt</span><span class="p-aug">$424–$516/nt</span></div>
         </div>
-        <div class="room-option">
-          <div class="room-desc room-na">⚠ No family suite option at this resort</div>
-        </div>
+        <div class="room-option"><div class="room-desc room-na">⚠ No family suite option at this resort</div></div>
       </div>
     </div>
     <div class="card-review">
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
       <div class="review-text">Guests consistently praise Pop Century for delivering an authentic Disney experience at a fraction of the cost. The recently refreshed rooms earn high marks for cleanliness and updated décor, and the legendary food court is a frequent highlight. The large property size means longer walks to your room, but the Skyliner connection and unbeatable value keep it a top pick for budget-conscious families.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/pop-century-resort/" target="_blank" class="book-btn sky-btn">Book Pop Century <span class="arrow">→ disney.com</span></a>
-    </div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/pop-century-resort/" target="_blank" class="book-btn sky-btn">Book Pop Century <span class="arrow">→ disney.com</span></a></div>
     <div class="card-note">Newly refreshed rooms. Shares Skyliner station with Art of Animation across Hourglass Lake.</div>
   </div>
 
-  <!-- ── Art of Animation ── -->
+  <!-- Art of Animation -->
   <div class="resort-card sky">
     <div class="card-header">
       <div>
@@ -560,8 +629,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span></div>
-          <span class="star-score">4.5</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.5</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -575,66 +643,35 @@
     <div class="savings-strip">✦ Saves ~$200–$580 for a 6-night stay vs. November 2–8 (varies by room type)</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~30–40 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-amber">~15 min</div>
-        <div class="park-method">Skyliner</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-amber">~10 min</div>
-        <div class="park-method">Skyliner (transfer at CBR)</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~30–40 min</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-amber">~15 min</div><div class="park-method">Skyliner</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-amber">~10 min</div><div class="park-method">Skyliner (transfer at CBR)</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Little Mermaid Room<small>2 Queen beds · Sleeps 4 · Standard room, no suite</small></div>
-          <div class="room-price">
-            <span class="p-nov">$292–$328/nt</span>
-            <span class="p-aug">$254–$298/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$292–$328/nt</span><span class="p-aug">$254–$298/nt</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">Family Suite – Lion King or Cars<small>Private queen bedroom (parents) + sleeper sofa + Murphy bed (kids) · 2 bathrooms · Kitchenette · Sleeps 6</small></div>
-          <div class="room-price">
-            <span class="p-nov">$586–$678/nt</span>
-            <span class="p-aug">$536–$613/nt</span>
-          </div>
+          <div class="room-desc">Family Suite – Lion King or Cars<small>Private queen bedroom · Kitchenette · 2 bathrooms · Sleeps 6</small></div>
+          <div class="room-price"><span class="p-nov">$586–$678/nt</span><span class="p-aug">$536–$613/nt</span></div>
         </div>
         <div class="room-option">
           <div class="room-desc">Family Suite – Finding Nemo<small>Same layout · Closer to lobby, pool & Skyliner station</small></div>
-          <div class="room-price">
-            <span class="p-nov">$646–$736/nt</span>
-            <span class="p-aug">$549–$638/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$646–$736/nt</span><span class="p-aug">$549–$638/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">Family Suite (recommended)<small>Private queen bedroom for parents + kids sleeping area with sofa & Murphy bed · All in 1 room — no connecting room lottery needed</small></div>
-          <div class="room-price">
-            <span class="p-nov">$586–$736/nt</span>
-            <span class="p-aug">$536–$638/nt</span>
-          </div>
+          <div class="room-desc">Family Suite (recommended)<small>Private bedroom for parents + kids area · No connecting lottery needed</small></div>
+          <div class="room-price"><span class="p-nov">$586–$736/nt</span><span class="p-aug">$536–$638/nt</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">2× Little Mermaid Connecting Rooms<small>2 Queen beds each · Connecting door not guaranteed — call (407) 939-1936 to request</small></div>
-          <div class="room-price">
-            <span class="p-nov">$584–$656/nt</span>
-            <span class="p-aug">$508–$596/nt</span>
-          </div>
+          <div class="room-desc">2× Little Mermaid Connecting Rooms<small>2 Queen beds each · Not guaranteed — call (407) 939-1936</small></div>
+          <div class="room-price"><span class="p-nov">$584–$656/nt</span><span class="p-aug">$508–$596/nt</span></div>
         </div>
       </div>
     </div>
@@ -642,13 +679,11 @@
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
       <div class="review-text">Families with young children rave about the immersive theming — every hallway feels like walking through an animated film. The family suites are consistently called the "smartest room on Disney property" for giving parents a private bedroom without a connecting room lottery. The food court earns some of the best reviews on-property, and Skyliner access to EPCOT and Hollywood Studios is a real daily bonus.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/art-of-animation-resort/" target="_blank" class="book-btn sky-btn">Book Art of Animation <span class="arrow">→ disney.com</span></a>
-    </div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/art-of-animation-resort/" target="_blank" class="book-btn sky-btn">Book Art of Animation <span class="arrow">→ disney.com</span></a></div>
     <div class="card-note">The family suite's private bedroom is the easiest guaranteed way to have separate sleeping spaces — no room lottery needed.</div>
   </div>
 
-  <!-- ── Caribbean Beach ── -->
+  <!-- Caribbean Beach -->
   <div class="resort-card sky">
     <div class="card-header">
       <div>
@@ -659,8 +694,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
-          <span class="star-score">4.1</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.1</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -674,52 +708,27 @@
     <div class="savings-strip">✦ Saves ~$410 for a 6-night stay vs. November 2–8</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~30–40 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-amber">~15 min</div>
-        <div class="park-method">Skyliner</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-green">~5 min</div>
-        <div class="park-method">Skyliner (direct)</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~30–40 min</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-amber">~15 min</div><div class="park-method">Skyliner</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-green">~5 min</div><div class="park-method">Skyliner (direct)</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Standard Room<small>2 Queen beds · Sleeps 4</small></div>
-          <div class="room-price">
-            <span class="p-nov">$392–$442/nt</span>
-            <span class="p-aug">$331–$367/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$392–$442/nt</span><span class="p-aug">$331–$367/nt</span></div>
         </div>
         <div class="room-option">
           <div class="room-desc">Preferred Room<small>2 Queen beds · Closer to main hub & Skyliner station</small></div>
-          <div class="room-price">
-            <span class="p-nov">$505–$542/nt</span>
-            <span class="p-aug">$426–$458/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$505–$542/nt</span><span class="p-aug">$426–$458/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">2× Standard Connecting Rooms<small>2 Queen beds each · Connecting door not guaranteed — call (407) 939-1936 to request</small></div>
-          <div class="room-price">
-            <span class="p-nov">$784–$884/nt</span>
-            <span class="p-aug">$662–$734/nt</span>
-          </div>
+          <div class="room-desc">2× Standard Connecting Rooms<small>2 Queen beds each · Not guaranteed — call (407) 939-1936</small></div>
+          <div class="room-price"><span class="p-nov">$784–$884/nt</span><span class="p-aug">$662–$734/nt</span></div>
         </div>
       </div>
     </div>
@@ -727,13 +736,11 @@
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
       <div class="review-text">Guests love the relaxed tropical atmosphere and the resort's role as the Skyliner hub — Hollywood Studios is practically a 5-minute gondola ride away, making it the best Hollywood Studios access of any resort on property. The most common complaint is the sprawling layout, where your room can be a long walk from the main building. Old Port Royale food court earns solid reviews for variety and value.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/caribbean-beach-resort/" target="_blank" class="book-btn sky-btn">Book Caribbean Beach <span class="arrow">→ disney.com</span></a>
-    </div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/caribbean-beach-resort/" target="_blank" class="book-btn sky-btn">Book Caribbean Beach <span class="arrow">→ disney.com</span></a></div>
     <div class="card-note">The Skyliner hub — all gondola routes pass through here. Best Hollywood Studios access of any Skyliner resort.</div>
   </div>
 
-  <!-- ── Riviera ── -->
+  <!-- Riviera -->
   <div class="resort-card sky">
     <div class="card-header">
       <div>
@@ -744,8 +751,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span></div>
-          <span class="star-score">4.4</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.4</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -759,59 +765,31 @@
     <div class="savings-strip">✦ Saves ~$900 for a 6-night stay vs. November 2–8 (Deluxe Studio)</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~30–40 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-green">~9 min</div>
-        <div class="park-method">Skyliner (direct)</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-green">~8 min</div>
-        <div class="park-method">Skyliner (transfer at CBR)</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~30–40 min</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-green">~9 min</div><div class="park-method">Skyliner (direct)</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-green">~8 min</div><div class="park-method">Skyliner (transfer at CBR)</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Deluxe Studio – Resort View<small>1 Queen bed + 1 Queen sleeper sofa · Sleeps 5</small></div>
-          <div class="room-price">
-            <span class="p-nov">$810–$954/nt</span>
-            <span class="p-aug">$728–$735/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$810–$954/nt</span><span class="p-aug">$728–$735/nt</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">1-Bedroom Villa – Resort View<small>Separate king bedroom + queen sofa in living area · Full kitchen · Sleeps 4</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,074–$1,225/nt</span>
-            <span class="p-aug">$1,027–$1,065/nt</span>
-          </div>
+          <div class="room-desc">1-Bedroom Villa – Resort View<small>Separate king bedroom + full kitchen · Sleeps 4</small></div>
+          <div class="room-price"><span class="p-nov">$1,074–$1,225/nt</span><span class="p-aug">$1,027–$1,065/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">2-Bedroom Villa – Resort View (guaranteed separation)<small>Master bedroom + second bedroom · Full kitchen · 2 full bathrooms · Sleeps up to 8</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,785–$2,094/nt</span>
-            <span class="p-aug p-aug-na">See mousesavers.com</span>
-          </div>
+          <div class="room-desc">2-Bedroom Villa – Resort View<small>Guaranteed separation · Full kitchen · 2 bathrooms · Sleeps 8</small></div>
+          <div class="room-price"><span class="p-nov">$1,785–$2,094/nt</span><span class="p-aug" style="font-style:italic;font-weight:400;font-size:0.72rem;color:#9ca3af">See mousesavers.com</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">2× Deluxe Studios (connecting)<small>1 Queen + sleeper sofa each · Not guaranteed — call (407) 939-1936</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,620–$1,908/nt</span>
-            <span class="p-aug">$1,456–$1,470/nt</span>
-          </div>
+          <div class="room-desc">2× Deluxe Studios (connecting)<small>Not guaranteed — call (407) 939-1936</small></div>
+          <div class="room-price"><span class="p-nov">$1,620–$1,908/nt</span><span class="p-aug">$1,456–$1,470/nt</span></div>
         </div>
       </div>
     </div>
@@ -819,13 +797,11 @@
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
       <div class="review-text">The newest resort on property consistently earns praise for its sophisticated European theming and Topolino's Terrace, which guests call one of the best character dining experiences in Walt Disney World. The rooftop pool and refined atmosphere appeal strongly to adults. Skyliner access to both EPCOT and Hollywood Studios is among the fastest of any resort. Note: non-DVC resale buyers may have Skyliner use restricted to resort-only travel.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/riviera-resort/" target="_blank" class="book-btn sky-btn">Book Riviera Resort <span class="arrow">→ disney.com</span></a>
-    </div>
-    <div class="card-note">Newest resort on property. European theming with rooftop dining and some of the fastest Skyliner access to both parks.</div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/riviera-resort/" target="_blank" class="book-btn sky-btn">Book Riviera Resort <span class="arrow">→ disney.com</span></a></div>
+    <div class="card-note">Newest resort on property. European theming with rooftop dining and fastest Skyliner access to both parks.</div>
   </div>
 
-  <!-- ── Contemporary ── -->
+  <!-- Contemporary -->
   <div class="resort-card mono">
     <div class="card-header">
       <div>
@@ -836,8 +812,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
-          <span class="star-score">4.3</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.3</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -851,52 +826,27 @@
     <div class="savings-strip">✦ Saves ~$1,130 for a 6-night stay vs. November 2–8</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-green">~5 min</div>
-        <div class="park-method">Monorail or walk</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-amber">~15 min</div>
-        <div class="park-method">Transfer at TTC</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~25–35 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-green">~5 min</div><div class="park-method">Monorail or walk</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-amber">~15 min</div><div class="park-method">Transfer at TTC</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-gray">Bus only</div><div class="park-method">~25–35 min</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Garden Wing Standard<small>2 Queen beds · Sleeps 4 · Garden view</small></div>
-          <div class="room-price">
-            <span class="p-nov">$773–$868/nt</span>
-            <span class="p-aug">$626–$641/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$773–$868/nt</span><span class="p-aug">$626–$641/nt</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">Tower Room – Water View<small>2 Queen beds or 1 King · Sleeps 4 · Inside the iconic A-frame tower</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,032–$1,151/nt</span>
-            <span class="p-aug">$863–$889/nt</span>
-          </div>
+          <div class="room-desc">Tower Room – Water View<small>2 Queen beds or 1 King · Inside the iconic A-frame tower</small></div>
+          <div class="room-price"><span class="p-nov">$1,032–$1,151/nt</span><span class="p-aug">$863–$889/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">2× Standard Connecting Rooms<small>2 Queen beds each · Connecting door not guaranteed — call (407) 939-1936 to request</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,546–$1,736/nt</span>
-            <span class="p-aug">$1,252–$1,282/nt</span>
-          </div>
+          <div class="room-desc">2× Standard Connecting Rooms<small>2 Queen beds each · Not guaranteed — call (407) 939-1936</small></div>
+          <div class="room-price"><span class="p-nov">$1,546–$1,736/nt</span><span class="p-aug">$1,252–$1,282/nt</span></div>
         </div>
       </div>
     </div>
@@ -904,13 +854,11 @@
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
       <div class="review-text">The iconic A-frame tower with the monorail running directly through the building delivers on the wow factor every time. Guests rave about walking to Magic Kingdom in under 15 minutes — especially valuable for dashing back during afternoon heat or catching fireworks from the room. Chef Mickey's character breakfast earns consistent five-star reviews for kids. The main hesitation: the premium price point relative to other Monorail resorts.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/contemporary-resort/" target="_blank" class="book-btn mono-btn">Book Contemporary <span class="arrow">→ disney.com</span></a>
-    </div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/contemporary-resort/" target="_blank" class="book-btn mono-btn">Book Contemporary <span class="arrow">→ disney.com</span></a></div>
     <div class="card-note">Iconic A-frame building. Magic Kingdom is a short walk or 1-stop monorail. Chef Mickey's character dining on-site.</div>
   </div>
 
-  <!-- ── Polynesian Village ── -->
+  <!-- Polynesian -->
   <div class="resort-card mono">
     <div class="card-header">
       <div>
@@ -921,8 +869,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span></div>
-          <span class="star-score">4.6</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.6</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -936,59 +883,31 @@
     <div class="savings-strip">✦ Saves ~$895 for a 6-night stay vs. November 2–8 (Resort View Studio)</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-green">~5–10 min</div>
-        <div class="park-method">Monorail</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-amber">~15 min</div>
-        <div class="park-method">Walk to TTC, transfer</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~25–35 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-green">~5–10 min</div><div class="park-method">Monorail</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-amber">~15 min</div><div class="park-method">Walk to TTC, transfer</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-gray">Bus only</div><div class="park-method">~25–35 min</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Deluxe Studio – Resort View<small>Queen bed + queen sofa sleeper · Sleeps 5 · DVC villa unit</small></div>
-          <div class="room-price">
-            <span class="p-nov">$920–$939/nt</span>
-            <span class="p-aug">$756–$806/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$920–$939/nt</span><span class="p-aug">$756–$806/nt</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">Deluxe Studio – Theme Park View<small>Queen bed + queen sofa sleeper · Views toward Magic Kingdom & Seven Seas Lagoon</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,272–$1,329/nt</span>
-            <span class="p-aug">$1,051–$1,084/nt</span>
-          </div>
+          <div class="room-desc">Deluxe Studio – Theme Park View<small>Views toward Magic Kingdom & Seven Seas Lagoon</small></div>
+          <div class="room-price"><span class="p-nov">$1,272–$1,329/nt</span><span class="p-aug">$1,051–$1,084/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">1-Bedroom Villa – Resort View<small>Separate king bedroom + queen sofa in living area · Full kitchen · 2 bathrooms · Sleeps 4</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,326–$1,352/nt</span>
-            <span class="p-aug p-aug-na">See mousesavers.com</span>
-          </div>
+          <div class="room-desc">1-Bedroom Villa – Resort View<small>Separate king bedroom + full kitchen · 2 bathrooms · Sleeps 4</small></div>
+          <div class="room-price"><span class="p-nov">$1,326–$1,352/nt</span><span class="p-aug" style="font-style:italic;font-weight:400;font-size:0.72rem;color:#9ca3af">See mousesavers.com</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">1-Bedroom Villa – Theme Park View<small>Same layout · Magic Kingdom & lagoon views · Sleeps 4</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,655–$1,688/nt</span>
-            <span class="p-aug p-aug-na">See mousesavers.com</span>
-          </div>
+          <div class="room-desc">1-Bedroom Villa – Theme Park View<small>Same layout · Magic Kingdom & lagoon views</small></div>
+          <div class="room-price"><span class="p-nov">$1,655–$1,688/nt</span><span class="p-aug" style="font-style:italic;font-weight:400;font-size:0.72rem;color:#9ca3af">See mousesavers.com</span></div>
         </div>
       </div>
     </div>
@@ -996,13 +915,11 @@
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
       <div class="review-text">Consistently ranked among the most beloved Disney resorts, and the reviews back it up. Guests describe the South Pacific theming as genuinely transporting, and the beachfront view of Magic Kingdom across Seven Seas Lagoon is called a trip highlight. Trader Sam's Grog Grotto earns a cult following of its own. The most repeated sentiment in reviews: once you stay here, it's hard to go anywhere else.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/polynesian-village-resort/" target="_blank" class="book-btn mono-btn">Book Polynesian Village <span class="arrow">→ disney.com</span></a>
-    </div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/polynesian-village-resort/" target="_blank" class="book-btn mono-btn">Book Polynesian Village <span class="arrow">→ disney.com</span></a></div>
     <div class="card-note">South Pacific theming. Trader Sam's Grog Grotto on-site. Shades of Green veteran resort is a 15-min walk away.</div>
   </div>
 
-  <!-- ── Grand Floridian ── -->
+  <!-- Grand Floridian -->
   <div class="resort-card mono">
     <div class="card-header">
       <div>
@@ -1013,8 +930,7 @@
         </div>
         <div class="star-row">
           <div class="stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span></div>
-          <span class="star-score">4.4</span>
-          <span class="star-count">· TripAdvisor / Google</span>
+          <span class="star-score">4.4</span><span class="star-count">· TripAdvisor / Google</span>
         </div>
       </div>
       <div class="price-block">
@@ -1028,112 +944,84 @@
     <div class="savings-strip">✦ Saves ~$1,100 for a 6-night stay vs. November 2–8</div>
     <div class="card-parks">
       <div class="parks-section-label">Park travel times</div>
-      <div class="park-item">
-        <div class="park-name">Magic Kingdom</div>
-        <div class="park-time t-green">~10 min</div>
-        <div class="park-method">Monorail</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">EPCOT</div>
-        <div class="park-time t-amber">~15 min</div>
-        <div class="park-method">Transfer at TTC</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Hollywood Studios</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~25–35 min</div>
-      </div>
-      <div class="park-item">
-        <div class="park-name">Animal Kingdom</div>
-        <div class="park-time t-gray">Bus only</div>
-        <div class="park-method">~35–45 min</div>
-      </div>
+      <div class="park-item"><div class="park-name">Magic Kingdom</div><div class="park-time t-green">~10 min</div><div class="park-method">Monorail</div></div>
+      <div class="park-item"><div class="park-name">EPCOT</div><div class="park-time t-amber">~15 min</div><div class="park-method">Transfer at TTC</div></div>
+      <div class="park-item"><div class="park-name">Hollywood Studios</div><div class="park-time t-gray">Bus only</div><div class="park-method">~25–35 min</div></div>
+      <div class="park-item"><div class="park-name">Animal Kingdom</div><div class="park-time t-gray">Bus only</div><div class="park-method">~35–45 min</div></div>
     </div>
     <div class="card-rooms">
       <div class="rooms-title">Room options</div>
       <div class="rooms-1">
         <div class="room-option">
           <div class="room-desc">Standard Room – Resort View<small>2 Queen beds or 1 King + daybed · Sleeps up to 5</small></div>
-          <div class="room-price">
-            <span class="p-nov">$960–$1,098/nt</span>
-            <span class="p-aug">$816–$875/nt</span>
-          </div>
+          <div class="room-price"><span class="p-nov">$960–$1,098/nt</span><span class="p-aug">$816–$875/nt</span></div>
         </div>
         <div class="room-option">
-          <div class="room-desc">Theme Park View Room<small>2 Queen beds + daybed · Views of Magic Kingdom fireworks</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,226–$1,400/nt</span>
-            <span class="p-aug">$984–$1,054/nt</span>
-          </div>
+          <div class="room-desc">Theme Park View Room<small>Views of Magic Kingdom fireworks</small></div>
+          <div class="room-price"><span class="p-nov">$1,226–$1,400/nt</span><span class="p-aug">$984–$1,054/nt</span></div>
         </div>
       </div>
       <div class="rooms-2">
         <div class="room-option">
-          <div class="room-desc">2× Standard Connecting Rooms<small>2 Queen beds each · Connecting door not guaranteed — call (407) 939-1936 to request</small></div>
-          <div class="room-price">
-            <span class="p-nov">$1,920–$2,196/nt</span>
-            <span class="p-aug">$1,632–$1,750/nt</span>
-          </div>
+          <div class="room-desc">2× Standard Connecting Rooms<small>2 Queen beds each · Not guaranteed — call (407) 939-1936</small></div>
+          <div class="room-price"><span class="p-nov">$1,920–$2,196/nt</span><span class="p-aug">$1,632–$1,750/nt</span></div>
         </div>
       </div>
     </div>
     <div class="card-review">
       <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
-      <div class="review-text">Disney's flagship luxury resort earns high marks for Victorian elegance, immaculate grounds, and white-glove service that guests say sets it apart from every other resort on property. Victoria & Albert's is called one of the finest dining experiences in Florida. The Magic Kingdom fireworks view from the Seven Seas Lagoon beach is described as spectacular. A small number of guests find the formal atmosphere less relaxed than other Monorail resorts — but for a special occasion, reviewers say it's unmatched.</div>
+      <div class="review-text">Disney's flagship luxury resort earns high marks for Victorian elegance, immaculate grounds, and white-glove service that guests say sets it apart from every other resort on property. Victoria & Albert's is called one of the finest dining experiences in Florida. The Magic Kingdom fireworks view from the Seven Seas Lagoon beach is described as spectacular. For a special occasion, reviewers say it's unmatched.</div>
     </div>
-    <div class="card-book">
-      <a href="https://disneyworld.disney.go.com/resorts/grand-floridian-resort-and-spa/" target="_blank" class="book-btn mono-btn">Book Grand Floridian <span class="arrow">→ disney.com</span></a>
-    </div>
-    <div class="card-note">Most luxurious Disney resort. Home to Michelin-starred Victoria & Albert's. Victorian theming throughout the property.</div>
+    <div class="card-book"><a href="https://disneyworld.disney.go.com/resorts/grand-floridian-resort-and-spa/" target="_blank" class="book-btn mono-btn">Book Grand Floridian <span class="arrow">→ disney.com</span></a></div>
+    <div class="card-note">Most luxurious Disney resort. Home to Michelin-starred Victoria & Albert's. Victorian theming throughout.</div>
   </div>
 
-</div>
+</div><!-- end cards-container -->
 
 <footer>
-  <div class="footer-nov">
-    Official rack rates for <strong>November 2–8, 2026</strong> (Fall 2 price season) · Source: MouseSavers.com<br/>
-    Prices shown as Mon–Sat range · Always verify at disneyworld.com before booking.
-  </div>
-  <div class="footer-aug">
-    Official rack rates for <strong>August 17–September 6, 2026</strong> (Value 2 price season) · Source: MouseSavers.com<br/>
-    Prices shown as Mon–Sat range · Always verify at disneyworld.com before booking.<br/>
-    Note: Florida heat &amp; humidity peaks in August. Early January 2027 may be even cheaper — check mousesavers.com when 2027 rates publish (est. Sep–Oct 2026).
-  </div>
-  <div class="footer-shared">
-    All rates include 12.5% Florida tax · Connecting rooms are requests only, never guaranteed unless noted.<br/>
-    Disney Reservations: (407) 939-1936 · Review summaries generated by AI based on public guest reviews.
-  </div>
+  <div class="footer-nov">Official rack rates for <strong>November 2–8, 2026</strong> (Fall 2) · Source: MouseSavers.com<br/>Prices shown as Mon–Sat range · Always verify at disneyworld.com before booking.</div>
+  <div class="footer-aug">Official rack rates for <strong>August 17–September 6, 2026</strong> (Value 2) · Source: MouseSavers.com<br/>Florida heat &amp; humidity peaks in August · Early Jan 2027 may be cheaper — check mousesavers.com when 2027 rates publish.</div>
+  <div class="footer-table">Comparing <strong>Nov 2–8, 2026</strong> (Fall 2) vs. <strong>Aug 17–Sep 6, 2026</strong> (Value 2) · Source: MouseSavers.com</div>
+  <div class="footer-shared">All rates include 12.5% Florida tax · Connecting rooms are requests only, never guaranteed unless noted.<br/>Disney Reservations: (407) 939-1936 · Review summaries generated by AI based on public guest reviews.</div>
 </footer>
 
 <script>
+  const state = { rooms: 1, week: 'nov', view: 'cards' };
+
+  function sync() {
+    document.body.className = `show-${state.rooms} week-${state.week} view-${state.view}`;
+    const dateEl = document.getElementById('header-date');
+    if (dateEl) {
+      if (state.view === 'table') {
+        dateEl.textContent = 'Nov 2–8 vs. Aug 17–Sep 6, 2026 · Price Comparison · Official Rack Rates';
+      } else {
+        dateEl.textContent = state.week === 'nov'
+          ? 'November 2–8, 2026 · Official Rack Rates (incl. tax) · Prices vary by night'
+          : 'August 17–September 6, 2026 · Official Rack Rates (incl. tax) · Prices vary by night';
+      }
+    }
+  }
+
   function setRooms(n, btn) {
-    const cur = document.body.className;
-    document.body.className = cur.replace(/show-\d/, 'show-' + n);
+    state.rooms = n;
+    sync();
     document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }
 
   function setWeek(w, btn) {
-    const cur = document.body.className;
-    document.body.className = cur.replace(/week-\w+/, 'week-' + w);
+    state.week = w;
+    sync();
     document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const dateEl = document.getElementById('header-date');
-    if (dateEl) {
-      dateEl.textContent = w === 'nov'
-        ? 'November 2–8, 2026 · Official Rack Rates (incl. tax) · Prices vary by night'
-        : 'August 17–September 6, 2026 · Official Rack Rates (incl. tax) · Prices vary by night';
-    }
   }
 
-  // Style the "See mousesavers.com" unavailable prices
-  document.querySelectorAll('.p-aug-na').forEach(el => {
-    el.style.fontStyle = 'italic';
-    el.style.fontWeight = '400';
-    el.style.fontSize = '0.72rem';
-    el.style.color = '#9ca3af';
-  });
+  function setView(v, btn) {
+    state.view = v;
+    sync();
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
 </script>
-
 </body>
 </html>
