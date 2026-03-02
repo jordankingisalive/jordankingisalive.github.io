@@ -185,9 +185,9 @@
       font-size: 1rem;
       font-weight: 700;
       color: var(--navy);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.3rem;
     }
-    .badges-row { display: flex; flex-wrap: wrap; gap: 0.28rem; }
+    .badges-row { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-bottom: 0.4rem; }
     .badge {
       display: inline-flex;
       align-items: center;
@@ -203,6 +203,31 @@
     .badge-del  { background: rgba(201,168,76,0.12);color: #92691c; border: 1px solid rgba(201,168,76,0.3); }
     .badge-best { background: linear-gradient(90deg,#c9a84c,#f0d080); color: #1a1a2e; border: none; font-weight: 700; }
 
+    /* Star rating */
+    .star-row {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .stars {
+      display: inline-flex;
+      gap: 1px;
+      font-size: 0.82rem;
+      line-height: 1;
+    }
+    .star-filled { color: #f59e0b; }
+    .star-half   { color: #f59e0b; position: relative; display: inline-block; }
+    .star-empty  { color: #d1d5db; }
+    .star-score {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .star-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
     .price-block { text-align: right; flex-shrink: 0; }
     .price-label { font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.1rem; }
     .price-value { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--navy); line-height: 1; }
@@ -212,9 +237,18 @@
     .card-parks {
       padding: 0.7rem 1.1rem;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem 0.5rem;
       border-bottom: 1px solid var(--border);
+    }
+    .parks-section-label {
+      grid-column: 1 / -1;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 0.1rem;
     }
     .park-name  { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; margin-bottom: 0.1rem; }
     .park-time  { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.05rem; }
@@ -240,6 +274,43 @@
     .room-desc small { display: block; color: var(--muted); font-size: 0.7rem; margin-top: 0.05rem; line-height: 1.4; }
     .room-price { font-weight: 600; color: var(--navy); font-size: 0.85rem; white-space: nowrap; }
     .room-na { color: var(--muted); font-style: italic; font-size: 0.78rem; }
+
+    /* AI Review Summary */
+    .card-review {
+      padding: 0.75rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .review-label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 0.45rem;
+    }
+    .review-label .ai-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: #4f46e5;
+      font-size: 0.6rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .review-text {
+      font-size: 0.8rem;
+      color: #374151;
+      line-height: 1.6;
+    }
 
     /* Book button */
     .card-book { padding: 0.75rem 1.1rem; }
@@ -323,6 +394,13 @@
           <span class="badge badge-sky">🚡 Skyliner</span>
           <span class="badge badge-val">Value</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span>
+          </div>
+          <span class="star-score">4.2</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -330,6 +408,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-gray">Bus only</div>
@@ -344,6 +423,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-amber">~10 min</div>
         <div class="park-method">Skyliner (transfer at CBR)</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -368,6 +452,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">Guests consistently praise Pop Century for delivering an authentic Disney experience at a fraction of the cost. The recently refreshed rooms earn high marks for cleanliness and updated décor, and the legendary food court is a frequent highlight. The large property size means longer walks to your room, but the Skyliner connection and unbeatable value keep it a top pick for budget-conscious families.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/pop-century-resort/" target="_blank" class="book-btn sky-btn">Book Pop Century <span class="arrow">→ disney.com</span></a>
     </div>
@@ -384,6 +472,13 @@
           <span class="badge badge-val">Value</span>
           <span class="badge badge-best">⭐ Best Pick</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span>
+          </div>
+          <span class="star-score">4.5</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -391,6 +486,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-gray">Bus only</div>
@@ -405,6 +501,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-amber">~10 min</div>
         <div class="park-method">Skyliner (transfer at CBR)</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -434,6 +535,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">Families with young children rave about the immersive theming — every hallway feels like walking through an animated film. The family suites are consistently called the "smartest room on Disney property" for giving parents a private bedroom without a connecting room lottery. The food court earns some of the best reviews on-property, and Skyliner access to EPCOT and Hollywood Studios is a real daily bonus.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/art-of-animation-resort/" target="_blank" class="book-btn sky-btn">Book Art of Animation <span class="arrow">→ disney.com</span></a>
     </div>
@@ -449,6 +554,13 @@
           <span class="badge badge-sky">🚡 Skyliner</span>
           <span class="badge badge-mod">Moderate</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span>
+          </div>
+          <span class="star-score">4.1</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -456,6 +568,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-gray">Bus only</div>
@@ -470,6 +583,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-green">~5 min</div>
         <div class="park-method">Skyliner (direct)</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -491,6 +609,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">Guests love the relaxed tropical atmosphere and the resort's role as the Skyliner hub — Hollywood Studios is practically a 5-minute gondola ride away, making it the best Hollywood Studios access of any resort on property. The most common complaint is the sprawling layout, where your room can be a long walk from the main building. Old Port Royale food court earns solid reviews for variety and value.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/caribbean-beach-resort/" target="_blank" class="book-btn sky-btn">Book Caribbean Beach <span class="arrow">→ disney.com</span></a>
     </div>
@@ -506,6 +628,13 @@
           <span class="badge badge-sky">🚡 Skyliner</span>
           <span class="badge badge-del">Deluxe Villa</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span>
+          </div>
+          <span class="star-score">4.4</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -513,6 +642,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-gray">Bus only</div>
@@ -527,6 +657,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-green">~8 min</div>
         <div class="park-method">Skyliner (transfer at CBR)</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -552,6 +687,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">The newest resort on property consistently earns praise for its sophisticated European theming and Topolino's Terrace, which guests call one of the best character dining experiences in Walt Disney World. The rooftop pool and refined atmosphere appeal strongly to adults. Skyliner access to both EPCOT and Hollywood Studios is among the fastest of any resort. Note: non-DVC resale buyers may have Skyliner use restricted to resort-only travel.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/riviera-resort/" target="_blank" class="book-btn sky-btn">Book Riviera Resort <span class="arrow">→ disney.com</span></a>
     </div>
@@ -567,6 +706,13 @@
           <span class="badge badge-mono">🚝 Monorail</span>
           <span class="badge badge-del">Deluxe</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span>
+          </div>
+          <span class="star-score">4.3</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -574,6 +720,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-green">~5 min</div>
@@ -588,6 +735,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-gray">Bus only</div>
         <div class="park-method">~25–35 min</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -609,6 +761,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">The iconic A-frame tower with the monorail running directly through the building delivers on the wow factor every time. Guests rave about walking to Magic Kingdom in under 15 minutes — especially valuable for dashing back during afternoon heat or catching fireworks from the room. Chef Mickey's character breakfast earns consistent five-star reviews for kids. The main hesitation: the premium price point relative to other Monorail resorts.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/contemporary-resort/" target="_blank" class="book-btn mono-btn">Book Contemporary <span class="arrow">→ disney.com</span></a>
     </div>
@@ -624,6 +780,13 @@
           <span class="badge badge-mono">🚝 Monorail</span>
           <span class="badge badge-del">Deluxe</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span>
+          </div>
+          <span class="star-score">4.6</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -631,6 +794,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-green">~5–10 min</div>
@@ -645,6 +809,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-gray">Bus only</div>
         <div class="park-method">~25–35 min</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -666,6 +835,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">Consistently ranked among the most beloved Disney resorts, and the reviews back it up. Guests describe the South Pacific theming as genuinely transporting, and the beachfront view of Magic Kingdom across Seven Seas Lagoon is called a trip highlight. Trader Sam's Grog Grotto earns a cult following of its own. The most repeated sentiment in reviews: once you stay here, it's hard to go anywhere else.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/polynesian-village-resort/" target="_blank" class="book-btn mono-btn">Book Polynesian Village <span class="arrow">→ disney.com</span></a>
     </div>
@@ -681,6 +854,13 @@
           <span class="badge badge-mono">🚝 Monorail</span>
           <span class="badge badge-del">Deluxe</span>
         </div>
+        <div class="star-row">
+          <div class="stars">
+            <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-half">★</span>
+          </div>
+          <span class="star-score">4.4</span>
+          <span class="star-count">· TripAdvisor / Google</span>
+        </div>
       </div>
       <div class="price-block">
         <div class="price-label">From / night</div>
@@ -688,6 +868,7 @@
       </div>
     </div>
     <div class="card-parks">
+      <div class="parks-section-label">Park travel times</div>
       <div class="park-item">
         <div class="park-name">Magic Kingdom</div>
         <div class="park-time t-green">~10 min</div>
@@ -702,6 +883,11 @@
         <div class="park-name">Hollywood Studios</div>
         <div class="park-time t-gray">Bus only</div>
         <div class="park-method">~25–35 min</div>
+      </div>
+      <div class="park-item">
+        <div class="park-name">Animal Kingdom</div>
+        <div class="park-time t-gray">Bus only</div>
+        <div class="park-method">~35–45 min</div>
       </div>
     </div>
     <div class="card-rooms">
@@ -723,6 +909,10 @@
         </div>
       </div>
     </div>
+    <div class="card-review">
+      <div class="review-label">Guest summary <span class="ai-chip">✦ AI</span></div>
+      <div class="review-text">Disney's flagship luxury resort earns high marks for Victorian elegance, immaculate grounds, and white-glove service that guests say sets it apart from every other resort on property. Victoria & Albert's is called one of the finest dining experiences in Florida. The Magic Kingdom fireworks view from the Seven Seas Lagoon beach is described as spectacular. A small number of guests find the formal atmosphere less relaxed than other Monorail resorts — but for a special occasion, reviewers say it's unmatched.</div>
+    </div>
     <div class="card-book">
       <a href="https://disneyworld.disney.go.com/resorts/grand-floridian-resort-and-spa/" target="_blank" class="book-btn mono-btn">Book Grand Floridian <span class="arrow">→ disney.com</span></a>
     </div>
@@ -735,7 +925,7 @@
   Rates are estimated rack rates for early November 2026 (Fall 2 price season) including ~12.5% tax.<br/>
   Prices vary by night — always verify at disneyworld.com before booking.<br/>
   Connecting rooms are requests only and never guaranteed unless noted.<br/>
-  Disney Reservations: (407) 939-1936
+  Disney Reservations: (407) 939-1936 · Review summaries generated by AI based on public guest reviews.
 </footer>
 
 <script>
