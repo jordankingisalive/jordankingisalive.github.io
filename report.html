@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Work Report | Jordan King — Jan–Apr 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --ms-blue: #0078D4;
+  --ms-blue-dk: #005A9E;
+  --ms-blue-dkr: #003966;
+  --ms-teal: #00B4D8;
+  --ms-purple: #7719AA;
+  --ms-green: #107C10;
+  --ms-amber: #FFB900;
+  --ms-red: #D13438;
+  --ms-orange: #CA5010;
+  --hero-start: #001a3d;
+  --hero-end: #003d80;
+  --bg: #f0f3f7;
+  --card: #ffffff;
+  --border: #dde3ec;
+  --text: #1a1f2e;
+  --muted: #6b7280;
+  --subtle: #f7f9fc;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0,26,61,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 40px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.nav-brand svg { flex-shrink: 0; }
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: #fff; }
+
+.nav-badge {
+  background: var(--ms-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #001228 0%, #002855 40%, #004a99 80%, #0064ba 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 80px 40px 72px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 900px 500px at 70% 40%, rgba(0,120,212,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 400px at 20% 80%, rgba(0,180,216,0.15) 0%, transparent 60%);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--ms-teal);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--ms-teal);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.hero h1 span {
+  background: linear-gradient(90deg, #00B4D8, #7CB9E8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  max-width: 560px;
+  margin-bottom: 48px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2px;
+  max-width: 900px;
+}
+
+.hero-stat {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 20px 24px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.hero-stat:hover { background: rgba(255,255,255,0.1); }
+
+.hero-stat:first-child { border-radius: 8px 4px 4px 8px; }
+.hero-stat:last-child { border-radius: 4px 8px 8px 4px; }
+
+.hero-stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-family: 'DM Mono', monospace;
+}
+
+.hero-stat-value sup {
+  font-size: 18px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+.hero-stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.hero-stat-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 2px;
+}
+
+/* ── CONTENT ── */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+
+.section { margin-bottom: 52px; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.section-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── KPI CARDS ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+
+.kpi-blue::before { background: var(--ms-blue); }
+.kpi-teal::before { background: var(--ms-teal); }
+.kpi-green::before { background: var(--ms-green); }
+.kpi-amber::before { background: var(--ms-amber); }
+.kpi-purple::before { background: var(--ms-purple); }
+.kpi-orange::before { background: var(--ms-orange); }
+
+.kpi-icon {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.kpi-value {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-family: 'DM Mono', monospace;
+}
+
+.kpi-blue .kpi-value { color: var(--ms-blue); }
+.kpi-teal .kpi-value { color: #0097b5; }
+.kpi-green .kpi-value { color: var(--ms-green); }
+.kpi-amber .kpi-value { color: #d4930a; }
+.kpi-purple .kpi-value { color: var(--ms-purple); }
+.kpi-orange .kpi-value { color: var(--ms-orange); }
+
+.kpi-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.kpi-change {
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* ── CHART CARDS ── */
+.chart-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+}
+
+.chart-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.chart-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.chart-container { position: relative; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  nav { padding: 0 20px; }
+  .hero { padding: 60px 20px; }
+  .content { padding: 32px 20px; }
+}
+
+/* ── PROJECT CARDS ── */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+}
+
+.project-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+}
+
+.project-header {
+  padding: 20px 22px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.project-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.project-date {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-family: 'DM Mono', monospace;
+}
+
+.project-hours {
+  background: var(--ms-blue);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+}
+
+.project-summary {
+  padding: 0 22px 16px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.project-tags {
+  padding: 0 22px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.tag-domain {
+  background: #fff3e0;
+  color: #ca5010;
+}
+
+.tag-tech {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.project-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--ms-blue), var(--ms-teal));
+}
+
+/* ── TIMELINE ── */
+.timeline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.timeline-row:last-child { border-bottom: none; }
+
+.timeline-label {
+  width: 220px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+.timeline-date {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+}
+
+.timeline-track {
+  flex: 1;
+  height: 28px;
+  background: var(--bg);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-bar {
+  position: absolute;
+  top: 4px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+
+.timeline-bar:hover { opacity: 0.85; }
+
+.timeline-hours {
+  width: 52px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ms-blue);
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+}
+
+/* ── ROI SECTION ── */
+.roi-card {
+  background: linear-gradient(135deg, #001a3d 0%, #003870 100%);
+  border-radius: 16px;
+  padding: 40px;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+}
+
+.roi-headline {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.roi-headline span {
+  color: var(--ms-teal);
+}
+
+.roi-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  max-width: 480px;
+}
+
+.roi-number {
+  text-align: center;
+}
+
+.roi-multiplier {
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--ms-teal);
+  font-family: 'DM Mono', monospace;
+}
+
+.roi-multiplier-label {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.roi-breakdown {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.roi-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.roi-item-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+}
+
+.roi-item-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+@media (max-width: 700px) {
+  .roi-card { grid-template-columns: 1fr; }
+  .roi-breakdown { flex-wrap: wrap; gap: 16px; }
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #001228;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 28px 40px;
+  font-size: 12px;
+}
+
+footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+footer a:hover { color: #fff; }
+
+/* ── SCROLL ANIMATIONS ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── LEGEND DOT ── */
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.legend-row:last-child { border-bottom: none; }
+
+.legend-name { flex: 1; font-weight: 500; }
+.legend-hours { font-weight: 700; color: var(--ms-blue); font-family: 'DM Mono', monospace; width: 52px; text-align: right; }
+.legend-pct { color: var(--muted); width: 44px; text-align: right; font-size: 12px; }
+
+/* ── COLLAB LEGEND ── */
+.collab-legend { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="2" width="9" height="9" fill="#F25022"/>
+      <rect x="13" y="2" width="9" height="9" fill="#7FBA00"/>
+      <rect x="2" y="13" width="9" height="9" fill="#00A4EF"/>
+      <rect x="13" y="13" width="9" height="9" fill="#FFB900"/>
+    </svg>
+    Jordan King · AI Work Report
+  </div>
+  <ul class="nav-links">
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#roi">ROI</a></li>
+  </ul>
+  <span class="nav-badge">Jan–Apr 2026</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Claude AI · Augmented Work Analytics</div>
+    <h1>What I Built<br>with <span>AI Collaboration</span></h1>
+    <p class="hero-sub">
+      A data-driven retrospective of 65 days of AI-augmented productivity across
+      the M365 Analytics program — Jan 28 through Apr 2, 2026.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="152" data-suffix="h">0h</div>
+        <div class="hero-stat-label">Human Hours Equivalent</div>
+        <div class="hero-stat-sub">Professional services value</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="16">0</div>
+        <div class="hero-stat-label">Goals Delivered</div>
+        <div class="hero-stat-sub">Across 6 workstreams</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="193">0</div>
+        <div class="hero-stat-label">Tasks Completed</div>
+        <div class="hero-stat-sub">Avg 12 per goal</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="21">0</div>
+        <div class="hero-stat-label">Active Days</div>
+        <div class="hero-stat-sub">Of 65 calendar days</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="452" data-suffix="M">0M</div>
+        <div class="hero-stat-label">Tokens Processed</div>
+        <div class="hero-stat-sub">AI context consumed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" data-count="192" data-suffix="×">0×</div>
+        <div class="hero-stat-label">Return on Subscription</div>
+        <div class="hero-stat-sub">vs $57 seat cost</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- KPI CARDS -->
+  <section class="section fade-in" id="impact">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f2fb">📊</div>
+      <div>
+        <div class="section-title">Impact at a Glance</div>
+        <div class="section-desc">Core productivity metrics for the reporting period</div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-value">152h</div>
+        <div class="kpi-label">Senior-dev equivalent hours</div>
+        <div class="kpi-change" style="color:var(--ms-green)">↑ At $72/hr = $10,944 value</div>
+      </div>
+      <div class="kpi-card kpi-teal">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-value">16</div>
+        <div class="kpi-label">Major goals shipped</div>
+        <div class="kpi-change" style="color:var(--ms-green)">↑ 193 discrete tasks</div>
+      </div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-icon">📁</div>
+        <div class="kpi-value">25</div>
+        <div class="kpi-label">Projects in scope</div>
+        <div class="kpi-change" style="color:var(--muted)">Across 6 product areas</div>
+      </div>
+      <div class="kpi-card kpi-amber">
+        <div class="kpi-icon">💻</div>
+        <div class="kpi-value">3,689</div>
+        <div class="kpi-label">Lines of code added</div>
+        <div class="kpi-change" style="color:var(--muted)">Python, JS, HTML, DAX, M</div>
+      </div>
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-icon">🧠</div>
+        <div class="kpi-value">9</div>
+        <div class="kpi-label">Professional roles augmented</div>
+        <div class="kpi-change" style="color:var(--muted)">From SWE to Consultant</div>
+      </div>
+      <div class="kpi-card kpi-orange">
+        <div class="kpi-icon">🚀</div>
+        <div class="kpi-value">$57</div>
+        <div class="kpi-label">Total subscription cost</div>
+        <div class="kpi-change" style="color:var(--ms-green)">↑ 192× return delivered</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS + SKILLS ROW -->
+  <section class="section fade-in" id="projects">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f5e9">🏗️</div>
+      <div>
+        <div class="section-title">Effort by Project</div>
+        <div class="section-desc">Human-equivalent hours invested per deliverable</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-container" style="height:380px">
+        <canvas id="projectChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS + COLLAB -->
+  <div class="two-col fade-in" id="skills">
+    <div class="chart-card">
+      <div class="chart-title">Skills Mobilized</div>
+      <div class="chart-subtitle">Professional role hours augmented by AI</div>
+      <div id="skillLegend"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Collaboration Pattern</div>
+      <div class="chart-subtitle">How work was approached across all sessions</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center">
+        <div class="chart-container" style="height:220px">
+          <canvas id="collabChart"></canvas>
+        </div>
+        <div class="collab-legend" id="collabLegend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <section class="section fade-in" id="timeline" style="margin-top:52px">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fce4ec">📅</div>
+      <div>
+        <div class="section-title">Work Timeline</div>
+        <div class="section-desc">Project Gantt — 65 days, Jan 28 → Apr 2, 2026</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div id="timelineContainer"></div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY HEATMAP -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fff3e0">🔥</div>
+      <div>
+        <div class="section-title">Activity Calendar</div>
+        <div class="section-desc">Session intensity across the reporting period</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-container" style="height:200px">
+        <canvas id="activityChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background:#ede7f6">⚙️</div>
+      <div>
+        <div class="section-title">Technology Stack</div>
+        <div class="section-desc">Languages and tools used across all work</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Languages & Frameworks</div>
+        <div class="chart-subtitle">Task frequency by technology</div>
+        <div class="chart-container" style="height:260px">
+          <canvas id="techChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Work Type Distribution</div>
+        <div class="chart-subtitle">How effort was categorized by task type</div>
+        <div class="chart-container" style="height:260px">
+          <canvas id="taskTypeChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT SHOWCASE CARDS -->
+  <section class="section fade-in">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e3f2fd">📦</div>
+      <div>
+        <div class="section-title">Project Highlights</div>
+        <div class="section-desc">Major deliverables produced during the period</div>
+      </div>
+    </div>
+    <div class="project-grid" id="projectCards"></div>
+  </section>
+
+  <!-- ROI -->
+  <section class="section fade-in" id="roi">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f5e9">💰</div>
+      <div>
+        <div class="section-title">Return on Investment</div>
+        <div class="section-desc">Value delivered relative to subscription cost</div>
+      </div>
+    </div>
+    <div class="roi-card">
+      <div>
+        <div class="roi-headline">
+          $10,944 in professional services<br>
+          delivered for <span>$57</span>
+        </div>
+        <p class="roi-sub">
+          152 human-equivalent hours at a blended $72/hr professional services rate,
+          delivered through a $19/month Claude subscription over 3 months.
+          This is the team AI assembled on demand — at zero headcount cost.
+        </p>
+        <div class="roi-breakdown">
+          <div class="roi-item">
+            <div class="roi-item-value">$10,944</div>
+            <div class="roi-item-label">Services value</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-item-value">$57</div>
+            <div class="roi-item-label">Subscription cost</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-item-value">$72/hr</div>
+            <div class="roi-item-label">Blended rate</div>
+          </div>
+          <div class="roi-item">
+            <div class="roi-item-value">452M</div>
+            <div class="roi-item-label">Tokens processed</div>
+          </div>
+        </div>
+      </div>
+      <div class="roi-number">
+        <div class="roi-multiplier">192×</div>
+        <div class="roi-multiplier-label">ROI</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>Jordan King · Microsoft M365 Analytics · AI Work Report · Jan 28 – Apr 2, 2026</p>
+  <p style="margin-top:6px">Generated with <a href="https://github.com/shailendrahegde/What-I-Did-Claude">What I Did</a> · Powered by Claude AI · <a href="https://jordankingisalive.github.io">jordankingisalive.github.io</a></p>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const PROJECTS = [
+  { name: "Export Framework Brief", label: "Export\nFramework Brief", hours: 27.8, date: "Mar 12–19", color: "#0078D4",
+    summary: "17-page landscape PDF with schema specs, executive brief, stakeholder-ready email templates and complete field-level coverage documentation.",
+    tags: ["Technical Writing","Data Analysis","Python","PDF/ReportLab"] },
+  { name: "M365 Dashboard Audit & Cleanup", label: "M365 Dashboard\nAudit", hours: 20.5, date: "Mar 4–6", color: "#005A9E",
+    summary: "Comprehensive semantic model cleanup — removed 59 unused DAX measures, 8 tables, fixed V1 measure bugs, parameterized data source paths.",
+    tags: ["System Architecture","DAX/TMDL","Power BI","Data Engineering"] },
+  { name: "ChatIntel / AI-in-One ROI", label: "ChatIntel\nROI Redesign", hours: 21.5, date: "Mar 16–17", color: "#00B4D8",
+    summary: "Migrated AI-in-One measures into ChatIntel, fixed blank ROI visuals, redesigned Opportunity Cost page, implemented multi-currency support.",
+    tags: ["Solutions Architect","DAX/TMDL","Power BI","UX Design"] },
+  { name: "TrapperKeeper Client System", label: "TrapperKeeper\nClient System", hours: 18.8, date: "Mar 2–3", color: "#7719AA",
+    summary: "Full-stack client management app with KYC integration, AI-powered note analysis via Anthropic API, dark glassmorphism UI, phrase analytics.",
+    tags: ["Software Engineer","JavaScript","Node.js","API Integration"] },
+  { name: "PBIP Template Split", label: "PBIP Template\nSplit", hours: 20.5, date: "Mar 4–6", color: "#CA5010",
+    summary: "Automated Python tooling to split Super User Adoption PBIP into 4 template variants (CSV/DQ × Adoption/Impact), fixed DAX type errors.",
+    tags: ["System Architecture","Python","Power BI","DevOps"] },
+  { name: "Agent365 Reference Library", label: "Agent365\nDocs", hours: 6.5, date: "Mar 24", color: "#107C10",
+    summary: "Synthesized Microsoft Agent365 developer documentation, analyzed Python SDK and Samples repositories, created comprehensive technical reference.",
+    tags: ["Technical Research","Documentation","Python","System Architecture"] },
+  { name: "M365 Interpretation Guide", label: "M365 Usage\nGuide", hours: 5.5, date: "Mar 6", color: "#FFB900",
+    summary: "13-slide PPTX interpretation guide built from template design specs using Python-pptx, with full visual QA pass.",
+    tags: ["Technical Writing","UX Design","Python","PPTX"] },
+  { name: "Power BI PBIP Error Fixes", label: "PBIP Error\nFixes", hours: 5.5, date: "Mar 31", color: "#D13438",
+    summary: "Diagnosed and resolved TMDL measure syntax errors across 9 reports, fixed Viva Insights DirectQuery failures, restored scatterplot bookmarks.",
+    tags: ["Debugging","Power BI","Python","Bash/Shell"] },
+  { name: "M365 Data Transfer & Docs", label: "M365 Data\nTransfer", hours: 9.2, date: "Feb 25–26", color: "#004a99",
+    summary: "Cross-referenced field outputs vs TMDL measures, applied semantic validation, resolved naming mismatches, created comprehensive handoff docs.",
+    tags: ["Data Engineering","Python","SQL","Technical Writing"] },
+  { name: "Analytics-Hub Launch Page", label: "Analytics-Hub\nREADME", hours: 3.5, date: "Mar 5", color: "#00B4D8",
+    summary: "GitHub landing page with repository cards, team roster, case studies, and team announcement — shipped to public.",
+    tags: ["Technical Writing","HTML/CSS","Product Management","Stakeholder Comms"] },
+  { name: "Bookmark Versioning Fixes", label: "Bookmark\nFixes", hours: 3.5, date: "Mar 30", color: "#6B7280",
+    summary: "Diagnosed Power BI bookmark schema incompatibility in AI_In_One, reverted versions, resolved Last Updated column issue in Agents export.",
+    tags: ["Debugging","Power BI","Bash/Shell","Technical Research"] },
+  { name: "Demo Data / Merz Anonymization", label: "Demo Data\nEnvironment", hours: 2.8, date: "Mar 5", color: "#107C10",
+    summary: "Anonymized Merz project data, rebranded to Microsoft palette, deployed Demo Data environment to GitHub.",
+    tags: ["Data Engineering","HTML/CSS","JavaScript","DevOps"] },
+];
+
+const SKILLS = [
+  { role: "Software Engineer",     hours: 48, color: "#0078D4" },
+  { role: "Solutions Architect",   hours: 22, color: "#005A9E" },
+  { role: "Technical Writer",      hours: 18, color: "#00B4D8" },
+  { role: "Data Analyst",          hours: 16, color: "#7719AA" },
+  { role: "UX Designer",           hours: 14, color: "#CA5010" },
+  { role: "Data Engineer",         hours: 12, color: "#107C10" },
+  { role: "Product Manager",       hours: 10, color: "#FFB900" },
+  { role: "Research Scientist",    hours: 7,  color: "#D13438" },
+  { role: "DevOps Engineer",       hours: 5,  color: "#6B7280" },
+];
+
+const COLLAB = [
+  { label: "Building",      pct: 38, color: "#0078D4" },
+  { label: "Investigating", pct: 19, color: "#CA5010" },
+  { label: "Iterating",     pct: 16, color: "#7719AA" },
+  { label: "Researching",   pct: 13, color: "#107C10" },
+  { label: "Designing",     pct: 9,  color: "#00B4D8" },
+  { label: "Shipping",      pct: 5,  color: "#D13438" },
+];
+
+const ACTIVITY = [
+  { date: "Feb 25", sessions: 1, tokens: 20 },
+  { date: "Feb 26", sessions: 1, tokens: 2 },
+  { date: "Mar 2",  sessions: 2, tokens: 4 },
+  { date: "Mar 3",  sessions: 2, tokens: 20 },
+  { date: "Mar 4",  sessions: 11, tokens: 77 },
+  { date: "Mar 5",  sessions: 5, tokens: 55 },
+  { date: "Mar 6",  sessions: 4, tokens: 42 },
+  { date: "Mar 9",  sessions: 1, tokens: 0 },
+  { date: "Mar 12", sessions: 3, tokens: 28 },
+  { date: "Mar 16", sessions: 3, tokens: 50 },
+  { date: "Mar 17", sessions: 3, tokens: 19 },
+  { date: "Mar 19", sessions: 3, tokens: 7 },
+  { date: "Mar 23", sessions: 4, tokens: 42 },
+  { date: "Mar 24", sessions: 1, tokens: 2 },
+  { date: "Mar 25", sessions: 1, tokens: 0 },
+  { date: "Mar 26", sessions: 2, tokens: 7 },
+  { date: "Mar 27", sessions: 2, tokens: 5 },
+  { date: "Mar 30", sessions: 5, tokens: 24 },
+  { date: "Mar 31", sessions: 3, tokens: 44 },
+  { date: "Apr 1",  sessions: 3, tokens: 2 },
+  { date: "Apr 2",  sessions: 1, tokens: 1 },
+];
+
+const TECH = [
+  { name: "Python",      count: 72, color: "#0078D4" },
+  { name: "Bash/Shell",  count: 58, color: "#005A9E" },
+  { name: "DAX / TMDL", count: 41, color: "#7719AA" },
+  { name: "HTML/CSS",    count: 28, color: "#CA5010" },
+  { name: "JavaScript",  count: 22, color: "#107C10" },
+  { name: "Markdown",    count: 18, color: "#FFB900" },
+  { name: "JSON",        count: 15, color: "#00B4D8" },
+  { name: "SQL / M Code", count: 14, color: "#D13438" },
+];
+
+const TASK_TYPES = [
+  { type: "Development",          count: 68, color: "#0078D4" },
+  { type: "Analysis & Research",  count: 52, color: "#7719AA" },
+  { type: "Execution & Ops",      count: 38, color: "#107C10" },
+  { type: "Bug Fix & Debug",      count: 24, color: "#D13438" },
+  { type: "Design & UX",         count: 11, color: "#CA5010" },
+];
+
+// Timeline: start day = Jan 28 = day 0, end = Apr 2 = day 64
+const TOTAL_DAYS = 65;
+function dayOffset(dateStr) {
+  const d = new Date(dateStr + " 2026");
+  const start = new Date("Jan 28 2026");
+  return Math.round((d - start) / 86400000);
+}
+
+const TIMELINE_PROJECTS = [
+  { name: "M365 Data Transfer", start: "Feb 25", end: "Feb 26", hours: 9.2, color: "#004a99" },
+  { name: "TrapperKeeper System", start: "Mar 2", end: "Mar 3", hours: 18.8, color: "#7719AA" },
+  { name: "M365 Dashboard Audit", start: "Mar 4", end: "Mar 6", hours: 20.5, color: "#005A9E" },
+  { name: "PBIP Template Split", start: "Mar 4", end: "Mar 6", hours: 20.5, color: "#CA5010" },
+  { name: "Analytics-Hub Launch", start: "Mar 5", end: "Mar 5", hours: 3.5, color: "#00B4D8" },
+  { name: "M365 Interpretation Guide", start: "Mar 6", end: "Mar 6", hours: 5.5, color: "#FFB900" },
+  { name: "Export Framework Brief", start: "Mar 12", end: "Mar 19", hours: 27.8, color: "#0078D4" },
+  { name: "ChatIntel ROI Redesign", start: "Mar 16", end: "Mar 17", hours: 21.5, color: "#00B4D8" },
+  { name: "Agent365 Reference Docs", start: "Mar 24", end: "Mar 24", hours: 6.5, color: "#107C10" },
+  { name: "Bookmark Versioning Fixes", start: "Mar 30", end: "Mar 30", hours: 3.5, color: "#6B7280" },
+  { name: "mycopilotworks Docs", start: "Mar 30", end: "Mar 30", hours: 2.2, color: "#107C10" },
+  { name: "PBIP Error Fixes", start: "Mar 31", end: "Mar 31", hours: 5.5, color: "#D13438" },
+  { name: "What I Did Analytics", start: "Apr 2", end: "Apr 2", hours: 2.8, color: "#0078D4" },
+];
+
+
+// ── COUNTER ANIMATION ────────────────────────────────────────────────────────
+function animateCounter(el) {
+  const target = parseInt(el.dataset.count);
+  const suffix = el.dataset.suffix || "";
+  const duration = 1200;
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const val = Math.round(target * eased);
+    el.textContent = val + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+document.querySelectorAll('[data-count]').forEach(el => {
+  setTimeout(() => animateCounter(el), 400);
+});
+
+
+// ── PROJECT BAR CHART ────────────────────────────────────────────────────────
+const projectsSorted = [...PROJECTS].sort((a, b) => b.hours - a.hours);
+
+new Chart(document.getElementById('projectChart'), {
+  type: 'bar',
+  data: {
+    labels: projectsSorted.map(p => p.name),
+    datasets: [{
+      data: projectsSorted.map(p => p.hours),
+      backgroundColor: projectsSorted.map(p => p.color),
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw}h human-equivalent`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: { font: { family: "'DM Mono'", size: 12 }, color: '#6b7280' },
+        title: { display: true, text: 'Human-Equivalent Hours', font: { size: 12 }, color: '#6b7280' }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { family: "'Outfit'", size: 13, weight: '600' }, color: '#1a1f2e' }
+      }
+    }
+  }
+});
+
+
+// ── SKILLS LEGEND ────────────────────────────────────────────────────────────
+const totalSkillHours = SKILLS.reduce((s, r) => s + r.hours, 0);
+const skillsEl = document.getElementById('skillLegend');
+SKILLS.forEach(s => {
+  const pct = ((s.hours / totalSkillHours) * 100).toFixed(1);
+  skillsEl.innerHTML += `
+    <div class="legend-row">
+      <span class="legend-dot" style="background:${s.color}"></span>
+      <span class="legend-name">${s.role}</span>
+      <span class="legend-hours">${s.hours}h</span>
+      <span class="legend-pct">${pct}%</span>
+    </div>
+    <div style="height:6px;background:#f0f3f7;border-radius:3px;margin:4px 0 8px 16px">
+      <div style="height:6px;width:${pct}%;background:${s.color};border-radius:3px;transition:width 1s ease"></div>
+    </div>
+  `;
+});
+
+
+// ── COLLAB CHART ─────────────────────────────────────────────────────────────
+new Chart(document.getElementById('collabChart'), {
+  type: 'doughnut',
+  data: {
+    labels: COLLAB.map(c => c.label),
+    datasets: [{
+      data: COLLAB.map(c => c.pct),
+      backgroundColor: COLLAB.map(c => c.color),
+      borderWidth: 2,
+      borderColor: '#fff',
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}%` }
+      }
+    }
+  }
+});
+
+const collabLegendEl = document.getElementById('collabLegend');
+COLLAB.forEach(c => {
+  collabLegendEl.innerHTML += `
+    <div style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px">
+      <span class="legend-dot" style="background:${c.color}"></span>
+      <span style="flex:1;font-weight:500">${c.label}</span>
+      <span style="font-weight:700;color:${c.color};font-family:'DM Mono',monospace">${c.pct}%</span>
+    </div>
+  `;
+});
+
+
+// ── ACTIVITY CHART ───────────────────────────────────────────────────────────
+new Chart(document.getElementById('activityChart'), {
+  type: 'bar',
+  data: {
+    labels: ACTIVITY.map(a => a.date),
+    datasets: [
+      {
+        label: 'Tokens (M)',
+        data: ACTIVITY.map(a => a.tokens),
+        backgroundColor: ACTIVITY.map(a =>
+          a.tokens > 50 ? '#0078D4' :
+          a.tokens > 20 ? '#5BA8E5' :
+          a.tokens > 5  ? '#92C8F2' : '#C5E1FA'
+        ),
+        borderRadius: 4,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Sessions',
+        data: ACTIVITY.map(a => a.sessions),
+        type: 'line',
+        borderColor: '#FFB900',
+        backgroundColor: 'rgba(255,185,0,0.1)',
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: '#FFB900',
+        tension: 0.3,
+        yAxisID: 'y2',
+        fill: true,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { family: "'Outfit'" }, boxWidth: 12, padding: 16 } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#6b7280' } },
+      y: {
+        position: 'left',
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        title: { display: true, text: 'Tokens (millions)', font: { size: 11 }, color: '#6b7280' },
+        ticks: { font: { family: "'DM Mono'", size: 11 }, color: '#6b7280' }
+      },
+      y2: {
+        position: 'right',
+        grid: { display: false },
+        title: { display: true, text: 'Sessions', font: { size: 11 }, color: '#6b7280' },
+        ticks: { font: { size: 11 }, color: '#FFB900' }
+      }
+    }
+  }
+});
+
+
+// ── TECH CHART ───────────────────────────────────────────────────────────────
+new Chart(document.getElementById('techChart'), {
+  type: 'bar',
+  data: {
+    labels: TECH.map(t => t.name),
+    datasets: [{
+      data: TECH.map(t => t.count),
+      backgroundColor: TECH.map(t => t.color),
+      borderRadius: 5,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.raw} task references` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 }, color: '#6b7280' } },
+      y: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: '#1a1f2e' } }
+    }
+  }
+});
+
+
+// ── TASK TYPE CHART ───────────────────────────────────────────────────────────
+new Chart(document.getElementById('taskTypeChart'), {
+  type: 'doughnut',
+  data: {
+    labels: TASK_TYPES.map(t => t.type),
+    datasets: [{
+      data: TASK_TYPES.map(t => t.count),
+      backgroundColor: TASK_TYPES.map(t => t.color),
+      borderWidth: 2,
+      borderColor: '#fff',
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: { family: "'Outfit'", size: 12 }, boxWidth: 12, padding: 12 }
+      },
+      tooltip: {
+        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} tasks` }
+      }
+    }
+  }
+});
+
+
+// ── TIMELINE ─────────────────────────────────────────────────────────────────
+const tc = document.getElementById('timelineContainer');
+const dateLabels = ['Jan 28', 'Feb 14', 'Mar 1', 'Mar 15', 'Apr 1'];
+const datePcts   = [0, 27/65*100, 32/65*100, 46/65*100, 64/65*100];
+
+// Date label row
+let labelHtml = `<div style="display:flex;gap:12px;padding:0 0 8px 0;margin-bottom:4px">
+  <div style="width:220px;flex-shrink:0"></div>
+  <div style="flex:1;position:relative;height:18px">`;
+dateLabels.forEach((l, i) => {
+  labelHtml += `<span style="position:absolute;left:${datePcts[i]}%;transform:translateX(-50%);font-size:11px;color:#6b7280;font-family:'DM Mono',monospace;white-space:nowrap">${l}</span>`;
+});
+labelHtml += `</div><div style="width:52px;flex-shrink:0"></div></div>`;
+tc.innerHTML = labelHtml;
+
+TIMELINE_PROJECTS.forEach(p => {
+  const startPct = dayOffset(p.start) / TOTAL_DAYS * 100;
+  const endPct   = (dayOffset(p.end) + 1) / TOTAL_DAYS * 100;
+  const widthPct = Math.max(endPct - startPct, 1.5);
+
+  tc.innerHTML += `
+    <div class="timeline-row">
+      <div class="timeline-label">
+        ${p.name}
+        <div class="timeline-date">${p.start}${p.start !== p.end ? ' → ' + p.end : ''}</div>
+      </div>
+      <div class="timeline-track">
+        <div class="timeline-bar" style="left:${startPct}%;width:${widthPct}%;background:${p.color}" title="${p.name}: ${p.hours}h">
+          ${widthPct > 6 ? p.hours + 'h' : ''}
+        </div>
+      </div>
+      <div class="timeline-hours">${p.hours}h</div>
+    </div>
+  `;
+});
+
+
+// ── PROJECT CARDS ─────────────────────────────────────────────────────────────
+const cardsEl = document.getElementById('projectCards');
+PROJECTS.forEach(p => {
+  cardsEl.innerHTML += `
+    <div class="project-card">
+      <div class="project-bar" style="background:linear-gradient(90deg,${p.color},${p.color}99)"></div>
+      <div class="project-header">
+        <div>
+          <div class="project-name">${p.name}</div>
+          <div class="project-date">${p.date}</div>
+        </div>
+        <div class="project-hours">${p.hours}h</div>
+      </div>
+      <div class="project-summary">${p.summary}</div>
+      <div class="project-tags">
+        ${p.tags.map((t, i) => `<span class="tag ${i < 2 ? 'tag-domain' : 'tag-tech'}">${t}</span>`).join('')}
+      </div>
+    </div>
+  `;
+});
+
+
+// ── SCROLL FADE-IN ────────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
