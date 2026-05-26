@@ -738,13 +738,6 @@
             </div>
         </header>
 
-        <!-- ─── Quick-start cookbook (Tier 1 #1) ─── -->
-        <section class="panel" id="section-cookbook">
-            <h2>Quick-start cookbook <a class="anchor" href="#section-cookbook">#</a></h2>
-            <p class="panel-blurb">Drop-in queries against the PAX flat output. Click a tab to switch language. Every recipe assumes you've already run the hygiene recipe first (dedupe + drop service principals).</p>
-            <div id="cookbook-list"></div>
-        </section>
-
         <!-- ─── Script generator (Tier 3 #12) ─── -->
         <section class="panel generator" id="section-generator">
             <h2>Script starter generator <a class="anchor" href="#section-generator">#</a></h2>
@@ -1502,36 +1495,6 @@
             syncThemeBtn();
         });
 
-        // ── Cookbook rendering (with tabs) ──
-        const langs = ['KQL','T-SQL','SPL','Pandas'];
-        const cbList = document.getElementById('cookbook-list');
-        extras.cookbook.forEach(rec => {
-            const det = document.createElement('details');
-            det.className = 'collapsible';
-            det.id = 'cookbook-' + rec.key;
-            det.innerHTML = `<summary>${esc(rec.title)} <span class="blurb">${esc(rec.blurb)}</span></summary>
-              <div class="content">
-                <div class="tabs" role="tablist"></div>
-                <div class="snippet-wrap"><pre class="snippet"></pre><button class="copy-snippet">Copy</button></div>
-              </div>`;
-            const tabsEl = det.querySelector('.tabs');
-            const preEl  = det.querySelector('pre.snippet');
-            const copyEl = det.querySelector('.copy-snippet');
-            langs.forEach((l, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'tab' + (i === 0 ? ' active' : '');
-                btn.textContent = l; btn.type = 'button';
-                btn.addEventListener('click', () => {
-                    tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    btn.classList.add('active');
-                    preEl.textContent = rec.snippets[l] || '(not provided)';
-                });
-                tabsEl.appendChild(btn);
-            });
-            preEl.textContent = rec.snippets[langs[0]] || '';
-            copyEl.addEventListener('click', () => copyText(preEl.textContent, 'Snippet copied'));
-            cbList.appendChild(det);
-        });
 
         // ── Scenarios cheat sheet ──
         const scGrid = document.getElementById('scenario-grid');
