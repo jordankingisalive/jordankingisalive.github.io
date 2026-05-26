@@ -1,0 +1,276 @@
+{
+  "$schema_description": "PAX v1.11.2 — mapping of raw Purview Unified Audit Log JSON (the 'AuditData' column and the CSV record envelope) to the 153-column flattened output produced by the embedded rollup processor (Path A: non-Copilot M365; Path B: Copilot explosion). One row = one output column. Source paths are dotted JSON paths rooted at either 'record' (CSV envelope returned by the Graph audit query) or 'AuditData' (the JSON blob inside each record). 'CED' = AuditData.CopilotEventData.",
+  "$source_script": "PAX/PAX_Purview_Audit_Log_Processor_v1.11.2.ps1",
+  "$generated_for": "AI-in-One Dashboard - Rollup Edition / customer wire-format reference",
+  "$conventions": {
+    "fallback_chain": "Listed left-to-right. First non-null wins.",
+    "array_explosion": "Copilot records explode to N rows where N = max(len(Messages), len(Contexts), len(AccessedResources), len(AISystemPlugin), len(ModelTransparencyDetails), len(SensitivityLabels), contextItemsMax). Per-row index 'i' picks the i-th element of each array.",
+    "non_copilot": "Non-Copilot records produce exactly 1 row; all CED.* columns are empty.",
+    "empty_value": "Missing/null becomes empty string ('').",
+    "json_subobject": "When source value is an object/array and target is scalar, it is serialized as compact JSON."
+  },
+
+  "csv_envelope": [
+    { "column": "RecordId",                         "source": "record.RecordId || record.Identity || record.Id || AuditData.Id",                                  "transform": "first non-null" },
+    { "column": "CreationDate",                     "source": "record.CreationDate",                                                                                "transform": "verbatim string" },
+    { "column": "RecordType",                       "source": "record.RecordType",                                                                                  "transform": "verbatim" },
+    { "column": "RecordTypeNum",                    "source": "record.RecordType",                                                                                  "transform": "int(); empty on parse failure" }
+  ],
+
+  "audit_data_root": [
+    { "column": "Operation",                        "source": "AuditData.Operation || record.Operation || record.Operations" },
+    { "column": "UserId",                           "source": "AuditData.UserId || record.UserId || record.UserIds" },
+    { "column": "AssociatedAdminUnits",             "source": "record.AssociatedAdminUnits || AuditData.AssociatedAdminUnits" },
+    { "column": "AssociatedAdminUnitsNames",        "source": "record.AssociatedAdminUnitsNames || AuditData.AssociatedAdminUnitsNames" },
+    { "column": "@odata.type",                      "source": "AuditData.@odata.type" },
+    { "column": "CreationTime",                     "source": "AuditData.CreationTime",                                                                             "transform": "format_date_purview() — ISO 8601 normalized" },
+    { "column": "Id",                               "source": "AuditData.Id" },
+    { "column": "OrganizationId",                   "source": "AuditData.OrganizationId" },
+    { "column": "ResultStatus",                     "source": "AuditData.ResultStatus" },
+    { "column": "ResultStatus_Audit",               "source": "AuditData.ResultStatus",                                                                             "transform": "alias of ResultStatus" },
+    { "column": "UserKey",                          "source": "AuditData.UserKey" },
+    { "column": "UserType",                         "source": "AuditData.UserType" },
+    { "column": "Version",                          "source": "AuditData.Version" },
+    { "column": "Workload",                         "source": "AuditData.Workload" },
+    { "column": "ClientIP",                         "source": "AuditData.ClientIP" },
+    { "column": "ObjectId",                         "source": "AuditData.ObjectId" },
+    { "column": "AzureActiveDirectoryEventType",    "source": "AuditData.AzureActiveDirectoryEventType" },
+    { "column": "ActorContextId",                   "source": "AuditData.ActorContextId" },
+    { "column": "ActorIpAddress",                   "source": "AuditData.ActorIpAddress" },
+    { "column": "InterSystemsId",                   "source": "AuditData.InterSystemsId" },
+    { "column": "IntraSystemId",                    "source": "AuditData.IntraSystemId" },
+    { "column": "SupportTicketId",                  "source": "AuditData.SupportTicketId" },
+    { "column": "TargetContextId",                  "source": "AuditData.TargetContextId" },
+    { "column": "ApplicationId",                    "source": "AuditData.ApplicationId || AuditData.AppId || AuditData.ClientAppId",                                "transform": "first non-null" },
+    { "column": "ErrorNumber",                      "source": "AuditData.ErrorNumber" }
+  ],
+
+  "device_properties_nv_pivot": {
+    "$note": "AuditData.DeviceProperties is an array of {Name, Value} pairs. M-code GetNVProp pivots only OS and BrowserType — others are dropped.",
+    "mappings": [
+      { "column": "DeviceProperties.OS",          "source": "AuditData.DeviceProperties[?Name=='OS'].Value" },
+      { "column": "DeviceProperties.BrowserType", "source": "AuditData.DeviceProperties[?Name=='BrowserType'].Value" }
+    ]
+  },
+
+  "sharepoint_onedrive_office": [
+    { "column": "SiteUrl",                       "source": "AuditData.SiteUrl" },
+    { "column": "SourceRelativeUrl",             "source": "AuditData.SourceRelativeUrl" },
+    { "column": "SourceFileName",                "source": "AuditData.SourceFileName" },
+    { "column": "SourceFileExtension",           "source": "AuditData.SourceFileExtension" },
+    { "column": "ListId",                        "source": "AuditData.ListId" },
+    { "column": "ListItemUniqueId",              "source": "AuditData.ListItemUniqueId" },
+    { "column": "WebId",                         "source": "AuditData.WebId" },
+    { "column": "ApplicationDisplayName",        "source": "AuditData.ApplicationDisplayName" },
+    { "column": "EventSource",                   "source": "AuditData.EventSource" },
+    { "column": "ItemType",                      "source": "AuditData.ItemType" },
+    { "column": "SiteSensitivityLabelId",        "source": "AuditData.SiteSensitivityLabelId" },
+    { "column": "GeoLocation",                   "source": "AuditData.GeoLocation" },
+    { "column": "IsManagedDevice",               "source": "AuditData.IsManagedDevice" },
+    { "column": "DeviceDisplayName",             "source": "AuditData.DeviceDisplayName" },
+    { "column": "ListBaseType",                  "source": "AuditData.ListBaseType" },
+    { "column": "ListServerTemplate",            "source": "AuditData.ListServerTemplate" },
+    { "column": "AuthenticationType",            "source": "AuditData.AuthenticationType" },
+    { "column": "Site",                          "source": "AuditData.Site" },
+    { "column": "DoNotDistributeEvent",          "source": "AuditData.DoNotDistributeEvent" },
+    { "column": "HighPriorityMediaProcessing",   "source": "AuditData.HighPriorityMediaProcessing" },
+    { "column": "BrowserName",                   "source": "AuditData.BrowserName" },
+    { "column": "BrowserVersion",                "source": "AuditData.BrowserVersion" },
+    { "column": "CorrelationId",                 "source": "AuditData.CorrelationId" },
+    { "column": "Platform",                      "source": "AuditData.Platform" },
+    { "column": "UserAgent",                     "source": "AuditData.UserAgent" },
+    { "column": "ActorInfoString",               "source": "AuditData.ActorInfoString" }
+  ],
+
+  "exchange_identity_app": [
+    { "column": "AppId",                  "source": "AuditData.AppId" },
+    { "column": "AuthType",               "source": "AuditData.AuthType" },
+    { "column": "ClientAppId",            "source": "AuditData.ClientAppId" },
+    { "column": "ClientIPAddress",        "source": "AuditData.ClientIPAddress" },
+    { "column": "ClientInfoString",       "source": "AuditData.ClientInfoString" },
+    { "column": "ExternalAccess",         "source": "AuditData.ExternalAccess" },
+    { "column": "InternalLogonType",      "source": "AuditData.InternalLogonType" },
+    { "column": "LogonType",              "source": "AuditData.LogonType" },
+    { "column": "LogonUserSid",           "source": "AuditData.LogonUserSid" },
+    { "column": "MailboxGuid",            "source": "AuditData.MailboxGuid" },
+    { "column": "MailboxOwnerSid",        "source": "AuditData.MailboxOwnerSid" },
+    { "column": "MailboxOwnerUPN",        "source": "AuditData.MailboxOwnerUPN" },
+    { "column": "OrganizationName",       "source": "AuditData.OrganizationName" },
+    { "column": "OriginatingServer",      "source": "AuditData.OriginatingServer" },
+    { "column": "SessionId",              "source": "AuditData.SessionId" },
+    { "column": "TokenObjectId",          "source": "AuditData.TokenObjectId" },
+    { "column": "TokenTenantId",          "source": "AuditData.TokenTenantId" },
+    { "column": "TokenType",              "source": "AuditData.TokenType" },
+    { "column": "SaveToSentItems",        "source": "AuditData.SaveToSentItems" },
+    { "column": "OperationCount",         "source": "AuditData.OperationCount" },
+    { "column": "FileSizeBytes",          "source": "AuditData.FileSizeBytes" }
+  ],
+
+  "teams_meetings_chat": [
+    { "column": "MeetingId",              "source": "AuditData.MeetingId" },
+    { "column": "MeetingType",            "source": "AuditData.MeetingType" },
+    { "column": "EventSignature",         "source": "AuditData.EventSignature" },
+    { "column": "EventData",              "source": "AuditData.EventData" },
+    { "column": "Permission",             "source": "AuditData.Permission" },
+    { "column": "SensitivityLabelId",     "source": "AuditData.SensitivityLabelId" },
+    { "column": "SharingLinkScope",       "source": "AuditData.SharingLinkScope" },
+    { "column": "TargetUserOrGroupType",  "source": "AuditData.TargetUserOrGroupType" },
+    { "column": "TargetUserOrGroupName",  "source": "AuditData.TargetUserOrGroupName" },
+    { "column": "MeetingURL",             "source": "AuditData.MeetingURL" },
+    { "column": "ChatId",                 "source": "AuditData.ChatId" },
+    { "column": "MessageId",              "source": "AuditData.MessageId" },
+    { "column": "MessageSizeInBytes",     "source": "AuditData.MessageSizeInBytes" },
+    { "column": "MessageType",            "source": "AuditData.MessageType" },
+    { "column": "TeamName",               "source": "AuditData.TeamName" },
+    { "column": "TeamGuid",               "source": "AuditData.TeamGuid" },
+    { "column": "ResponseId",             "source": "AuditData.ResponseId" },
+    { "column": "IsAnonymous",            "source": "AuditData.IsAnonymous" },
+    { "column": "DeviceType",             "source": "AuditData.DeviceType" },
+    { "column": "ChannelId",              "source": "AuditData.ChannelId" },
+    { "column": "ChannelName",            "source": "AuditData.ChannelName" },
+    { "column": "ChannelGuid",            "source": "AuditData.ChannelGuid" },
+    { "column": "ChannelType",            "source": "AuditData.ChannelType" }
+  ],
+
+  "forms_stream_powerapps_planner": [
+    { "column": "FormId",                 "source": "AuditData.FormId" },
+    { "column": "FormName",               "source": "AuditData.FormName" },
+    { "column": "VideoId",                "source": "AuditData.VideoId" },
+    { "column": "VideoName",              "source": "AuditData.VideoName" },
+    { "column": "ViewDuration",           "source": "AuditData.ViewDuration" },
+    { "column": "AppName",                "source": "AuditData.AppName" },
+    { "column": "EnvironmentName",        "source": "AuditData.EnvironmentName" },
+    { "column": "PlanId",                 "source": "AuditData.PlanId" },
+    { "column": "PlanName",               "source": "AuditData.PlanName" },
+    { "column": "TaskId",                 "source": "AuditData.TaskId" },
+    { "column": "TaskName",               "source": "AuditData.TaskName" },
+    { "column": "PercentComplete",        "source": "AuditData.PercentComplete" },
+    { "column": "CrossMailboxOperation",  "source": "AuditData.CrossMailboxOperation" }
+  ],
+
+  "copilot_scalar_root": [
+    { "column": "ClientRegion",          "source": "AuditData.ClientRegion" },
+    { "column": "CopilotLogVersion",     "source": "AuditData.CopilotLogVersion" },
+    { "column": "TargetId",              "source": "AuditData.TargetId" },
+    { "column": "AgentId",               "source": "AuditData.AgentId" },
+    { "column": "AgentName",             "source": "AuditData.AgentName" },
+    { "column": "AgentCategory",         "source": "AuditData.AgentId",                "transform": "categorize_agent(AgentId) — bucket into M365Copilot / CustomAgent / etc." },
+    { "column": "ApplicationName",       "source": "AuditData.ApplicationName || CED.HostAppName || CED.ClientAppName" }
+  ],
+
+  "copilot_event_data_scalars": {
+    "$note": "Path B only — populated when AuditData.CopilotEventData is present. Path A leaves all of these empty.",
+    "mappings": [
+      { "column": "AppHost",         "source": "CED.AppHost || AuditData.AppHost || AuditData.Workload",                                                "transform": "first non-null" },
+      { "column": "ThreadId",        "source": "CED.ThreadId" },
+      { "column": "AgentVersion",    "source": "AuditData.AgentVersion || CED.AgentVersion || CED.Version" },
+      { "column": "ConversationId",  "source": "CED.ConversationId || CED.ConversationID || CED.SessionId" },
+      { "column": "TurnNumber",      "source": "CED.TurnNumber || CED.TurnIndex || CED.MessageIndex",                                                    "transform": "to_num()" },
+      { "column": "RetryCount",      "source": "CED.RetryCount || CED.Retries",                                                                          "transform": "to_num()" },
+      { "column": "ClientVersion",   "source": "CED.ClientVersion || CED.Version || CED.Build" },
+      { "column": "ClientPlatform",  "source": "CED.ClientPlatform || CED.Platform || CED.OS" },
+      { "column": "OutcomeStatus",   "source": "CED.OutcomeStatus || CED.Outcome || CED.Result || CED.Status",                                          "transform": "if bool → 'Success'/'Failure'" },
+      { "column": "DurationMs",      "source": "CED.DurationMs || CED.ElapsedMs || CED.ProcessingTimeMs || CED.LatencyMs",                              "transform": "to_num()" }
+    ]
+  },
+
+  "copilot_model_fields": {
+    "$note": "Populated from CED for Copilot rows; from AuditData root for non-Copilot rows.",
+    "mappings": [
+      { "column": "ModelId",        "source": "CED.ModelId || CED.ModelID || AuditData.ModelId" },
+      { "column": "ModelProvider",  "source": "CED.ModelProvider || CED.Provider || CED.ModelVendor" },
+      { "column": "ModelFamily",    "source": "CED.ModelFamily || CED.ModelType" }
+    ]
+  },
+
+  "copilot_token_usage": {
+    "$note": "Usage block resolved via: CED.Usage || CED.TokenUsage || CED.Tokens || AuditData.Usage. Token fields then resolved within that block.",
+    "mappings": [
+      { "column": "TokensTotal",   "source": "<usage>.Total || <usage>.TotalTokens || <usage>.TokensTotal",                       "transform": "to_num(); fallback to TokensInput + TokensOutput if missing" },
+      { "column": "TokensInput",   "source": "<usage>.Input || <usage>.Prompt || <usage>.InputTokens || <usage>.TokensInput",     "transform": "to_num()" },
+      { "column": "TokensOutput",  "source": "<usage>.Output || <usage>.Completion || <usage>.OutputTokens || <usage>.TokensOutput", "transform": "to_num()" }
+    ]
+  },
+
+  "copilot_arrays_exploded": {
+    "$note": "Each output row carries the i-th element (i = 0..row_count-1). Empty when i ≥ array length.",
+    "messages": [
+      { "column": "Message_Id",         "source": "CED.Messages[i].Id" },
+      { "column": "Message_isPrompt",   "source": "CED.Messages[i].isPrompt",        "transform": "bool_tf() → 'TRUE'/'FALSE'/''" },
+      { "column": "MessageIds",         "source": "CED.MessageIds",                  "transform": "string.join(';', MessageIds) — same for every exploded row" }
+    ],
+    "contexts": [
+      { "column": "Context_Id",         "source": "CED.Contexts[i].Id" },
+      { "column": "Context_Type",       "source": "CED.Contexts[i].Type" },
+      { "column": "Context_Item",       "source": "CED.Contexts[*].Items[i]",         "transform": "first context with an Items[i] wins; serialized JSON if object. Only populated when Operation='CopilotInteraction'." }
+    ],
+    "accessed_resources": [
+      { "column": "AccessedResource_Action",            "source": "CED.AccessedResources[i].Action" },
+      { "column": "AccessedResource_PolicyDetails",     "source": "CED.AccessedResources[i].PolicyDetails", "transform": "to_json_if_object()" },
+      { "column": "AccessedResource_SiteUrl",           "source": "CED.AccessedResources[i].SiteUrl" },
+      { "column": "AccessedResource_Name",              "source": "CED.AccessedResources[i].Name" },
+      { "column": "AccessedResource_SensitivityLabel",  "source": "CED.AccessedResources[i].SensitivityLabel" },
+      { "column": "AccessedResource_ResourceType",      "source": "CED.AccessedResources[i].ResourceType" }
+    ],
+    "plugins": [
+      { "column": "AISystemPlugin_Id",   "source": "CED.AISystemPlugin[i].Id" },
+      { "column": "AISystemPlugin_Name", "source": "CED.AISystemPlugin[i].Name" }
+    ],
+    "model_transparency": [
+      { "column": "ModelTransparencyDetails_ModelName", "source": "CED.ModelTransparencyDetails[i].ModelName" }
+    ],
+    "sensitivity": [
+      { "column": "SensitivityLabel",    "source": "CED.SensitivityLabels[i] (scalar) || AuditData.SensitivityLabel" }
+    ]
+  },
+
+  "rollup_provenance_columns": {
+    "$note": "Added at append-merge time when -AppendFile / -AppendUserInfo / -AppendAgent365Info is used. Not present on non-append runs.",
+    "mappings": [
+      { "column": "Date_Added",          "source": "<append-time>",  "transform": "Date when row first appeared in target; immutable" },
+      { "column": "Latest_Append_Date",  "source": "<append-time>",  "transform": "Date of most recent append touching this row" },
+      { "column": "In_Latest_Append",    "source": "<append-time>",  "transform": "TRUE if row was present in current run's audit window; FALSE if Departed" },
+      { "column": "Message_Id_Raw",      "source": "CED.Messages[i].Id",  "transform": "CopilotInteraction Fact CSV only — stable raw key behind the per-run integer surrogate Message_Id" },
+      { "column": "ThreadId_Raw",        "source": "CED.ThreadId",         "transform": "CopilotInteraction Fact CSV only — stable raw key behind the per-run integer surrogate ThreadId" }
+    ]
+  },
+
+  "user_enrichment_join": {
+    "$note": "Joined in by -IncludeUserInfo from the EntraUsers_MAClicensing_<ts>.csv companion file. Join key: UserId (UPN, case-insensitive) ↔ PersonId_Normalized.",
+    "source_endpoint": "Microsoft Graph /users + /subscribedSkus",
+    "mappings": [
+      { "column": "PersonId_Normalized",  "source": "Graph /users.userPrincipalName",      "transform": "ToLower()" },
+      { "column": "DisplayName",          "source": "Graph /users.displayName" },
+      { "column": "Department",           "source": "Graph /users.department" },
+      { "column": "JobTitle",             "source": "Graph /users.jobTitle" },
+      { "column": "OfficeLocation",       "source": "Graph /users.officeLocation" },
+      { "column": "City",                 "source": "Graph /users.city" },
+      { "column": "Country",              "source": "Graph /users.country" },
+      { "column": "Manager_UPN",          "source": "Graph /users/{id}/manager.userPrincipalName" },
+      { "column": "Has_M365Copilot_License",  "source": "Graph /users/{id}/licenseDetails", "transform": "TRUE if any SKU matches the M365 Copilot (MAC) skuId set" },
+      { "column": "License_SKUs",         "source": "Graph /users/{id}/licenseDetails.skuPartNumber[]", "transform": "semicolon-joined" }
+    ]
+  },
+
+  "$column_count": {
+    "unified_base_row": 153,
+    "appended_when_-AppendFile":  3,
+    "appended_when_copilot_fact_with_append": 5
+  },
+
+  "$dropped_or_ignored_paths": {
+    "$note": "These nested paths from AuditData are intentionally NOT lifted by the unified processor. Customers needing them must consume the raw CSV via -RollupPlusRaw and parse AuditData themselves.",
+    "examples": [
+      "AuditData.DeviceProperties[?Name not in ('OS','BrowserType')]",
+      "AuditData.ModifiedProperties[*]",
+      "AuditData.ExtendedProperties[*]",
+      "AuditData.PolicyDetails (top-level, not the per-AccessedResource one)",
+      "AuditData.Parameters[*]",
+      "AuditData.Actor[*]",
+      "AuditData.Target[*]",
+      "AuditData.CopilotEventData.Citations[*]",
+      "AuditData.CopilotEventData.Attachments[*]",
+      "Any CED.* key not listed in copilot_event_data_scalars / copilot_arrays_exploded above"
+    ]
+  }
+}

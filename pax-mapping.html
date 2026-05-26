@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAX v1.11.2 — JSON to Column Mapping | Jordan King</title>
+    <meta name="description" content="Reference mapping of raw Microsoft Purview Unified Audit Log JSON (AuditData + CopilotEventData) to the 153-column flattened output produced by the PAX v1.11.2 rollup processor.">
+    <style>
+        :root {
+            --copilot-blue: #0078D4;
+            --copilot-dark: #004578;
+            --copilot-light: #50A0E8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --text-muted: #888;
+            --bg-light: #f5f7fa;
+            --bg-code: #f1f3f5;
+            --border: #e0e4e8;
+            --row-alt: #fafbfc;
+            --pill-bg: #eaf3fb;
+            --pill-fg: #004578;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.55;
+            color: var(--text-primary);
+            background: #fff;
+        }
+
+        a { color: var(--copilot-blue); }
+        a:hover { color: var(--copilot-dark); }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header.page-header {
+            padding: 3rem 0 2rem;
+            border-bottom: 2px solid var(--copilot-blue);
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--copilot-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--copilot-blue);
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+        }
+
+        .intro {
+            color: var(--text-secondary);
+            max-width: 900px;
+            font-size: 1rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1.1rem;
+            background: var(--copilot-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid var(--copilot-blue);
+            transition: all 0.15s ease;
+        }
+        .btn:hover { background: var(--copilot-dark); color: white; }
+        .btn.secondary {
+            background: #fff;
+            color: var(--copilot-blue);
+        }
+        .btn.secondary:hover { background: var(--bg-light); color: var(--copilot-dark); }
+
+        .conventions {
+            background: var(--bg-light);
+            border-left: 4px solid var(--copilot-blue);
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+        .conventions h3 {
+            color: var(--copilot-dark);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .conventions ul { list-style: none; }
+        .conventions li {
+            padding: 0.2rem 0;
+            color: var(--text-secondary);
+        }
+        .conventions li strong { color: var(--text-primary); }
+        .conventions code {
+            background: #fff;
+            padding: 0.05rem 0.35rem;
+            border-radius: 3px;
+            font-size: 0.85em;
+            border: 1px solid var(--border);
+        }
+
+        .toolbar {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(6px);
+            padding: 0.85rem 0;
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .toolbar input[type=search] {
+            flex: 1 1 280px;
+            padding: 0.55rem 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        .toolbar input[type=search]:focus {
+            outline: none;
+            border-color: var(--copilot-blue);
+            box-shadow: 0 0 0 3px rgba(0,120,212,0.15);
+        }
+        .toolbar .counter {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .toolbar .toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .section {
+            margin: 2.5rem 0;
+        }
+        .section h2 {
+            font-size: 1.45rem;
+            color: var(--copilot-dark);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+        }
+        .section h2 .count {
+            font-size: 0.8rem;
+            background: var(--pill-bg);
+            color: var(--pill-fg);
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+        .section .note {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.85rem;
+            max-width: 900px;
+        }
+
+        table.mapping {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.92rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        table.mapping thead {
+            background: var(--bg-light);
+        }
+        table.mapping th {
+            text-align: left;
+            padding: 0.65rem 0.85rem;
+            color: var(--copilot-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid var(--border);
+        }
+        table.mapping td {
+            padding: 0.6rem 0.85rem;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border);
+        }
+        table.mapping tbody tr:nth-child(even) { background: var(--row-alt); }
+        table.mapping tbody tr:last-child td { border-bottom: none; }
+
+        td.col-column {
+            font-family: 'Consolas','Cascadia Code',monospace;
+            color: var(--copilot-dark);
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 0.88rem;
+        }
+        td.col-source {
+            font-family: 'Consolas','Cascadia Code',monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+        td.col-source code {
+            background: var(--bg-code);
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+        }
+        td.col-transform {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .dropped {
+            background: #fff8e6;
+            border-left: 4px solid #f0b400;
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .dropped h2 {
+            color: #8a6500;
+            border: none;
+        }
+        .dropped ul {
+            margin: 0.5rem 0 0 1.2rem;
+            color: var(--text-secondary);
+        }
+        .dropped li {
+            font-family: 'Consolas','Cascadia Code',monospace;
+            font-size: 0.85rem;
+            padding: 0.15rem 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .stat {
+            background: var(--bg-light);
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .stat .num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--copilot-dark);
+            display: block;
+        }
+        .stat .lbl {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .hidden { display: none !important; }
+        mark {
+            background: #fff3a3;
+            color: inherit;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.6rem; }
+            table.mapping { font-size: 0.82rem; }
+            table.mapping th, table.mapping td { padding: 0.45rem 0.55rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header class="page-header">
+            <div class="breadcrumb">
+                <a href="./index.html">← Home</a> / PAX Mapping
+            </div>
+            <h1>PAX v1.11.2 — JSON → Column Mapping</h1>
+            <div class="subtitle">Raw Purview Unified Audit Log → 153-column flattened rollup output</div>
+            <p class="intro">
+                Reference mapping for the <a href="https://github.com/microsoft/PAX" target="_blank" rel="noopener">Portable Audit eXporter (PAX) v1.11.2</a>
+                Purview Audit Log Processor. Each row below shows how a specific nested JSON path in the raw audit record
+                (the <code>AuditData</code> blob, its <code>CopilotEventData</code> sub-object, and the surrounding CSV envelope)
+                is lifted into one column of the flat output consumed by the
+                <strong>AI-in-One Dashboard — Rollup Edition</strong> and any other downstream tool (Splunk, Fabric, ADX, etc.).
+            </p>
+            <div class="actions">
+                <a class="btn" href="./pax-mapping.json" download>Download mapping (JSON)</a>
+                <a class="btn secondary" href="https://github.com/microsoft/PAX" target="_blank" rel="noopener">PAX on GitHub</a>
+                <a class="btn secondary" href="https://github.com/microsoft/Analytics-Hub" target="_blank" rel="noopener">Analytics Hub (dashboards)</a>
+            </div>
+        </header>
+
+        <div class="conventions" id="conventions">
+            <h3>Conventions</h3>
+            <ul id="convention-list"></ul>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="toolbar">
+            <input type="search" id="filter" placeholder="Filter columns or source paths… (e.g. Token, CopilotEventData.Messages, AppHost)" autocomplete="off">
+            <span class="counter" id="counter"></span>
+        </div>
+
+        <div id="sections"></div>
+
+        <footer>
+            Generated from <code>PAX_Purview_Audit_Log_Processor_v1.11.2.ps1</code> ·
+            Mapping authored 2026-05 ·
+            <a href="./index.html">jordankingisalive.github.io</a>
+        </footer>
+
+    </div>
+
+    <script id="mapping-data" type="application/json">{
+  "$schema_description": "PAX v1.11.2 — mapping of raw Purview Unified Audit Log JSON (the 'AuditData' column and the CSV record envelope) to the 153-column flattened output produced by the embedded rollup processor (Path A: non-Copilot M365; Path B: Copilot explosion). One row = one output column. Source paths are dotted JSON paths rooted at either 'record' (CSV envelope returned by the Graph audit query) or 'AuditData' (the JSON blob inside each record). 'CED' = AuditData.CopilotEventData.",
+  "$source_script": "PAX/PAX_Purview_Audit_Log_Processor_v1.11.2.ps1",
+  "$generated_for": "AI-in-One Dashboard - Rollup Edition / customer wire-format reference",
+  "$conventions": {
+    "fallback_chain": "Listed left-to-right. First non-null wins.",
+    "array_explosion": "Copilot records explode to N rows where N = max(len(Messages), len(Contexts), len(AccessedResources), len(AISystemPlugin), len(ModelTransparencyDetails), len(SensitivityLabels), contextItemsMax). Per-row index 'i' picks the i-th element of each array.",
+    "non_copilot": "Non-Copilot records produce exactly 1 row; all CED.* columns are empty.",
+    "empty_value": "Missing/null becomes empty string ('').",
+    "json_subobject": "When source value is an object/array and target is scalar, it is serialized as compact JSON."
+  },
+
+  "csv_envelope": [
+    { "column": "RecordId",                         "source": "record.RecordId || record.Identity || record.Id || AuditData.Id",                                  "transform": "first non-null" },
+    { "column": "CreationDate",                     "source": "record.CreationDate",                                                                                "transform": "verbatim string" },
+    { "column": "RecordType",                       "source": "record.RecordType",                                                                                  "transform": "verbatim" },
+    { "column": "RecordTypeNum",                    "source": "record.RecordType",                                                                                  "transform": "int(); empty on parse failure" }
+  ],
+
+  "audit_data_root": [
+    { "column": "Operation",                        "source": "AuditData.Operation || record.Operation || record.Operations" },
+    { "column": "UserId",                           "source": "AuditData.UserId || record.UserId || record.UserIds" },
+    { "column": "AssociatedAdminUnits",             "source": "record.AssociatedAdminUnits || AuditData.AssociatedAdminUnits" },
+    { "column": "AssociatedAdminUnitsNames",        "source": "record.AssociatedAdminUnitsNames || AuditData.AssociatedAdminUnitsNames" },
+    { "column": "@odata.type",                      "source": "AuditData.@odata.type" },
+    { "column": "CreationTime",                     "source": "AuditData.CreationTime",                                                                             "transform": "format_date_purview() — ISO 8601 normalized" },
+    { "column": "Id",                               "source": "AuditData.Id" },
+    { "column": "OrganizationId",                   "source": "AuditData.OrganizationId" },
+    { "column": "ResultStatus",                     "source": "AuditData.ResultStatus" },
+    { "column": "ResultStatus_Audit",               "source": "AuditData.ResultStatus",                                                                             "transform": "alias of ResultStatus" },
+    { "column": "UserKey",                          "source": "AuditData.UserKey" },
+    { "column": "UserType",                         "source": "AuditData.UserType" },
+    { "column": "Version",                          "source": "AuditData.Version" },
+    { "column": "Workload",                         "source": "AuditData.Workload" },
+    { "column": "ClientIP",                         "source": "AuditData.ClientIP" },
+    { "column": "ObjectId",                         "source": "AuditData.ObjectId" },
+    { "column": "AzureActiveDirectoryEventType",    "source": "AuditData.AzureActiveDirectoryEventType" },
+    { "column": "ActorContextId",                   "source": "AuditData.ActorContextId" },
+    { "column": "ActorIpAddress",                   "source": "AuditData.ActorIpAddress" },
+    { "column": "InterSystemsId",                   "source": "AuditData.InterSystemsId" },
+    { "column": "IntraSystemId",                    "source": "AuditData.IntraSystemId" },
+    { "column": "SupportTicketId",                  "source": "AuditData.SupportTicketId" },
+    { "column": "TargetContextId",                  "source": "AuditData.TargetContextId" },
+    { "column": "ApplicationId",                    "source": "AuditData.ApplicationId || AuditData.AppId || AuditData.ClientAppId",                                "transform": "first non-null" },
+    { "column": "ErrorNumber",                      "source": "AuditData.ErrorNumber" }
+  ],
+
+  "device_properties_nv_pivot": {
+    "$note": "AuditData.DeviceProperties is an array of {Name, Value} pairs. M-code GetNVProp pivots only OS and BrowserType — others are dropped.",
+    "mappings": [
+      { "column": "DeviceProperties.OS",          "source": "AuditData.DeviceProperties[?Name=='OS'].Value" },
+      { "column": "DeviceProperties.BrowserType", "source": "AuditData.DeviceProperties[?Name=='BrowserType'].Value" }
+    ]
+  },
+
+  "sharepoint_onedrive_office": [
+    { "column": "SiteUrl",                       "source": "AuditData.SiteUrl" },
+    { "column": "SourceRelativeUrl",             "source": "AuditData.SourceRelativeUrl" },
+    { "column": "SourceFileName",                "source": "AuditData.SourceFileName" },
+    { "column": "SourceFileExtension",           "source": "AuditData.SourceFileExtension" },
+    { "column": "ListId",                        "source": "AuditData.ListId" },
+    { "column": "ListItemUniqueId",              "source": "AuditData.ListItemUniqueId" },
+    { "column": "WebId",                         "source": "AuditData.WebId" },
+    { "column": "ApplicationDisplayName",        "source": "AuditData.ApplicationDisplayName" },
+    { "column": "EventSource",                   "source": "AuditData.EventSource" },
+    { "column": "ItemType",                      "source": "AuditData.ItemType" },
+    { "column": "SiteSensitivityLabelId",        "source": "AuditData.SiteSensitivityLabelId" },
+    { "column": "GeoLocation",                   "source": "AuditData.GeoLocation" },
+    { "column": "IsManagedDevice",               "source": "AuditData.IsManagedDevice" },
+    { "column": "DeviceDisplayName",             "source": "AuditData.DeviceDisplayName" },
+    { "column": "ListBaseType",                  "source": "AuditData.ListBaseType" },
+    { "column": "ListServerTemplate",            "source": "AuditData.ListServerTemplate" },
+    { "column": "AuthenticationType",            "source": "AuditData.AuthenticationType" },
+    { "column": "Site",                          "source": "AuditData.Site" },
+    { "column": "DoNotDistributeEvent",          "source": "AuditData.DoNotDistributeEvent" },
+    { "column": "HighPriorityMediaProcessing",   "source": "AuditData.HighPriorityMediaProcessing" },
+    { "column": "BrowserName",                   "source": "AuditData.BrowserName" },
+    { "column": "BrowserVersion",                "source": "AuditData.BrowserVersion" },
+    { "column": "CorrelationId",                 "source": "AuditData.CorrelationId" },
+    { "column": "Platform",                      "source": "AuditData.Platform" },
+    { "column": "UserAgent",                     "source": "AuditData.UserAgent" },
+    { "column": "ActorInfoString",               "source": "AuditData.ActorInfoString" }
+  ],
+
+  "exchange_identity_app": [
+    { "column": "AppId",                  "source": "AuditData.AppId" },
+    { "column": "AuthType",               "source": "AuditData.AuthType" },
+    { "column": "ClientAppId",            "source": "AuditData.ClientAppId" },
+    { "column": "ClientIPAddress",        "source": "AuditData.ClientIPAddress" },
+    { "column": "ClientInfoString",       "source": "AuditData.ClientInfoString" },
+    { "column": "ExternalAccess",         "source": "AuditData.ExternalAccess" },
+    { "column": "InternalLogonType",      "source": "AuditData.InternalLogonType" },
+    { "column": "LogonType",              "source": "AuditData.LogonType" },
+    { "column": "LogonUserSid",           "source": "AuditData.LogonUserSid" },
+    { "column": "MailboxGuid",            "source": "AuditData.MailboxGuid" },
+    { "column": "MailboxOwnerSid",        "source": "AuditData.MailboxOwnerSid" },
+    { "column": "MailboxOwnerUPN",        "source": "AuditData.MailboxOwnerUPN" },
+    { "column": "OrganizationName",       "source": "AuditData.OrganizationName" },
+    { "column": "OriginatingServer",      "source": "AuditData.OriginatingServer" },
+    { "column": "SessionId",              "source": "AuditData.SessionId" },
+    { "column": "TokenObjectId",          "source": "AuditData.TokenObjectId" },
+    { "column": "TokenTenantId",          "source": "AuditData.TokenTenantId" },
+    { "column": "TokenType",              "source": "AuditData.TokenType" },
+    { "column": "SaveToSentItems",        "source": "AuditData.SaveToSentItems" },
+    { "column": "OperationCount",         "source": "AuditData.OperationCount" },
+    { "column": "FileSizeBytes",          "source": "AuditData.FileSizeBytes" }
+  ],
+
+  "teams_meetings_chat": [
+    { "column": "MeetingId",              "source": "AuditData.MeetingId" },
+    { "column": "MeetingType",            "source": "AuditData.MeetingType" },
+    { "column": "EventSignature",         "source": "AuditData.EventSignature" },
+    { "column": "EventData",              "source": "AuditData.EventData" },
+    { "column": "Permission",             "source": "AuditData.Permission" },
+    { "column": "SensitivityLabelId",     "source": "AuditData.SensitivityLabelId" },
+    { "column": "SharingLinkScope",       "source": "AuditData.SharingLinkScope" },
+    { "column": "TargetUserOrGroupType",  "source": "AuditData.TargetUserOrGroupType" },
+    { "column": "TargetUserOrGroupName",  "source": "AuditData.TargetUserOrGroupName" },
+    { "column": "MeetingURL",             "source": "AuditData.MeetingURL" },
+    { "column": "ChatId",                 "source": "AuditData.ChatId" },
+    { "column": "MessageId",              "source": "AuditData.MessageId" },
+    { "column": "MessageSizeInBytes",     "source": "AuditData.MessageSizeInBytes" },
+    { "column": "MessageType",            "source": "AuditData.MessageType" },
+    { "column": "TeamName",               "source": "AuditData.TeamName" },
+    { "column": "TeamGuid",               "source": "AuditData.TeamGuid" },
+    { "column": "ResponseId",             "source": "AuditData.ResponseId" },
+    { "column": "IsAnonymous",            "source": "AuditData.IsAnonymous" },
+    { "column": "DeviceType",             "source": "AuditData.DeviceType" },
+    { "column": "ChannelId",              "source": "AuditData.ChannelId" },
+    { "column": "ChannelName",            "source": "AuditData.ChannelName" },
+    { "column": "ChannelGuid",            "source": "AuditData.ChannelGuid" },
+    { "column": "ChannelType",            "source": "AuditData.ChannelType" }
+  ],
+
+  "forms_stream_powerapps_planner": [
+    { "column": "FormId",                 "source": "AuditData.FormId" },
+    { "column": "FormName",               "source": "AuditData.FormName" },
+    { "column": "VideoId",                "source": "AuditData.VideoId" },
+    { "column": "VideoName",              "source": "AuditData.VideoName" },
+    { "column": "ViewDuration",           "source": "AuditData.ViewDuration" },
+    { "column": "AppName",                "source": "AuditData.AppName" },
+    { "column": "EnvironmentName",        "source": "AuditData.EnvironmentName" },
+    { "column": "PlanId",                 "source": "AuditData.PlanId" },
+    { "column": "PlanName",               "source": "AuditData.PlanName" },
+    { "column": "TaskId",                 "source": "AuditData.TaskId" },
+    { "column": "TaskName",               "source": "AuditData.TaskName" },
+    { "column": "PercentComplete",        "source": "AuditData.PercentComplete" },
+    { "column": "CrossMailboxOperation",  "source": "AuditData.CrossMailboxOperation" }
+  ],
+
+  "copilot_scalar_root": [
+    { "column": "ClientRegion",          "source": "AuditData.ClientRegion" },
+    { "column": "CopilotLogVersion",     "source": "AuditData.CopilotLogVersion" },
+    { "column": "TargetId",              "source": "AuditData.TargetId" },
+    { "column": "AgentId",               "source": "AuditData.AgentId" },
+    { "column": "AgentName",             "source": "AuditData.AgentName" },
+    { "column": "AgentCategory",         "source": "AuditData.AgentId",                "transform": "categorize_agent(AgentId) — bucket into M365Copilot / CustomAgent / etc." },
+    { "column": "ApplicationName",       "source": "AuditData.ApplicationName || CED.HostAppName || CED.ClientAppName" }
+  ],
+
+  "copilot_event_data_scalars": {
+    "$note": "Path B only — populated when AuditData.CopilotEventData is present. Path A leaves all of these empty.",
+    "mappings": [
+      { "column": "AppHost",         "source": "CED.AppHost || AuditData.AppHost || AuditData.Workload",                                                "transform": "first non-null" },
+      { "column": "ThreadId",        "source": "CED.ThreadId" },
+      { "column": "AgentVersion",    "source": "AuditData.AgentVersion || CED.AgentVersion || CED.Version" },
+      { "column": "ConversationId",  "source": "CED.ConversationId || CED.ConversationID || CED.SessionId" },
+      { "column": "TurnNumber",      "source": "CED.TurnNumber || CED.TurnIndex || CED.MessageIndex",                                                    "transform": "to_num()" },
+      { "column": "RetryCount",      "source": "CED.RetryCount || CED.Retries",                                                                          "transform": "to_num()" },
+      { "column": "ClientVersion",   "source": "CED.ClientVersion || CED.Version || CED.Build" },
+      { "column": "ClientPlatform",  "source": "CED.ClientPlatform || CED.Platform || CED.OS" },
+      { "column": "OutcomeStatus",   "source": "CED.OutcomeStatus || CED.Outcome || CED.Result || CED.Status",                                          "transform": "if bool → 'Success'/'Failure'" },
+      { "column": "DurationMs",      "source": "CED.DurationMs || CED.ElapsedMs || CED.ProcessingTimeMs || CED.LatencyMs",                              "transform": "to_num()" }
+    ]
+  },
+
+  "copilot_model_fields": {
+    "$note": "Populated from CED for Copilot rows; from AuditData root for non-Copilot rows.",
+    "mappings": [
+      { "column": "ModelId",        "source": "CED.ModelId || CED.ModelID || AuditData.ModelId" },
+      { "column": "ModelProvider",  "source": "CED.ModelProvider || CED.Provider || CED.ModelVendor" },
+      { "column": "ModelFamily",    "source": "CED.ModelFamily || CED.ModelType" }
+    ]
+  },
+
+  "copilot_token_usage": {
+    "$note": "Usage block resolved via: CED.Usage || CED.TokenUsage || CED.Tokens || AuditData.Usage. Token fields then resolved within that block.",
+    "mappings": [
+      { "column": "TokensTotal",   "source": "<usage>.Total || <usage>.TotalTokens || <usage>.TokensTotal",                       "transform": "to_num(); fallback to TokensInput + TokensOutput if missing" },
+      { "column": "TokensInput",   "source": "<usage>.Input || <usage>.Prompt || <usage>.InputTokens || <usage>.TokensInput",     "transform": "to_num()" },
+      { "column": "TokensOutput",  "source": "<usage>.Output || <usage>.Completion || <usage>.OutputTokens || <usage>.TokensOutput", "transform": "to_num()" }
+    ]
+  },
+
+  "copilot_arrays_exploded": {
+    "$note": "Each output row carries the i-th element (i = 0..row_count-1). Empty when i ≥ array length.",
+    "messages": [
+      { "column": "Message_Id",         "source": "CED.Messages[i].Id" },
+      { "column": "Message_isPrompt",   "source": "CED.Messages[i].isPrompt",        "transform": "bool_tf() → 'TRUE'/'FALSE'/''" },
+      { "column": "MessageIds",         "source": "CED.MessageIds",                  "transform": "string.join(';', MessageIds) — same for every exploded row" }
+    ],
+    "contexts": [
+      { "column": "Context_Id",         "source": "CED.Contexts[i].Id" },
+      { "column": "Context_Type",       "source": "CED.Contexts[i].Type" },
+      { "column": "Context_Item",       "source": "CED.Contexts[*].Items[i]",         "transform": "first context with an Items[i] wins; serialized JSON if object. Only populated when Operation='CopilotInteraction'." }
+    ],
+    "accessed_resources": [
+      { "column": "AccessedResource_Action",            "source": "CED.AccessedResources[i].Action" },
+      { "column": "AccessedResource_PolicyDetails",     "source": "CED.AccessedResources[i].PolicyDetails", "transform": "to_json_if_object()" },
+      { "column": "AccessedResource_SiteUrl",           "source": "CED.AccessedResources[i].SiteUrl" },
+      { "column": "AccessedResource_Name",              "source": "CED.AccessedResources[i].Name" },
+      { "column": "AccessedResource_SensitivityLabel",  "source": "CED.AccessedResources[i].SensitivityLabel" },
+      { "column": "AccessedResource_ResourceType",      "source": "CED.AccessedResources[i].ResourceType" }
+    ],
+    "plugins": [
+      { "column": "AISystemPlugin_Id",   "source": "CED.AISystemPlugin[i].Id" },
+      { "column": "AISystemPlugin_Name", "source": "CED.AISystemPlugin[i].Name" }
+    ],
+    "model_transparency": [
+      { "column": "ModelTransparencyDetails_ModelName", "source": "CED.ModelTransparencyDetails[i].ModelName" }
+    ],
+    "sensitivity": [
+      { "column": "SensitivityLabel",    "source": "CED.SensitivityLabels[i] (scalar) || AuditData.SensitivityLabel" }
+    ]
+  },
+
+  "rollup_provenance_columns": {
+    "$note": "Added at append-merge time when -AppendFile / -AppendUserInfo / -AppendAgent365Info is used. Not present on non-append runs.",
+    "mappings": [
+      { "column": "Date_Added",          "source": "<append-time>",  "transform": "Date when row first appeared in target; immutable" },
+      { "column": "Latest_Append_Date",  "source": "<append-time>",  "transform": "Date of most recent append touching this row" },
+      { "column": "In_Latest_Append",    "source": "<append-time>",  "transform": "TRUE if row was present in current run's audit window; FALSE if Departed" },
+      { "column": "Message_Id_Raw",      "source": "CED.Messages[i].Id",  "transform": "CopilotInteraction Fact CSV only — stable raw key behind the per-run integer surrogate Message_Id" },
+      { "column": "ThreadId_Raw",        "source": "CED.ThreadId",         "transform": "CopilotInteraction Fact CSV only — stable raw key behind the per-run integer surrogate ThreadId" }
+    ]
+  },
+
+  "user_enrichment_join": {
+    "$note": "Joined in by -IncludeUserInfo from the EntraUsers_MAClicensing_<ts>.csv companion file. Join key: UserId (UPN, case-insensitive) ↔ PersonId_Normalized.",
+    "source_endpoint": "Microsoft Graph /users + /subscribedSkus",
+    "mappings": [
+      { "column": "PersonId_Normalized",  "source": "Graph /users.userPrincipalName",      "transform": "ToLower()" },
+      { "column": "DisplayName",          "source": "Graph /users.displayName" },
+      { "column": "Department",           "source": "Graph /users.department" },
+      { "column": "JobTitle",             "source": "Graph /users.jobTitle" },
+      { "column": "OfficeLocation",       "source": "Graph /users.officeLocation" },
+      { "column": "City",                 "source": "Graph /users.city" },
+      { "column": "Country",              "source": "Graph /users.country" },
+      { "column": "Manager_UPN",          "source": "Graph /users/{id}/manager.userPrincipalName" },
+      { "column": "Has_M365Copilot_License",  "source": "Graph /users/{id}/licenseDetails", "transform": "TRUE if any SKU matches the M365 Copilot (MAC) skuId set" },
+      { "column": "License_SKUs",         "source": "Graph /users/{id}/licenseDetails.skuPartNumber[]", "transform": "semicolon-joined" }
+    ]
+  },
+
+  "$column_count": {
+    "unified_base_row": 153,
+    "appended_when_-AppendFile":  3,
+    "appended_when_copilot_fact_with_append": 5
+  },
+
+  "$dropped_or_ignored_paths": {
+    "$note": "These nested paths from AuditData are intentionally NOT lifted by the unified processor. Customers needing them must consume the raw CSV via -RollupPlusRaw and parse AuditData themselves.",
+    "examples": [
+      "AuditData.DeviceProperties[?Name not in ('OS','BrowserType')]",
+      "AuditData.ModifiedProperties[*]",
+      "AuditData.ExtendedProperties[*]",
+      "AuditData.PolicyDetails (top-level, not the per-AccessedResource one)",
+      "AuditData.Parameters[*]",
+      "AuditData.Actor[*]",
+      "AuditData.Target[*]",
+      "AuditData.CopilotEventData.Citations[*]",
+      "AuditData.CopilotEventData.Attachments[*]",
+      "Any CED.* key not listed in copilot_event_data_scalars / copilot_arrays_exploded above"
+    ]
+  }
+}
+</script>
+    <script>
+    (function () {
+        const data = JSON.parse(document.getElementById('mapping-data').textContent);
+
+        // ── Section definitions (preserve order, give friendly titles) ──
+        const SECTIONS = [
+            { key: 'csv_envelope',                 title: 'CSV envelope',                  note: 'Fields from the CSV row returned by the Graph audit query (outside the AuditData JSON blob).' },
+            { key: 'audit_data_root',              title: 'AuditData root scalars',        note: 'Top-level fields lifted directly from AuditData.*' },
+            { key: 'device_properties_nv_pivot',   title: 'DeviceProperties (NV pivot)',   isSubMappings: true },
+            { key: 'sharepoint_onedrive_office',   title: 'SharePoint / OneDrive / Office', note: 'Workload-specific scalars for file and site operations.' },
+            { key: 'exchange_identity_app',        title: 'Exchange / identity / app',     note: 'Exchange Online, mailbox, identity, and app-context fields.' },
+            { key: 'teams_meetings_chat',          title: 'Teams / meetings / chat',       note: 'Microsoft Teams meetings, channels, and chat messages.' },
+            { key: 'forms_stream_powerapps_planner', title: 'Forms / Stream / Power Apps / Planner', note: 'Cross-workload activity for the M365 Usage Bundle.' },
+            { key: 'copilot_scalar_root',          title: 'Copilot scalars (AuditData root)', note: 'Copilot-specific fields that live at the root of AuditData rather than inside CopilotEventData.' },
+            { key: 'copilot_event_data_scalars',   title: 'CopilotEventData scalars',      isSubMappings: true },
+            { key: 'copilot_model_fields',         title: 'Copilot model fields',          isSubMappings: true },
+            { key: 'copilot_token_usage',          title: 'Copilot token usage',           isSubMappings: true },
+            { key: 'copilot_arrays_exploded',      title: 'Copilot arrays (exploded)',     isArrays: true },
+            { key: 'rollup_provenance_columns',    title: 'Rollup provenance columns',     isSubMappings: true },
+            { key: 'user_enrichment_join',         title: 'User enrichment join',          isSubMappings: true }
+        ];
+
+        // ── Conventions block ──
+        const convList = document.getElementById('convention-list');
+        const conv = data.$conventions || {};
+        Object.entries(conv).forEach(([k, v]) => {
+            const li = document.createElement('li');
+            li.innerHTML = '<strong>' + esc(k) + ':</strong> ' + esc(v);
+            convList.appendChild(li);
+        });
+
+        // ── Render sections ──
+        const sectionsEl = document.getElementById('sections');
+        let totalRows = 0;
+        const allRowEls = [];
+
+        SECTIONS.forEach(sec => {
+            const node = data[sec.key];
+            if (!node) return;
+
+            const section = document.createElement('section');
+            section.className = 'section';
+            section.dataset.title = sec.title.toLowerCase();
+
+            const h2 = document.createElement('h2');
+            h2.innerHTML = esc(sec.title) + ' <span class="count" data-count></span>';
+            section.appendChild(h2);
+
+            const noteText = sec.note || (node && node.$note) || '';
+            if (noteText) {
+                const p = document.createElement('p');
+                p.className = 'note';
+                p.textContent = noteText;
+                section.appendChild(p);
+            }
+
+            // Collect rows (either an array of {column,source,transform},
+            // a wrapper {$note, mappings:[...]}, or a grouped {arr1:[], arr2:[]} for arrays section)
+            const tables = [];
+            if (Array.isArray(node)) {
+                tables.push({ title: null, rows: node });
+            } else if (sec.isArrays) {
+                Object.entries(node).forEach(([sub, val]) => {
+                    if (sub === '$note') return;
+                    if (Array.isArray(val)) {
+                        tables.push({ title: prettifyArrayKey(sub), rows: val });
+                    }
+                });
+            } else if (node.mappings) {
+                tables.push({ title: null, rows: node.mappings });
+            }
+
+            let sectionRowCount = 0;
+            tables.forEach(t => {
+                if (t.title) {
+                    const sub = document.createElement('h3');
+                    sub.style.cssText = 'font-size:1rem;color:var(--text-secondary);margin:1rem 0 0.5rem;font-weight:600;';
+                    sub.textContent = t.title;
+                    section.appendChild(sub);
+                }
+                const table = document.createElement('table');
+                table.className = 'mapping';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th style="width:24%">Output column</th>
+                            <th style="width:46%">JSON source path</th>
+                            <th style="width:30%">Transform / notes</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>`;
+                const tbody = table.querySelector('tbody');
+                t.rows.forEach(r => {
+                    const tr = document.createElement('tr');
+                    tr.dataset.search = ((r.column || '') + ' ' + (r.source || '') + ' ' + (r.transform || '')).toLowerCase();
+                    tr.innerHTML = `
+                        <td class="col-column">${esc(r.column || '')}</td>
+                        <td class="col-source"><code>${esc(r.source || '')}</code></td>
+                        <td class="col-transform">${esc(r.transform || '')}</td>`;
+                    tbody.appendChild(tr);
+                    allRowEls.push(tr);
+                    sectionRowCount++;
+                    totalRows++;
+                });
+                section.appendChild(table);
+            });
+
+            h2.querySelector('[data-count]').textContent = sectionRowCount + (sectionRowCount === 1 ? ' field' : ' fields');
+            sectionsEl.appendChild(section);
+        });
+
+        // ── Dropped paths panel ──
+        const dropped = data.$dropped_or_ignored_paths;
+        if (dropped && Array.isArray(dropped.examples)) {
+            const div = document.createElement('div');
+            div.className = 'dropped section';
+            div.innerHTML = `
+                <h2>Dropped / unmapped JSON paths</h2>
+                <p style="color:var(--text-secondary);font-size:0.92rem;">
+                    ${esc(dropped.$note || '')}
+                </p>
+                <ul>${dropped.examples.map(e => '<li>' + esc(e) + '</li>').join('')}</ul>`;
+            sectionsEl.appendChild(div);
+        }
+
+        // ── Stats block ──
+        const statsEl = document.getElementById('stats');
+        const cc = data.$column_count || {};
+        const statDefs = [
+            { num: totalRows,                                 lbl: 'Total mapped fields on this page' },
+            { num: cc.unified_base_row || 153,                lbl: 'Columns in unified base row' },
+            { num: cc.appended_when_minus_AppendFile ?? cc['appended_when_-AppendFile'] ?? 3, lbl: 'Provenance columns under -AppendFile' },
+            { num: 'v1.11.2',                                 lbl: 'PAX script version' }
+        ];
+        statDefs.forEach(s => {
+            const d = document.createElement('div');
+            d.className = 'stat';
+            d.innerHTML = '<span class="num">' + esc(String(s.num)) + '</span><span class="lbl">' + esc(s.lbl) + '</span>';
+            statsEl.appendChild(d);
+        });
+
+        // ── Filter ──
+        const filter = document.getElementById('filter');
+        const counter = document.getElementById('counter');
+        const updateCounter = (shown) => counter.textContent = shown + ' / ' + totalRows + ' fields';
+        updateCounter(totalRows);
+        filter.addEventListener('input', () => {
+            const q = filter.value.trim().toLowerCase();
+            let shown = 0;
+            allRowEls.forEach(tr => {
+                const match = !q || tr.dataset.search.includes(q);
+                tr.classList.toggle('hidden', !match);
+                if (match) shown++;
+            });
+            // Hide empty sections + their preceding tables / headings
+            document.querySelectorAll('.section').forEach(sec => {
+                const visible = sec.querySelectorAll('tbody tr:not(.hidden)').length;
+                const isDropped = sec.classList.contains('dropped');
+                sec.classList.toggle('hidden', !isDropped && visible === 0 && q.length > 0);
+            });
+            updateCounter(shown);
+        });
+
+        // ── Helpers ──
+        function esc(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+        function prettifyArrayKey(k) {
+            return k.replace(/_/g, ' ').replace(/\b\w/g, m => m.toUpperCase());
+        }
+    })();
+    </script>
+</body>
+</html>
