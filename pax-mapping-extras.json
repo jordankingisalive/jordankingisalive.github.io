@@ -1,0 +1,220 @@
+{
+  "$note": "Supplemental content layered onto the PAX mapping page: cookbook recipes, scenario field-sets, gotchas, CLI cheat sheet, sample records, glossary, schema diff. Authored for PAX v1.11.2 flat output.",
+
+  "scenarios": [
+    {
+      "key": "copilot-roi",
+      "title": "Copilot ROI / productivity metrics",
+      "blurb": "Per-user, per-surface activity volume + outcome + duration. Use to compare cohorts and surface-level adoption against your ROI model.",
+      "fields": ["UserId", "AppHost", "ConversationId", "TurnNumber", "TokensInput", "TokensOutput", "DurationMs", "OutcomeStatus", "CreationTime"],
+      "filter": "RecordType=261 (CopilotInteraction) AND OutcomeStatus='Success'"
+    },
+    {
+      "key": "adoption-by-surface",
+      "title": "Adoption by surface",
+      "blurb": "Where Copilot is being used inside your tenant — Word vs Excel vs Teams vs M365 Chat — and on which client platforms.",
+      "fields": ["UserId", "AppHost", "ClientPlatform", "ClientVersion", "CreationTime"],
+      "filter": "RecordType=261"
+    },
+    {
+      "key": "sensitive-grounding",
+      "title": "Sensitive content exposure",
+      "blurb": "Which Copilot turns grounded on (or accessed) data carrying MIP labels. Pair with your label registry to resolve label GUIDs to display names.",
+      "fields": ["UserId", "AppHost", "ConversationId", "AccessedResources[i].Type", "AccessedResources[i].SensitivityLabel", "SensitivityLabels[i].Id", "SiteSensitivityLabelId"],
+      "filter": "RecordType=261 AND (AccessedResources[i].SensitivityLabel IS NOT NULL OR SensitivityLabels[i].Id IS NOT NULL)"
+    },
+    {
+      "key": "failed-turns",
+      "title": "Failed-turn triage",
+      "blurb": "Failures with the diagnostic context you need: which model, which surface, how many retries, which error code.",
+      "fields": ["UserId", "AppHost", "OutcomeStatus", "RetryCount", "ErrorNumber", "ModelName", "ModelVendor", "CreationTime"],
+      "filter": "OutcomeStatus='Failure'"
+    },
+    {
+      "key": "cost-attribution",
+      "title": "Cost attribution (token spend)",
+      "blurb": "Token consumption by user / model / surface — the input to chargeback and capacity planning.",
+      "fields": ["UserId", "OrganizationId", "AppHost", "ModelName", "ModelVendor", "TokensInput", "TokensOutput", "TokensTotal", "CreationTime"],
+      "filter": "RecordType=261"
+    },
+    {
+      "key": "dlp-correlation",
+      "title": "DLP correlation (file activity)",
+      "blurb": "Pair with DLP alerts: who touched which file, from where, in which workload.",
+      "fields": ["UserId", "ClientIP", "Workload", "Operation", "SiteUrl", "SourceFileName", "ItemType", "SiteSensitivityLabelId", "CreationTime"],
+      "filter": "Workload IN ('SharePoint','OneDrive','Exchange')"
+    },
+    {
+      "key": "file-activity",
+      "title": "File activity overview",
+      "blurb": "Generic 'who did what to which file' for SharePoint and OneDrive.",
+      "fields": ["UserId", "Workload", "Operation", "SiteUrl", "SourceFileName", "SourceFileExtension", "ItemType", "ClientIP", "CreationTime"],
+      "filter": "RecordType IN (4, 6, 14)"
+    },
+    {
+      "key": "cross-tenant",
+      "title": "Cross-tenant / B2B access",
+      "blurb": "Activity where actor and target tenants differ — guests, B2B collaborators, cross-cloud.",
+      "fields": ["UserId", "ActorContextId", "TargetContextId", "Workload", "Operation", "ObjectId", "CreationTime"],
+      "filter": "ActorContextId IS NOT NULL AND TargetContextId IS NOT NULL AND ActorContextId <> TargetContextId"
+    }
+  ],
+
+  "cookbook": [
+    {
+      "key": "hygiene",
+      "title": "Hygiene: dedupe retries + drop service-principal noise",
+      "blurb": "Always do this first. RecordId can appear more than once across overlapping audit pages. UserType 4/5/6 are System / Application / ServicePrincipal — almost always noise for end-user analytics.",
+      "snippets": {
+        "KQL": "PAX\n| where UserType !in ('4','5','6','System','Application','ServicePrincipal')\n| summarize arg_max(CreationTime, *) by RecordId",
+        "T-SQL": "WITH ranked AS (\n  SELECT *,\n    ROW_NUMBER() OVER (PARTITION BY RecordId ORDER BY CreationTime DESC) AS rn\n  FROM dbo.PAX\n  WHERE UserType NOT IN ('4','5','6','System','Application','ServicePrincipal')\n)\nSELECT * FROM ranked WHERE rn = 1;",
+        "SPL": "index=pax sourcetype=pax_purview\n| search NOT UserType IN (4,5,6,\"System\",\"Application\",\"ServicePrincipal\")\n| dedup RecordId sortby -CreationTime",
+        "Pandas": "import pandas as pd\ndf = pd.read_csv('Purview_Audit_UsageActivity_*.csv')\ndf = df[~df['UserType'].astype(str).isin(['4','5','6','System','Application','ServicePrincipal'])]\ndf = df.sort_values('CreationTime').drop_duplicates('RecordId', keep='last')"
+      }
+    },
+    {
+      "key": "top-token-users",
+      "title": "Top users by token spend, last 7 days",
+      "blurb": "Cost-attribution starter. Group by UserId, sum TokensTotal, rank.",
+      "snippets": {
+        "KQL": "PAX\n| where RecordType == '261'\n| where CreationTime >= ago(7d)\n| summarize Turns = count(),\n            InputTokens = sum(toint(TokensInput)),\n            OutputTokens = sum(toint(TokensOutput)),\n            TotalTokens = sum(toint(TokensTotal))\n          by UserId\n| top 25 by TotalTokens desc",
+        "T-SQL": "SELECT TOP 25\n  UserId,\n  COUNT(*)                        AS Turns,\n  SUM(TRY_CAST(TokensInput  AS INT)) AS InputTokens,\n  SUM(TRY_CAST(TokensOutput AS INT)) AS OutputTokens,\n  SUM(TRY_CAST(TokensTotal  AS INT)) AS TotalTokens\nFROM dbo.PAX\nWHERE RecordType = '261'\n  AND CreationTime >= DATEADD(day, -7, SYSUTCDATETIME())\nGROUP BY UserId\nORDER BY TotalTokens DESC;",
+        "SPL": "index=pax sourcetype=pax_purview RecordType=261 earliest=-7d@d\n| stats count AS Turns,\n        sum(TokensInput)  AS InputTokens,\n        sum(TokensOutput) AS OutputTokens,\n        sum(TokensTotal)  AS TotalTokens\n      by UserId\n| sort -TotalTokens\n| head 25",
+        "Pandas": "cop = df[df['RecordType'].astype(str) == '261'].copy()\ncop['CreationTime'] = pd.to_datetime(cop['CreationTime'], utc=True)\ncop = cop[cop['CreationTime'] >= pd.Timestamp.utcnow() - pd.Timedelta(days=7)]\nfor c in ('TokensInput','TokensOutput','TokensTotal'):\n    cop[c] = pd.to_numeric(cop[c], errors='coerce').fillna(0).astype(int)\nprint(cop.groupby('UserId')\n         .agg(Turns=('RecordId','count'),\n              InputTokens=('TokensInput','sum'),\n              OutputTokens=('TokensOutput','sum'),\n              TotalTokens=('TokensTotal','sum'))\n         .nlargest(25,'TotalTokens'))"
+      }
+    },
+    {
+      "key": "failed-turns",
+      "title": "Failed Copilot turns in the last 24h with retry context",
+      "blurb": "Find which surfaces and models are producing failures, and whether retries eventually succeeded.",
+      "snippets": {
+        "KQL": "PAX\n| where RecordType == '261'\n| where CreationTime >= ago(24h)\n| where OutcomeStatus == 'Failure'\n| summarize Failures = count(),\n            AvgRetries = avg(toint(RetryCount)),\n            DistinctUsers = dcount(UserId)\n          by AppHost, ModelName, ModelVendor\n| order by Failures desc",
+        "T-SQL": "SELECT AppHost, ModelName, ModelVendor,\n       COUNT(*)                              AS Failures,\n       AVG(TRY_CAST(RetryCount AS FLOAT))    AS AvgRetries,\n       COUNT(DISTINCT UserId)                AS DistinctUsers\nFROM dbo.PAX\nWHERE RecordType = '261'\n  AND OutcomeStatus = 'Failure'\n  AND CreationTime >= DATEADD(hour, -24, SYSUTCDATETIME())\nGROUP BY AppHost, ModelName, ModelVendor\nORDER BY Failures DESC;",
+        "SPL": "index=pax sourcetype=pax_purview RecordType=261 OutcomeStatus=Failure earliest=-24h\n| stats count AS Failures,\n        avg(RetryCount) AS AvgRetries,\n        dc(UserId)      AS DistinctUsers\n      by AppHost, ModelName, ModelVendor\n| sort -Failures",
+        "Pandas": "f = df[(df['RecordType'].astype(str)=='261') & (df['OutcomeStatus']=='Failure')].copy()\nf['CreationTime'] = pd.to_datetime(f['CreationTime'], utc=True)\nf = f[f['CreationTime'] >= pd.Timestamp.utcnow() - pd.Timedelta(hours=24)]\nf['RetryCount'] = pd.to_numeric(f['RetryCount'], errors='coerce').fillna(0)\nprint(f.groupby(['AppHost','ModelName','ModelVendor'])\n        .agg(Failures=('RecordId','count'),\n             AvgRetries=('RetryCount','mean'),\n             DistinctUsers=('UserId','nunique'))\n        .sort_values('Failures', ascending=False))"
+      }
+    },
+    {
+      "key": "sensitive-grounding",
+      "title": "Copilot turns that grounded on labelled content",
+      "blurb": "Conservative pattern — joins to whichever sensitivity field a given surface emits. After dedup, hand off to your MIP label registry to resolve GUIDs.",
+      "snippets": {
+        "KQL": "PAX\n| where RecordType == '261'\n| where isnotempty(column_ifexists('AccessedResources[0].SensitivityLabel',''))\n     or isnotempty(column_ifexists('SensitivityLabels[0].Id',''))\n     or isnotempty(SiteSensitivityLabelId)\n| project CreationTime, UserId, AppHost, ConversationId, TurnNumber,\n          AccessedResource = column_ifexists('AccessedResources[0].Type',''),\n          LabelOnResource  = column_ifexists('AccessedResources[0].SensitivityLabel',''),\n          LabelOnTurn      = column_ifexists('SensitivityLabels[0].Id',''),\n          LabelOnSite      = SiteSensitivityLabelId",
+        "T-SQL": "SELECT CreationTime, UserId, AppHost, ConversationId, TurnNumber,\n       [AccessedResources[0].Type]              AS AccessedResource,\n       [AccessedResources[0].SensitivityLabel]  AS LabelOnResource,\n       [SensitivityLabels[0].Id]                AS LabelOnTurn,\n       SiteSensitivityLabelId                   AS LabelOnSite\nFROM dbo.PAX\nWHERE RecordType = '261'\n  AND (NULLIF([AccessedResources[0].SensitivityLabel],'') IS NOT NULL\n    OR NULLIF([SensitivityLabels[0].Id],'')               IS NOT NULL\n    OR NULLIF(SiteSensitivityLabelId,'')                  IS NOT NULL);",
+        "SPL": "index=pax sourcetype=pax_purview RecordType=261\n  (AccessedResources{}.SensitivityLabel=* OR SensitivityLabels{}.Id=* OR SiteSensitivityLabelId=*)\n| table _time UserId AppHost ConversationId TurnNumber\n        AccessedResources{}.Type AccessedResources{}.SensitivityLabel\n        SensitivityLabels{}.Id SiteSensitivityLabelId",
+        "Pandas": "cop = df[df['RecordType'].astype(str)=='261'].copy()\nmask = (cop.get('AccessedResources[0].SensitivityLabel', pd.Series(dtype=str)).fillna('') != '')\n     | (cop.get('SensitivityLabels[0].Id',               pd.Series(dtype=str)).fillna('') != '')\n     | (cop.get('SiteSensitivityLabelId',                 pd.Series(dtype=str)).fillna('') != '')\nprint(cop.loc[mask, ['CreationTime','UserId','AppHost','ConversationId','TurnNumber',\n                     'AccessedResources[0].Type',\n                     'AccessedResources[0].SensitivityLabel',\n                     'SensitivityLabels[0].Id',\n                     'SiteSensitivityLabelId']])"
+      }
+    }
+  ],
+
+  "gotchas": [
+    {
+      "title": "Exchange ResultStatus is True/False, not Succeeded/Failed",
+      "body": "Exchange records emit ResultStatus values 'True'/'False' while every other workload uses 'Succeeded'/'Failed'. Normalize before filtering or your Exchange rows will silently disappear."
+    },
+    {
+      "title": "RecordId is the dedupe key — Id is not",
+      "body": "The audit pipeline can serve the same RecordId twice across overlapping page boundaries. AuditData.Id usually equals RecordId but isn't guaranteed across schema versions. Dedupe on RecordId, keep the latest CreationTime."
+    },
+    {
+      "title": "CED.* columns are empty for every Path A (non-Copilot) row",
+      "body": "Non-Copilot records flow through Path A and produce exactly one flat row with all CopilotEventData-derived columns blank. Don't inner-join on AppHost / ConversationId / TokensTotal when you mean to scope to file activity — you'll drop every row."
+    },
+    {
+      "title": "One Copilot turn can explode to 50+ flat rows",
+      "body": "Path B explodes Messages × Contexts × AccessedResources × AISystemPlugin × ModelTransparencyDetails × SensitivityLabels. A turn that grounded on 12 files and used 4 plugins is 12 × 4 = 48 rows. Always aggregate (distinct ConversationId/TurnNumber) before joining to user-level dimensions or your token totals will multiply."
+    },
+    {
+      "title": "UserType is numeric in raw, text after enrichment",
+      "body": "Raw audit emits 0–8. Some Power BI flows label them (Regular/Admin/System/etc.). Filter on BOTH forms ('4','System') so the same query works regardless of whether the dataset was enriched."
+    },
+    {
+      "title": "First-party ApplicationId GUIDs look like noise but are signal",
+      "body": "00000003-0000-0ff1-ce00-000000000000 is SharePoint, 1fec8e78-bce4-4aaf-ab1b-5451cc387264 is Teams, fb78d390-0c51-40cd-8e17-fdbfab77341b is Copilot. Maintain a lookup table — most 'mystery actor' rows in audit are well-known first-party clients."
+    },
+    {
+      "title": "DurationMs is sometimes 0, -1, or missing",
+      "body": "Different Copilot surfaces report timing under DurationMs / ElapsedMs / ProcessingTimeMs / LatencyMs. PAX falls through them in that order. If you average DurationMs cluster-wide, exclude rows where DurationMs <= 0 or you'll wreck your p50."
+    },
+    {
+      "title": "Every timestamp is UTC — convert at the display layer only",
+      "body": "CreationDate, CreationTime, and every CED.* timestamp are UTC. Don't convert to local time during ingestion; do it only when you render. Multi-region tenants need UTC-keyed joins or your day boundaries won't match."
+    }
+  ],
+
+  "cli_cheatsheet": [
+    {
+      "title": "Minimal capture — last 7 days, local CSV",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -StartDate (Get-Date).AddDays(-7) `\n  -EndDate   (Get-Date)"
+    },
+    {
+      "title": "Copilot turns only, with the Rollup explosion",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date) `\n  -Filter 'RecordType:261' `\n  -Rollup"
+    },
+    {
+      "title": "Append-merge into an existing run (union + provenance)",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -AppendFile 'C:\\PAXOut\\Purview_Audit_UsageActivity_2026-05-25.csv' `\n  -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date)"
+    },
+    {
+      "title": "Native Fabric Delta-table output",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPathFabric 'https://onelake.dfs.fabric.microsoft.com/<workspace>/<lakehouse>.Lakehouse/Tables/dbo/' `\n  -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date) `\n  -Rollup"
+    },
+    {
+      "title": "Container/CI auth — App registration with certificate",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -Auth AppRegistration `\n  -TenantId   '<tenant-guid>' `\n  -ClientId   '<app-guid>' `\n  -CertThumbprint 'ABCD...EF'"
+    },
+    {
+      "title": "Azure-hosted run — Managed Identity",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPathFabric '<onelake-path>' `\n  -Auth ManagedIdentity"
+    }
+  ],
+
+  "samples": [
+    {
+      "title": "Copilot turn (Path B explosion)",
+      "json": "{\n  \"CreationTime\": \"2026-05-25T14:22:03\",\n  \"Id\":           \"f5b48420-...\",\n  \"Operation\":    \"CopilotInteraction\",\n  \"OrganizationId\":\"00000000-0000-0000-0000-000000000000\",\n  \"RecordType\":   261,\n  \"UserType\":     0,\n  \"UserKey\":      \"i:0h.f|membership|10037ff...\",\n  \"Workload\":     \"Copilot\",\n  \"UserId\":       \"alex@contoso.com\",\n  \"CopilotEventData\": {\n    \"AppHost\":        \"Word\",\n    \"ThreadId\":       \"7e0e1c4d-...\",\n    \"ConversationId\": \"c3b9...\",\n    \"TurnNumber\":     3,\n    \"ClientPlatform\": \"Windows\",\n    \"ClientVersion\":  \"16.0.18526\",\n    \"OutcomeStatus\":  true,\n    \"DurationMs\":     1842,\n    \"Messages\": [\n      { \"Role\": \"User\",      \"MessageType\": \"Prompt\"   },\n      { \"Role\": \"Assistant\", \"MessageType\": \"Response\" }\n    ],\n    \"AccessedResources\": [\n      { \"Type\": \"File\", \"SensitivityLabel\": \"defa4170-0d19-0005-000a-bc88714345d2\" },\n      { \"Type\": \"File\", \"SensitivityLabel\": \"\" }\n    ],\n    \"ModelTransparencyDetails\": [\n      { \"Provider\": \"OpenAI\", \"ModelName\": \"gpt-4o\" }\n    ],\n    \"Usage\": { \"Input\": 1820, \"Output\": 412 }\n  }\n}",
+      "explode_note": "Flattens to max(len(Messages)=2, len(AccessedResources)=2, len(ModelTransparencyDetails)=1) = 2 rows. Row i=0 picks Messages[0], AccessedResources[0], ModelTransparencyDetails[0]; row i=1 picks Messages[1], AccessedResources[1], and ModelTransparencyDetails[0] (last value re-used / empty per surface convention). Token totals appear identically on both rows — aggregate by ConversationId+TurnNumber before summing."
+    },
+    {
+      "title": "SharePoint file access (Path A)",
+      "json": "{\n  \"CreationTime\": \"2026-05-25T14:21:47\",\n  \"Id\":           \"f5b48421-...\",\n  \"Operation\":    \"FileAccessed\",\n  \"OrganizationId\":\"00000000-0000-0000-0000-000000000000\",\n  \"RecordType\":   6,\n  \"UserType\":     0,\n  \"UserKey\":      \"i:0h.f|membership|10037ff...\",\n  \"Workload\":     \"SharePoint\",\n  \"UserId\":       \"alex@contoso.com\",\n  \"ClientIP\":     \"203.0.113.42\",\n  \"ObjectId\":     \"https://contoso.sharepoint.com/sites/marketing/Shared Documents/Q2 plan.docx\",\n  \"SiteUrl\":      \"https://contoso.sharepoint.com/sites/marketing/\",\n  \"SourceFileName\":\"Q2 plan.docx\",\n  \"SourceFileExtension\":\"docx\",\n  \"ItemType\":     \"File\",\n  \"EventSource\":  \"SharePoint\",\n  \"SiteSensitivityLabelId\":\"defa4170-0d19-0005-000a-bc88714345d2\",\n  \"ApplicationId\":\"00000003-0000-0ff1-ce00-000000000000\",\n  \"DeviceProperties\": [\n    { \"Name\": \"OS\",          \"Value\": \"Windows\" },\n    { \"Name\": \"BrowserType\", \"Value\": \"Edge\" },\n    { \"Name\": \"IsCompliant\", \"Value\": \"True\" }\n  ]\n}",
+      "explode_note": "Produces exactly 1 flat row. CED.*, Messages[*], AccessedResources[*], ModelTransparencyDetails[*], SensitivityLabels[*], Tokens* all empty. DeviceProperties pivot pulls only OS=Windows and BrowserType=Edge; IsCompliant is dropped."
+    }
+  ],
+
+  "glossary": [
+    { "term": "Path A",          "definition": "PAX's non-Copilot processing branch. Every audit record produces exactly one flat output row." },
+    { "term": "Path B",          "definition": "PAX's Copilot processing branch. One record can produce N rows via the explosion of its CopilotEventData arrays." },
+    { "term": "Rollup",          "definition": "Post-processor invoked via the -Rollup or -RollupPlusRaw switch. Reads the deterministic raw output and produces the flat, explosion-applied dataset consumed by AI-in-One." },
+    { "term": "CED",             "definition": "Short for AuditData.CopilotEventData — the nested object inside Copilot records that carries everything specific to a turn." },
+    { "term": "Explosion",       "definition": "Per-record array fan-out that turns one Copilot record into N rows. N = max length across Messages / Contexts / AccessedResources / AISystemPlugin / ModelTransparencyDetails / SensitivityLabels." },
+    { "term": "Provenance",      "definition": "Columns added under -AppendFile that record which batch / source file / ingestion timestamp produced each row. Used to roll back a bad ingest." },
+    { "term": "Evergreen",       "definition": "Stable table or file name (e.g., Purview_Audit_UsageActivity) that PAX overwrites/upserts on each run, so downstream queries don't need date-suffixed targets." },
+    { "term": "Tier",            "definition": "Output target class inferred from the -OutputPath URL: Local (drive path), SP (*.sharepoint.com), Fabric (*.onelake.dfs.fabric.microsoft.com/<…>.Lakehouse/…)." },
+    { "term": "NV pivot",        "definition": "Lift of a Name/Value pair array onto fixed columns. PAX pivots only DeviceProperties[Name='OS' or 'BrowserType']; everything else in DeviceProperties is dropped." },
+    { "term": "Wire-format",     "definition": "The agreed flat-column schema between PAX and downstream consumers. 153 base columns plus up to 5 provenance columns under -Append* modes." },
+    { "term": "Schema mode merge","definition": "Delta-table write option PAX uses when emitting to Fabric: existing columns are preserved, new columns are added, no destructive overwrite." },
+    { "term": "Caller-not-owner","definition": "Risk signal: the principal executing PAX differs from the resource owner. Most often appears when running PAX under Managed Identity against a workspace not owned by that identity." }
+  ],
+
+  "schema_diff": {
+    "from": "v1.11.1",
+    "to":   "v1.11.2",
+    "added": [
+      "Single -OutputPath* switches with tier inferred from URL form (drive vs *.sharepoint.com vs *.onelake.dfs.fabric.microsoft.com/<…>.Lakehouse/…)",
+      "Symmetric -Append* switches with union-merge + provenance columns",
+      "Native Fabric Delta-table output with evergreen table names + schema_mode='merge'"
+    ],
+    "removed": [
+      "-IncludeDSPMForAI (Microsoft Agent 365 catalog enrichment — gated off and deprecated)",
+      "-ExplodeArrays / -ExplodeDeep / -ExplosionThreads (replaced by always-on Path B explosion under -Rollup)",
+      "-ExportWorkbook (Excel companion workbook no longer emitted)",
+      "-RAWInputCSV (raw passthrough mode; use the unrolled output directly)",
+      "Separate -OutputPathSP / -OutputPathFabric switches (unified into -OutputPath* with URL-based tier inference)"
+    ],
+    "behavior_changes": [
+      "Audit poll window capped at 4 hours per Graph call — long ranges chunk automatically",
+      "AppReg auth uses ephemeral PFX with certificate pinning instead of long-lived cert files on disk"
+    ]
+  }
+}

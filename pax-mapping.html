@@ -13,12 +13,44 @@
             --text-primary: #1a1a1a;
             --text-secondary: #555;
             --text-muted: #888;
+            --bg-body: #fff;
             --bg-light: #f5f7fa;
             --bg-code: #f1f3f5;
+            --bg-panel: #fff;
+            --bg-detail: #f8fbfe;
             --border: #e0e4e8;
             --row-alt: #fafbfc;
             --pill-bg: #eaf3fb;
             --pill-fg: #004578;
+            --warn-bg: #fff8e6;
+            --warn-border: #f0b400;
+            --warn-fg: #8a6500;
+            --code-fg: #1a1a1a;
+            --tab-active: #fff;
+            --shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        [data-theme="dark"] {
+            --copilot-blue: #4cc2ff;
+            --copilot-dark: #9cdcff;
+            --copilot-light: #69b8e8;
+            --text-primary: #e8edf2;
+            --text-secondary: #b8c0c8;
+            --text-muted: #8a929b;
+            --bg-body: #0e1419;
+            --bg-light: #1a2129;
+            --bg-code: #232b34;
+            --bg-panel: #151b22;
+            --bg-detail: #1a2129;
+            --border: #2a323b;
+            --row-alt: #161c23;
+            --pill-bg: #1f3247;
+            --pill-fg: #9cdcff;
+            --warn-bg: #2a2418;
+            --warn-border: #d6a300;
+            --warn-fg: #ffd766;
+            --code-fg: #e8edf2;
+            --tab-active: #232b34;
+            --shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,7 +59,8 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.55;
             color: var(--text-primary);
-            background: #fff;
+            background: var(--bg-body);
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
         a { color: var(--copilot-blue); }
@@ -128,7 +161,7 @@
         .toolbar {
             position: sticky;
             top: 0;
-            background: rgba(255,255,255,0.97);
+            background: color-mix(in srgb, var(--bg-body) 92%, transparent);
             backdrop-filter: blur(6px);
             padding: 0.85rem 0;
             border-bottom: 1px solid var(--border);
@@ -362,6 +395,318 @@
             table.mapping { font-size: 0.82rem; }
             table.mapping th, table.mapping td { padding: 0.45rem 0.55rem; }
         }
+
+        /* ─── New panels & helpers added in v2 ─── */
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+        }
+        .panel h2 {
+            font-size: 1.3rem;
+            color: var(--copilot-dark);
+            margin-bottom: 0.4rem;
+        }
+        .panel .panel-blurb {
+            color: var(--text-secondary);
+            font-size: 0.93rem;
+            margin-bottom: 1rem;
+            max-width: 900px;
+        }
+
+        details.collapsible {
+            border-top: 1px solid var(--border);
+            padding: 0.75rem 0;
+        }
+        details.collapsible:first-of-type { border-top: none; }
+        details.collapsible > summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--copilot-dark);
+            list-style: none;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+        details.collapsible > summary::-webkit-details-marker { display: none; }
+        details.collapsible > summary::before {
+            content: "›";
+            color: var(--copilot-blue);
+            font-weight: 700;
+            font-size: 1.1em;
+            display: inline-block;
+            transition: transform 0.15s ease;
+        }
+        details.collapsible[open] > summary::before { transform: rotate(90deg); }
+        details.collapsible > summary .blurb {
+            font-weight: 400;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-left: 0.5rem;
+        }
+        details.collapsible .content {
+            padding: 0.75rem 0 0.25rem 1.25rem;
+        }
+
+        /* Tabbed snippets */
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: -1px;
+        }
+        .tab {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .tab:hover { color: var(--copilot-blue); }
+        .tab.active {
+            background: var(--tab-active);
+            border-color: var(--border);
+            color: var(--copilot-dark);
+        }
+        pre.snippet {
+            background: var(--bg-code);
+            color: var(--code-fg);
+            border: 1px solid var(--border);
+            border-radius: 0 6px 6px 6px;
+            padding: 0.9rem 1rem;
+            font-family: 'Consolas','Cascadia Code',monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+            margin: 0;
+            position: relative;
+        }
+        .snippet-wrap { position: relative; }
+        .copy-snippet {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            background: var(--bg-panel);
+            color: var(--copilot-blue);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            opacity: 0.85;
+        }
+        .copy-snippet:hover { opacity: 1; background: var(--bg-light); }
+
+        /* Scenarios matrix */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 1rem;
+        }
+        .scenario-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.9rem 1rem;
+            box-shadow: var(--shadow);
+        }
+        .scenario-card h3 {
+            font-size: 1rem;
+            color: var(--copilot-dark);
+            margin-bottom: 0.35rem;
+        }
+        .scenario-card .blurb {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.65rem;
+        }
+        .scenario-card .fields {
+            display: flex; flex-wrap: wrap; gap: 0.3rem;
+            margin-bottom: 0.6rem;
+        }
+        .scenario-card .fields .chip {
+            background: var(--pill-bg);
+            color: var(--pill-fg);
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-family: 'Consolas','Cascadia Code',monospace;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .scenario-card .fields .chip:hover { border-color: var(--copilot-blue); }
+        .scenario-card .filter {
+            font-family: 'Consolas','Cascadia Code',monospace;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            background: var(--bg-code);
+            padding: 0.4rem 0.55rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+        .scenario-card .filter::before {
+            content: "WHERE ";
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        /* Gotchas */
+        .gotcha {
+            background: var(--warn-bg);
+            border-left: 4px solid var(--warn-border);
+            padding: 0.75rem 1rem;
+            border-radius: 0 5px 5px 0;
+            margin-bottom: 0.6rem;
+        }
+        .gotcha .gtitle {
+            font-weight: 700;
+            color: var(--warn-fg);
+            display: block;
+            margin-bottom: 0.2rem;
+            font-size: 0.95rem;
+        }
+        .gotcha .gbody {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Glossary */
+        dl.glossary { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.25rem; }
+        dl.glossary dt {
+            font-weight: 700; color: var(--copilot-dark);
+            font-family: 'Consolas','Cascadia Code',monospace; font-size: 0.9rem;
+        }
+        dl.glossary dd { color: var(--text-secondary); font-size: 0.92rem; }
+
+        /* Diff */
+        .diff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+        .diff-col { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem; }
+        .diff-col h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .diff-col.added h4   { color: #2a8a47; }
+        .diff-col.removed h4 { color: #c0392b; }
+        .diff-col.changed h4 { color: #8a6500; }
+        .diff-col ul { list-style: none; padding: 0; }
+        .diff-col li { font-size: 0.86rem; color: var(--text-secondary); padding: 0.25rem 0; border-bottom: 1px dashed var(--border); }
+        .diff-col li:last-child { border-bottom: none; }
+
+        /* Facet chips */
+        .facets { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+        .facet-chip {
+            padding: 0.3rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .facet-chip:hover { color: var(--copilot-blue); border-color: var(--copilot-light); }
+        .facet-chip.active {
+            background: var(--copilot-blue);
+            color: white;
+            border-color: var(--copilot-blue);
+        }
+
+        /* Section anchors */
+        .section h2 a.anchor, table.mapping td a.anchor {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7em;
+            margin-left: 0.4rem;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        .section h2:hover a.anchor, table.mapping tr:hover td a.anchor { opacity: 1; }
+
+        /* Per-row "copy as" buttons in detail panel */
+        .copy-as-row {
+            display: flex; flex-wrap: wrap; gap: 0.35rem;
+            margin-top: 0.85rem;
+        }
+        .copy-as-row .label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-right: 0.4rem;
+            align-self: center;
+        }
+        .copy-as-btn {
+            font-size: 0.78rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            color: var(--copilot-blue);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .copy-as-btn:hover { background: var(--copilot-blue); color: white; border-color: var(--copilot-blue); }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: var(--bg-panel);
+            color: var(--copilot-blue);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+        .theme-toggle:hover { background: var(--bg-light); }
+
+        /* Script generator */
+        .gen-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .gen-form label {
+            font-size: 0.8rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            font-weight: 600; display: block; margin-bottom: 0.25rem;
+        }
+        .gen-form select {
+            width: 100%; padding: 0.5rem 0.6rem;
+            border: 1px solid var(--border); border-radius: 5px;
+            background: var(--bg-panel); color: var(--text-primary);
+            font-family: inherit; font-size: 0.92rem;
+        }
+
+        .toast {
+            position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+            background: var(--copilot-dark); color: white;
+            padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 1000;
+            opacity: 0; transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; }
+
+        @media print {
+            .toolbar, .theme-toggle, .copy-as-btn, .copy-snippet,
+            .actions, .facets, .panel.generator { display: none !important; }
+            details.collapsible[open] > summary,
+            details.collapsible:not([open]) > summary { color: var(--copilot-dark); }
+            details.collapsible:not([open]) > * { display: revert !important; }
+            tr.detail-row.hidden { display: table-row !important; }
+            body { background: white; color: black; }
+        }
     </style>
 </head>
 <body>
@@ -386,10 +731,75 @@
             <div class="actions">
                 <a class="btn" href="./pax-mapping.json" download>Download mapping (JSON)</a>
                 <a class="btn secondary" href="./pax-mapping-enrichments.json" download>Download enrichments (JSON)</a>
+                <a class="btn secondary" href="./pax-mapping-extras.json" download>Download extras (JSON)</a>
                 <a class="btn secondary" href="https://github.com/microsoft/PAX" target="_blank" rel="noopener">PAX on GitHub</a>
                 <a class="btn secondary" href="https://github.com/microsoft/Analytics-Hub" target="_blank" rel="noopener">Analytics Hub (dashboards)</a>
+                <button id="theme-toggle" class="theme-toggle" type="button">☾ Dark mode</button>
             </div>
         </header>
+
+        <!-- ─── Quick-start cookbook (Tier 1 #1) ─── -->
+        <section class="panel" id="section-cookbook">
+            <h2>Quick-start cookbook <a class="anchor" href="#section-cookbook">#</a></h2>
+            <p class="panel-blurb">Drop-in queries against the PAX flat output. Click a tab to switch language. Every recipe assumes you've already run the hygiene recipe first (dedupe + drop service principals).</p>
+            <div id="cookbook-list"></div>
+        </section>
+
+        <!-- ─── Script generator (Tier 3 #12) ─── -->
+        <section class="panel generator" id="section-generator">
+            <h2>Script starter generator <a class="anchor" href="#section-generator">#</a></h2>
+            <p class="panel-blurb">Pick a scenario and a destination tool. Emits a starter query against the columns this scenario actually needs.</p>
+            <div class="gen-form">
+                <div><label for="gen-scenario">Scenario</label><select id="gen-scenario"></select></div>
+                <div><label for="gen-lang">Destination</label><select id="gen-lang">
+                    <option value="KQL">KQL (ADX / Sentinel / Log Analytics)</option>
+                    <option value="T-SQL">T-SQL (Fabric Warehouse / SQL Server)</option>
+                    <option value="SPL">SPL (Splunk)</option>
+                    <option value="Pandas">Pandas (Python)</option>
+                </select></div>
+            </div>
+            <div class="snippet-wrap"><pre class="snippet" id="gen-output"></pre><button class="copy-snippet" data-copy-target="gen-output">Copy</button></div>
+        </section>
+
+        <!-- ─── Scenarios cheat sheet (Tier 1 #2) ─── -->
+        <section class="panel" id="section-scenarios">
+            <h2>Scenario → fields cheat sheet <a class="anchor" href="#section-scenarios">#</a></h2>
+            <p class="panel-blurb">Pick a goal, see the 6–10 columns you actually need plus the recommended filter. Click any field chip to jump to its row in the full mapping below.</p>
+            <div class="scenario-grid" id="scenario-grid"></div>
+        </section>
+
+        <!-- ─── CLI cheat sheet (Tier 2 #5) ─── -->
+        <section class="panel" id="section-cli">
+            <h2>PAX CLI cheat sheet <a class="anchor" href="#section-cli">#</a></h2>
+            <p class="panel-blurb">The most common invocations of <code>PAX_Purview_Audit_Log_Processor_v1.11.2.ps1</code>. PowerShell 7+ required.</p>
+            <div id="cli-list"></div>
+        </section>
+
+        <!-- ─── Gotchas (Tier 1 #4) ─── -->
+        <section class="panel" id="section-gotchas">
+            <h2>Common gotchas <a class="anchor" href="#section-gotchas">#</a></h2>
+            <p class="panel-blurb">The stuff that burns people. Read this before you write your first query.</p>
+            <div id="gotcha-list"></div>
+        </section>
+
+        <!-- ─── Sample records (Tier 2 #7) ─── -->
+        <section class="panel" id="section-samples">
+            <h2>Sample raw records → explosion behavior <a class="anchor" href="#section-samples">#</a></h2>
+            <p class="panel-blurb">Two real-shaped <code>AuditData</code> JSON examples and a note on how each becomes flat row(s).</p>
+            <div id="sample-list"></div>
+        </section>
+
+        <!-- ─── Glossary (Tier 3 #9) ─── -->
+        <section class="panel" id="section-glossary">
+            <h2>Glossary <a class="anchor" href="#section-glossary">#</a></h2>
+            <dl class="glossary" id="glossary-list"></dl>
+        </section>
+
+        <!-- ─── Schema diff (Tier 3 #10) ─── -->
+        <section class="panel" id="section-diff">
+            <h2>Schema diff: <span id="diff-from"></span> → <span id="diff-to"></span> <a class="anchor" href="#section-diff">#</a></h2>
+            <div class="diff-grid" id="diff-grid"></div>
+        </section>
 
         <div class="conventions" id="conventions">
             <h3>Conventions</h3>
@@ -402,8 +812,11 @@
             <input type="search" id="filter" placeholder="Filter columns or source paths… (e.g. Token, CopilotEventData.Messages, AppHost)" autocomplete="off">
             <span class="counter" id="counter"></span>
         </div>
+        <div class="facets" id="facets"></div>
 
         <div id="sections"></div>
+
+        <div id="toast" class="toast"></div>
 
         <footer>
             Generated from <code>PAX_Purview_Audit_Log_Processor_v1.11.2.ps1</code> ·
@@ -413,6 +826,227 @@
 
     </div>
 
+    <script id="extras-data" type="application/json">{
+  "$note": "Supplemental content layered onto the PAX mapping page: cookbook recipes, scenario field-sets, gotchas, CLI cheat sheet, sample records, glossary, schema diff. Authored for PAX v1.11.2 flat output.",
+
+  "scenarios": [
+    {
+      "key": "copilot-roi",
+      "title": "Copilot ROI / productivity metrics",
+      "blurb": "Per-user, per-surface activity volume + outcome + duration. Use to compare cohorts and surface-level adoption against your ROI model.",
+      "fields": ["UserId", "AppHost", "ConversationId", "TurnNumber", "TokensInput", "TokensOutput", "DurationMs", "OutcomeStatus", "CreationTime"],
+      "filter": "RecordType=261 (CopilotInteraction) AND OutcomeStatus='Success'"
+    },
+    {
+      "key": "adoption-by-surface",
+      "title": "Adoption by surface",
+      "blurb": "Where Copilot is being used inside your tenant — Word vs Excel vs Teams vs M365 Chat — and on which client platforms.",
+      "fields": ["UserId", "AppHost", "ClientPlatform", "ClientVersion", "CreationTime"],
+      "filter": "RecordType=261"
+    },
+    {
+      "key": "sensitive-grounding",
+      "title": "Sensitive content exposure",
+      "blurb": "Which Copilot turns grounded on (or accessed) data carrying MIP labels. Pair with your label registry to resolve label GUIDs to display names.",
+      "fields": ["UserId", "AppHost", "ConversationId", "AccessedResources[i].Type", "AccessedResources[i].SensitivityLabel", "SensitivityLabels[i].Id", "SiteSensitivityLabelId"],
+      "filter": "RecordType=261 AND (AccessedResources[i].SensitivityLabel IS NOT NULL OR SensitivityLabels[i].Id IS NOT NULL)"
+    },
+    {
+      "key": "failed-turns",
+      "title": "Failed-turn triage",
+      "blurb": "Failures with the diagnostic context you need: which model, which surface, how many retries, which error code.",
+      "fields": ["UserId", "AppHost", "OutcomeStatus", "RetryCount", "ErrorNumber", "ModelName", "ModelVendor", "CreationTime"],
+      "filter": "OutcomeStatus='Failure'"
+    },
+    {
+      "key": "cost-attribution",
+      "title": "Cost attribution (token spend)",
+      "blurb": "Token consumption by user / model / surface — the input to chargeback and capacity planning.",
+      "fields": ["UserId", "OrganizationId", "AppHost", "ModelName", "ModelVendor", "TokensInput", "TokensOutput", "TokensTotal", "CreationTime"],
+      "filter": "RecordType=261"
+    },
+    {
+      "key": "dlp-correlation",
+      "title": "DLP correlation (file activity)",
+      "blurb": "Pair with DLP alerts: who touched which file, from where, in which workload.",
+      "fields": ["UserId", "ClientIP", "Workload", "Operation", "SiteUrl", "SourceFileName", "ItemType", "SiteSensitivityLabelId", "CreationTime"],
+      "filter": "Workload IN ('SharePoint','OneDrive','Exchange')"
+    },
+    {
+      "key": "file-activity",
+      "title": "File activity overview",
+      "blurb": "Generic 'who did what to which file' for SharePoint and OneDrive.",
+      "fields": ["UserId", "Workload", "Operation", "SiteUrl", "SourceFileName", "SourceFileExtension", "ItemType", "ClientIP", "CreationTime"],
+      "filter": "RecordType IN (4, 6, 14)"
+    },
+    {
+      "key": "cross-tenant",
+      "title": "Cross-tenant / B2B access",
+      "blurb": "Activity where actor and target tenants differ — guests, B2B collaborators, cross-cloud.",
+      "fields": ["UserId", "ActorContextId", "TargetContextId", "Workload", "Operation", "ObjectId", "CreationTime"],
+      "filter": "ActorContextId IS NOT NULL AND TargetContextId IS NOT NULL AND ActorContextId <> TargetContextId"
+    }
+  ],
+
+  "cookbook": [
+    {
+      "key": "hygiene",
+      "title": "Hygiene: dedupe retries + drop service-principal noise",
+      "blurb": "Always do this first. RecordId can appear more than once across overlapping audit pages. UserType 4/5/6 are System / Application / ServicePrincipal — almost always noise for end-user analytics.",
+      "snippets": {
+        "KQL": "PAX\n| where UserType !in ('4','5','6','System','Application','ServicePrincipal')\n| summarize arg_max(CreationTime, *) by RecordId",
+        "T-SQL": "WITH ranked AS (\n  SELECT *,\n    ROW_NUMBER() OVER (PARTITION BY RecordId ORDER BY CreationTime DESC) AS rn\n  FROM dbo.PAX\n  WHERE UserType NOT IN ('4','5','6','System','Application','ServicePrincipal')\n)\nSELECT * FROM ranked WHERE rn = 1;",
+        "SPL": "index=pax sourcetype=pax_purview\n| search NOT UserType IN (4,5,6,\"System\",\"Application\",\"ServicePrincipal\")\n| dedup RecordId sortby -CreationTime",
+        "Pandas": "import pandas as pd\ndf = pd.read_csv('Purview_Audit_UsageActivity_*.csv')\ndf = df[~df['UserType'].astype(str).isin(['4','5','6','System','Application','ServicePrincipal'])]\ndf = df.sort_values('CreationTime').drop_duplicates('RecordId', keep='last')"
+      }
+    },
+    {
+      "key": "top-token-users",
+      "title": "Top users by token spend, last 7 days",
+      "blurb": "Cost-attribution starter. Group by UserId, sum TokensTotal, rank.",
+      "snippets": {
+        "KQL": "PAX\n| where RecordType == '261'\n| where CreationTime >= ago(7d)\n| summarize Turns = count(),\n            InputTokens = sum(toint(TokensInput)),\n            OutputTokens = sum(toint(TokensOutput)),\n            TotalTokens = sum(toint(TokensTotal))\n          by UserId\n| top 25 by TotalTokens desc",
+        "T-SQL": "SELECT TOP 25\n  UserId,\n  COUNT(*)                        AS Turns,\n  SUM(TRY_CAST(TokensInput  AS INT)) AS InputTokens,\n  SUM(TRY_CAST(TokensOutput AS INT)) AS OutputTokens,\n  SUM(TRY_CAST(TokensTotal  AS INT)) AS TotalTokens\nFROM dbo.PAX\nWHERE RecordType = '261'\n  AND CreationTime >= DATEADD(day, -7, SYSUTCDATETIME())\nGROUP BY UserId\nORDER BY TotalTokens DESC;",
+        "SPL": "index=pax sourcetype=pax_purview RecordType=261 earliest=-7d@d\n| stats count AS Turns,\n        sum(TokensInput)  AS InputTokens,\n        sum(TokensOutput) AS OutputTokens,\n        sum(TokensTotal)  AS TotalTokens\n      by UserId\n| sort -TotalTokens\n| head 25",
+        "Pandas": "cop = df[df['RecordType'].astype(str) == '261'].copy()\ncop['CreationTime'] = pd.to_datetime(cop['CreationTime'], utc=True)\ncop = cop[cop['CreationTime'] >= pd.Timestamp.utcnow() - pd.Timedelta(days=7)]\nfor c in ('TokensInput','TokensOutput','TokensTotal'):\n    cop[c] = pd.to_numeric(cop[c], errors='coerce').fillna(0).astype(int)\nprint(cop.groupby('UserId')\n         .agg(Turns=('RecordId','count'),\n              InputTokens=('TokensInput','sum'),\n              OutputTokens=('TokensOutput','sum'),\n              TotalTokens=('TokensTotal','sum'))\n         .nlargest(25,'TotalTokens'))"
+      }
+    },
+    {
+      "key": "failed-turns",
+      "title": "Failed Copilot turns in the last 24h with retry context",
+      "blurb": "Find which surfaces and models are producing failures, and whether retries eventually succeeded.",
+      "snippets": {
+        "KQL": "PAX\n| where RecordType == '261'\n| where CreationTime >= ago(24h)\n| where OutcomeStatus == 'Failure'\n| summarize Failures = count(),\n            AvgRetries = avg(toint(RetryCount)),\n            DistinctUsers = dcount(UserId)\n          by AppHost, ModelName, ModelVendor\n| order by Failures desc",
+        "T-SQL": "SELECT AppHost, ModelName, ModelVendor,\n       COUNT(*)                              AS Failures,\n       AVG(TRY_CAST(RetryCount AS FLOAT))    AS AvgRetries,\n       COUNT(DISTINCT UserId)                AS DistinctUsers\nFROM dbo.PAX\nWHERE RecordType = '261'\n  AND OutcomeStatus = 'Failure'\n  AND CreationTime >= DATEADD(hour, -24, SYSUTCDATETIME())\nGROUP BY AppHost, ModelName, ModelVendor\nORDER BY Failures DESC;",
+        "SPL": "index=pax sourcetype=pax_purview RecordType=261 OutcomeStatus=Failure earliest=-24h\n| stats count AS Failures,\n        avg(RetryCount) AS AvgRetries,\n        dc(UserId)      AS DistinctUsers\n      by AppHost, ModelName, ModelVendor\n| sort -Failures",
+        "Pandas": "f = df[(df['RecordType'].astype(str)=='261') & (df['OutcomeStatus']=='Failure')].copy()\nf['CreationTime'] = pd.to_datetime(f['CreationTime'], utc=True)\nf = f[f['CreationTime'] >= pd.Timestamp.utcnow() - pd.Timedelta(hours=24)]\nf['RetryCount'] = pd.to_numeric(f['RetryCount'], errors='coerce').fillna(0)\nprint(f.groupby(['AppHost','ModelName','ModelVendor'])\n        .agg(Failures=('RecordId','count'),\n             AvgRetries=('RetryCount','mean'),\n             DistinctUsers=('UserId','nunique'))\n        .sort_values('Failures', ascending=False))"
+      }
+    },
+    {
+      "key": "sensitive-grounding",
+      "title": "Copilot turns that grounded on labelled content",
+      "blurb": "Conservative pattern — joins to whichever sensitivity field a given surface emits. After dedup, hand off to your MIP label registry to resolve GUIDs.",
+      "snippets": {
+        "KQL": "PAX\n| where RecordType == '261'\n| where isnotempty(column_ifexists('AccessedResources[0].SensitivityLabel',''))\n     or isnotempty(column_ifexists('SensitivityLabels[0].Id',''))\n     or isnotempty(SiteSensitivityLabelId)\n| project CreationTime, UserId, AppHost, ConversationId, TurnNumber,\n          AccessedResource = column_ifexists('AccessedResources[0].Type',''),\n          LabelOnResource  = column_ifexists('AccessedResources[0].SensitivityLabel',''),\n          LabelOnTurn      = column_ifexists('SensitivityLabels[0].Id',''),\n          LabelOnSite      = SiteSensitivityLabelId",
+        "T-SQL": "SELECT CreationTime, UserId, AppHost, ConversationId, TurnNumber,\n       [AccessedResources[0].Type]              AS AccessedResource,\n       [AccessedResources[0].SensitivityLabel]  AS LabelOnResource,\n       [SensitivityLabels[0].Id]                AS LabelOnTurn,\n       SiteSensitivityLabelId                   AS LabelOnSite\nFROM dbo.PAX\nWHERE RecordType = '261'\n  AND (NULLIF([AccessedResources[0].SensitivityLabel],'') IS NOT NULL\n    OR NULLIF([SensitivityLabels[0].Id],'')               IS NOT NULL\n    OR NULLIF(SiteSensitivityLabelId,'')                  IS NOT NULL);",
+        "SPL": "index=pax sourcetype=pax_purview RecordType=261\n  (AccessedResources{}.SensitivityLabel=* OR SensitivityLabels{}.Id=* OR SiteSensitivityLabelId=*)\n| table _time UserId AppHost ConversationId TurnNumber\n        AccessedResources{}.Type AccessedResources{}.SensitivityLabel\n        SensitivityLabels{}.Id SiteSensitivityLabelId",
+        "Pandas": "cop = df[df['RecordType'].astype(str)=='261'].copy()\nmask = (cop.get('AccessedResources[0].SensitivityLabel', pd.Series(dtype=str)).fillna('') != '')\n     | (cop.get('SensitivityLabels[0].Id',               pd.Series(dtype=str)).fillna('') != '')\n     | (cop.get('SiteSensitivityLabelId',                 pd.Series(dtype=str)).fillna('') != '')\nprint(cop.loc[mask, ['CreationTime','UserId','AppHost','ConversationId','TurnNumber',\n                     'AccessedResources[0].Type',\n                     'AccessedResources[0].SensitivityLabel',\n                     'SensitivityLabels[0].Id',\n                     'SiteSensitivityLabelId']])"
+      }
+    }
+  ],
+
+  "gotchas": [
+    {
+      "title": "Exchange ResultStatus is True/False, not Succeeded/Failed",
+      "body": "Exchange records emit ResultStatus values 'True'/'False' while every other workload uses 'Succeeded'/'Failed'. Normalize before filtering or your Exchange rows will silently disappear."
+    },
+    {
+      "title": "RecordId is the dedupe key — Id is not",
+      "body": "The audit pipeline can serve the same RecordId twice across overlapping page boundaries. AuditData.Id usually equals RecordId but isn't guaranteed across schema versions. Dedupe on RecordId, keep the latest CreationTime."
+    },
+    {
+      "title": "CED.* columns are empty for every Path A (non-Copilot) row",
+      "body": "Non-Copilot records flow through Path A and produce exactly one flat row with all CopilotEventData-derived columns blank. Don't inner-join on AppHost / ConversationId / TokensTotal when you mean to scope to file activity — you'll drop every row."
+    },
+    {
+      "title": "One Copilot turn can explode to 50+ flat rows",
+      "body": "Path B explodes Messages × Contexts × AccessedResources × AISystemPlugin × ModelTransparencyDetails × SensitivityLabels. A turn that grounded on 12 files and used 4 plugins is 12 × 4 = 48 rows. Always aggregate (distinct ConversationId/TurnNumber) before joining to user-level dimensions or your token totals will multiply."
+    },
+    {
+      "title": "UserType is numeric in raw, text after enrichment",
+      "body": "Raw audit emits 0–8. Some Power BI flows label them (Regular/Admin/System/etc.). Filter on BOTH forms ('4','System') so the same query works regardless of whether the dataset was enriched."
+    },
+    {
+      "title": "First-party ApplicationId GUIDs look like noise but are signal",
+      "body": "00000003-0000-0ff1-ce00-000000000000 is SharePoint, 1fec8e78-bce4-4aaf-ab1b-5451cc387264 is Teams, fb78d390-0c51-40cd-8e17-fdbfab77341b is Copilot. Maintain a lookup table — most 'mystery actor' rows in audit are well-known first-party clients."
+    },
+    {
+      "title": "DurationMs is sometimes 0, -1, or missing",
+      "body": "Different Copilot surfaces report timing under DurationMs / ElapsedMs / ProcessingTimeMs / LatencyMs. PAX falls through them in that order. If you average DurationMs cluster-wide, exclude rows where DurationMs <= 0 or you'll wreck your p50."
+    },
+    {
+      "title": "Every timestamp is UTC — convert at the display layer only",
+      "body": "CreationDate, CreationTime, and every CED.* timestamp are UTC. Don't convert to local time during ingestion; do it only when you render. Multi-region tenants need UTC-keyed joins or your day boundaries won't match."
+    }
+  ],
+
+  "cli_cheatsheet": [
+    {
+      "title": "Minimal capture — last 7 days, local CSV",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -StartDate (Get-Date).AddDays(-7) `\n  -EndDate   (Get-Date)"
+    },
+    {
+      "title": "Copilot turns only, with the Rollup explosion",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date) `\n  -Filter 'RecordType:261' `\n  -Rollup"
+    },
+    {
+      "title": "Append-merge into an existing run (union + provenance)",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -AppendFile 'C:\\PAXOut\\Purview_Audit_UsageActivity_2026-05-25.csv' `\n  -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date)"
+    },
+    {
+      "title": "Native Fabric Delta-table output",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPathFabric 'https://onelake.dfs.fabric.microsoft.com/<workspace>/<lakehouse>.Lakehouse/Tables/dbo/' `\n  -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date) `\n  -Rollup"
+    },
+    {
+      "title": "Container/CI auth — App registration with certificate",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPath 'C:\\PAXOut' `\n  -Auth AppRegistration `\n  -TenantId   '<tenant-guid>' `\n  -ClientId   '<app-guid>' `\n  -CertThumbprint 'ABCD...EF'"
+    },
+    {
+      "title": "Azure-hosted run — Managed Identity",
+      "code": "pwsh ./PAX_Purview_Audit_Log_Processor_v1.11.2.ps1 `\n  -OutputPathFabric '<onelake-path>' `\n  -Auth ManagedIdentity"
+    }
+  ],
+
+  "samples": [
+    {
+      "title": "Copilot turn (Path B explosion)",
+      "json": "{\n  \"CreationTime\": \"2026-05-25T14:22:03\",\n  \"Id\":           \"f5b48420-...\",\n  \"Operation\":    \"CopilotInteraction\",\n  \"OrganizationId\":\"00000000-0000-0000-0000-000000000000\",\n  \"RecordType\":   261,\n  \"UserType\":     0,\n  \"UserKey\":      \"i:0h.f|membership|10037ff...\",\n  \"Workload\":     \"Copilot\",\n  \"UserId\":       \"alex@contoso.com\",\n  \"CopilotEventData\": {\n    \"AppHost\":        \"Word\",\n    \"ThreadId\":       \"7e0e1c4d-...\",\n    \"ConversationId\": \"c3b9...\",\n    \"TurnNumber\":     3,\n    \"ClientPlatform\": \"Windows\",\n    \"ClientVersion\":  \"16.0.18526\",\n    \"OutcomeStatus\":  true,\n    \"DurationMs\":     1842,\n    \"Messages\": [\n      { \"Role\": \"User\",      \"MessageType\": \"Prompt\"   },\n      { \"Role\": \"Assistant\", \"MessageType\": \"Response\" }\n    ],\n    \"AccessedResources\": [\n      { \"Type\": \"File\", \"SensitivityLabel\": \"defa4170-0d19-0005-000a-bc88714345d2\" },\n      { \"Type\": \"File\", \"SensitivityLabel\": \"\" }\n    ],\n    \"ModelTransparencyDetails\": [\n      { \"Provider\": \"OpenAI\", \"ModelName\": \"gpt-4o\" }\n    ],\n    \"Usage\": { \"Input\": 1820, \"Output\": 412 }\n  }\n}",
+      "explode_note": "Flattens to max(len(Messages)=2, len(AccessedResources)=2, len(ModelTransparencyDetails)=1) = 2 rows. Row i=0 picks Messages[0], AccessedResources[0], ModelTransparencyDetails[0]; row i=1 picks Messages[1], AccessedResources[1], and ModelTransparencyDetails[0] (last value re-used / empty per surface convention). Token totals appear identically on both rows — aggregate by ConversationId+TurnNumber before summing."
+    },
+    {
+      "title": "SharePoint file access (Path A)",
+      "json": "{\n  \"CreationTime\": \"2026-05-25T14:21:47\",\n  \"Id\":           \"f5b48421-...\",\n  \"Operation\":    \"FileAccessed\",\n  \"OrganizationId\":\"00000000-0000-0000-0000-000000000000\",\n  \"RecordType\":   6,\n  \"UserType\":     0,\n  \"UserKey\":      \"i:0h.f|membership|10037ff...\",\n  \"Workload\":     \"SharePoint\",\n  \"UserId\":       \"alex@contoso.com\",\n  \"ClientIP\":     \"203.0.113.42\",\n  \"ObjectId\":     \"https://contoso.sharepoint.com/sites/marketing/Shared Documents/Q2 plan.docx\",\n  \"SiteUrl\":      \"https://contoso.sharepoint.com/sites/marketing/\",\n  \"SourceFileName\":\"Q2 plan.docx\",\n  \"SourceFileExtension\":\"docx\",\n  \"ItemType\":     \"File\",\n  \"EventSource\":  \"SharePoint\",\n  \"SiteSensitivityLabelId\":\"defa4170-0d19-0005-000a-bc88714345d2\",\n  \"ApplicationId\":\"00000003-0000-0ff1-ce00-000000000000\",\n  \"DeviceProperties\": [\n    { \"Name\": \"OS\",          \"Value\": \"Windows\" },\n    { \"Name\": \"BrowserType\", \"Value\": \"Edge\" },\n    { \"Name\": \"IsCompliant\", \"Value\": \"True\" }\n  ]\n}",
+      "explode_note": "Produces exactly 1 flat row. CED.*, Messages[*], AccessedResources[*], ModelTransparencyDetails[*], SensitivityLabels[*], Tokens* all empty. DeviceProperties pivot pulls only OS=Windows and BrowserType=Edge; IsCompliant is dropped."
+    }
+  ],
+
+  "glossary": [
+    { "term": "Path A",          "definition": "PAX's non-Copilot processing branch. Every audit record produces exactly one flat output row." },
+    { "term": "Path B",          "definition": "PAX's Copilot processing branch. One record can produce N rows via the explosion of its CopilotEventData arrays." },
+    { "term": "Rollup",          "definition": "Post-processor invoked via the -Rollup or -RollupPlusRaw switch. Reads the deterministic raw output and produces the flat, explosion-applied dataset consumed by AI-in-One." },
+    { "term": "CED",             "definition": "Short for AuditData.CopilotEventData — the nested object inside Copilot records that carries everything specific to a turn." },
+    { "term": "Explosion",       "definition": "Per-record array fan-out that turns one Copilot record into N rows. N = max length across Messages / Contexts / AccessedResources / AISystemPlugin / ModelTransparencyDetails / SensitivityLabels." },
+    { "term": "Provenance",      "definition": "Columns added under -AppendFile that record which batch / source file / ingestion timestamp produced each row. Used to roll back a bad ingest." },
+    { "term": "Evergreen",       "definition": "Stable table or file name (e.g., Purview_Audit_UsageActivity) that PAX overwrites/upserts on each run, so downstream queries don't need date-suffixed targets." },
+    { "term": "Tier",            "definition": "Output target class inferred from the -OutputPath URL: Local (drive path), SP (*.sharepoint.com), Fabric (*.onelake.dfs.fabric.microsoft.com/<…>.Lakehouse/…)." },
+    { "term": "NV pivot",        "definition": "Lift of a Name/Value pair array onto fixed columns. PAX pivots only DeviceProperties[Name='OS' or 'BrowserType']; everything else in DeviceProperties is dropped." },
+    { "term": "Wire-format",     "definition": "The agreed flat-column schema between PAX and downstream consumers. 153 base columns plus up to 5 provenance columns under -Append* modes." },
+    { "term": "Schema mode merge","definition": "Delta-table write option PAX uses when emitting to Fabric: existing columns are preserved, new columns are added, no destructive overwrite." },
+    { "term": "Caller-not-owner","definition": "Risk signal: the principal executing PAX differs from the resource owner. Most often appears when running PAX under Managed Identity against a workspace not owned by that identity." }
+  ],
+
+  "schema_diff": {
+    "from": "v1.11.1",
+    "to":   "v1.11.2",
+    "added": [
+      "Single -OutputPath* switches with tier inferred from URL form (drive vs *.sharepoint.com vs *.onelake.dfs.fabric.microsoft.com/<…>.Lakehouse/…)",
+      "Symmetric -Append* switches with union-merge + provenance columns",
+      "Native Fabric Delta-table output with evergreen table names + schema_mode='merge'"
+    ],
+    "removed": [
+      "-IncludeDSPMForAI (Microsoft Agent 365 catalog enrichment — gated off and deprecated)",
+      "-ExplodeArrays / -ExplodeDeep / -ExplosionThreads (replaced by always-on Path B explosion under -Rollup)",
+      "-ExportWorkbook (Excel companion workbook no longer emitted)",
+      "-RAWInputCSV (raw passthrough mode; use the unrolled output directly)",
+      "Separate -OutputPathSP / -OutputPathFabric switches (unified into -OutputPath* with URL-based tier inference)"
+    ],
+    "behavior_changes": [
+      "Audit poll window capped at 4 hours per Graph call — long ranges chunk automatically",
+      "AppReg auth uses ephemeral PFX with certificate pinning instead of long-lived cert files on disk"
+    ]
+  }
+}
+</script>
     <script id="enrichment-data" type="application/json">{
   "$note": "Per-column descriptions and possible values. Keyed by output column name. Sources: Microsoft 365 Management Activity API common schema, Office 365 Management API Schema, Copilot in Microsoft 365 audit schema. Values lists are illustrative — workload-dependent fields keep evolving; consult Microsoft Learn for the authoritative current list.",
   "$value_notation": {
@@ -763,19 +1397,261 @@
 </script>
     <script>
     (function () {
-        const data = JSON.parse(document.getElementById('mapping-data').textContent);
-        const enrich = JSON.parse(document.getElementById('enrichment-data').textContent);
-        // Normalize keys for lookup: exact column name first, then strip leading 'CED.' or array-index variants
+        const data    = JSON.parse(document.getElementById('mapping-data').textContent);
+        const enrich  = JSON.parse(document.getElementById('enrichment-data').textContent);
+        const extras  = JSON.parse(document.getElementById('extras-data').textContent);
+
+        // ── Helpers ──
+        function esc(s) {
+            return String(s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        function slugify(s) {
+            return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g,'');
+        }
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            clearTimeout(toast._h);
+            toast._h = setTimeout(() => t.classList.remove('show'), 1600);
+        }
+        function copyText(text, label) {
+            navigator.clipboard.writeText(text).then(
+                () => toast((label || 'Copied') + ' ✓'),
+                () => toast('Copy failed')
+            );
+        }
         function lookupEnrich(col) {
             if (!col) return null;
             if (enrich[col]) return enrich[col];
-            // Try array-index normalization (Messages[0].Role -> Messages[i].Role)
             const arrNorm = col.replace(/\[\d+\]/g, '[i]');
             if (enrich[arrNorm]) return enrich[arrNorm];
             return null;
         }
+        // Take a 'source' field string (which may contain '||' fallbacks) and return its FIRST path.
+        function firstPath(src) {
+            if (!src) return '';
+            const first = src.split('||')[0].trim();
+            // Strip predicate operators we can't translate cleanly
+            return first;
+        }
+        // Turn 'AuditData.CopilotEventData.AppHost' into format-specific access expressions.
+        function pathToFormat(src, fmt) {
+            const path = firstPath(src);
+            if (!path) return '';
+            // Strip the root token so we can prepend per-format.
+            // record.X  -> envelope column X
+            // AuditData.X.Y  -> nested under AuditData
+            // CED.X       -> AuditData.CopilotEventData.X
+            // DeviceProperties[?Name=='OS'].Value -> filter pattern, we keep notation
+            let root = null;
+            let rest = path;
+            if (/^record\./i.test(path))     { root = 'record';    rest = path.replace(/^record\./i, ''); }
+            else if (/^AuditData\./.test(path)) { root = 'AuditData'; rest = path.replace(/^AuditData\./, ''); }
+            else if (/^CED\./.test(path))       { root = 'CED';       rest = path.replace(/^CED\./, ''); }
+            else { root = ''; rest = path; }
 
-        // ── Section definitions (preserve order, give friendly titles) ──
+            const segs = rest.split('.');
+            switch (fmt) {
+                case 'JSONPath': {
+                    return '$.' + (root ? root + '.' : '') + segs.join('.');
+                }
+                case 'KQL': {
+                    // Assume AuditData is a JSON column; parse it once then walk.
+                    if (root === 'record') return rest;
+                    const expanded = (root === 'CED' ? ['CopilotEventData', ...segs] : segs).join('.');
+                    return 'parse_json(AuditData).' + expanded;
+                }
+                case 'M': {
+                    // Power Query M record/list walk
+                    const all = (root === 'CED' ? ['CopilotEventData', ...segs] : segs);
+                    const bracketed = all.map(s => `[${s}]`).join('');
+                    return (root === 'record' ? `[${rest}]` : `Json.Document([AuditData])${bracketed}`);
+                }
+                case 'Python': {
+                    if (root === 'record') return `record['${rest}']`;
+                    const all = (root === 'CED' ? ['CopilotEventData', ...segs] : segs);
+                    return 'audit_data' + all.map(s => `['${s}']`).join('');
+                }
+                case 'SPL': {
+                    // Splunk dot-path against the JSON-extracted field tree
+                    if (root === 'record') return rest;
+                    const all = (root === 'CED' ? ['CopilotEventData', ...segs] : segs);
+                    return 'AuditData.' + all.join('.');
+                }
+            }
+            return path;
+        }
+
+        // ── Theme toggle ──
+        const themeBtn = document.getElementById('theme-toggle');
+        const stored = localStorage.getItem('pax-theme');
+        if (stored === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        function syncThemeBtn() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            themeBtn.textContent = isDark ? '☀ Light mode' : '☾ Dark mode';
+        }
+        syncThemeBtn();
+        themeBtn.addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            const next = cur === 'dark' ? null : 'dark';
+            if (next) document.documentElement.setAttribute('data-theme', next);
+            else      document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('pax-theme', next || 'light');
+            syncThemeBtn();
+        });
+
+        // ── Cookbook rendering (with tabs) ──
+        const langs = ['KQL','T-SQL','SPL','Pandas'];
+        const cbList = document.getElementById('cookbook-list');
+        extras.cookbook.forEach(rec => {
+            const det = document.createElement('details');
+            det.className = 'collapsible';
+            det.id = 'cookbook-' + rec.key;
+            det.innerHTML = `<summary>${esc(rec.title)} <span class="blurb">${esc(rec.blurb)}</span></summary>
+              <div class="content">
+                <div class="tabs" role="tablist"></div>
+                <div class="snippet-wrap"><pre class="snippet"></pre><button class="copy-snippet">Copy</button></div>
+              </div>`;
+            const tabsEl = det.querySelector('.tabs');
+            const preEl  = det.querySelector('pre.snippet');
+            const copyEl = det.querySelector('.copy-snippet');
+            langs.forEach((l, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'tab' + (i === 0 ? ' active' : '');
+                btn.textContent = l; btn.type = 'button';
+                btn.addEventListener('click', () => {
+                    tabsEl.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    btn.classList.add('active');
+                    preEl.textContent = rec.snippets[l] || '(not provided)';
+                });
+                tabsEl.appendChild(btn);
+            });
+            preEl.textContent = rec.snippets[langs[0]] || '';
+            copyEl.addEventListener('click', () => copyText(preEl.textContent, 'Snippet copied'));
+            cbList.appendChild(det);
+        });
+
+        // ── Scenarios cheat sheet ──
+        const scGrid = document.getElementById('scenario-grid');
+        const genScenario = document.getElementById('gen-scenario');
+        extras.scenarios.forEach(sc => {
+            const card = document.createElement('div');
+            card.className = 'scenario-card';
+            card.id = 'scenario-' + sc.key;
+            card.innerHTML = `<h3>${esc(sc.title)}</h3>
+              <div class="blurb">${esc(sc.blurb)}</div>
+              <div class="fields">${sc.fields.map(f =>
+                `<span class="chip" data-jump="${esc(f)}">${esc(f)}</span>`).join('')}</div>
+              <div class="filter">${esc(sc.filter)}</div>`;
+            scGrid.appendChild(card);
+
+            const opt = document.createElement('option');
+            opt.value = sc.key; opt.textContent = sc.title;
+            genScenario.appendChild(opt);
+        });
+
+        // ── CLI cheat sheet ──
+        const cliList = document.getElementById('cli-list');
+        extras.cli_cheatsheet.forEach(c => {
+            const det = document.createElement('details');
+            det.className = 'collapsible';
+            det.innerHTML = `<summary>${esc(c.title)}</summary>
+              <div class="content"><div class="snippet-wrap"><pre class="snippet"></pre><button class="copy-snippet">Copy</button></div></div>`;
+            const pre = det.querySelector('pre');
+            pre.textContent = c.code;
+            det.querySelector('.copy-snippet').addEventListener('click', () => copyText(pre.textContent, 'Command copied'));
+            cliList.appendChild(det);
+        });
+
+        // ── Gotchas ──
+        const goList = document.getElementById('gotcha-list');
+        extras.gotchas.forEach(g => {
+            const d = document.createElement('div');
+            d.className = 'gotcha';
+            d.innerHTML = `<span class="gtitle">${esc(g.title)}</span><span class="gbody">${esc(g.body)}</span>`;
+            goList.appendChild(d);
+        });
+
+        // ── Samples ──
+        const sList = document.getElementById('sample-list');
+        extras.samples.forEach(s => {
+            const det = document.createElement('details');
+            det.className = 'collapsible';
+            det.innerHTML = `<summary>${esc(s.title)}</summary>
+              <div class="content">
+                <div class="snippet-wrap"><pre class="snippet"></pre><button class="copy-snippet">Copy</button></div>
+                <p style="margin-top:0.6rem;color:var(--text-secondary);font-size:0.88rem;">${esc(s.explode_note)}</p>
+              </div>`;
+            const pre = det.querySelector('pre');
+            pre.textContent = s.json;
+            det.querySelector('.copy-snippet').addEventListener('click', () => copyText(pre.textContent, 'Sample copied'));
+            sList.appendChild(det);
+        });
+
+        // ── Glossary ──
+        const gl = document.getElementById('glossary-list');
+        extras.glossary.forEach(g => {
+            const dt = document.createElement('dt'); dt.textContent = g.term;
+            const dd = document.createElement('dd'); dd.textContent = g.definition;
+            gl.appendChild(dt); gl.appendChild(dd);
+        });
+
+        // ── Schema diff ──
+        document.getElementById('diff-from').textContent = extras.schema_diff.from;
+        document.getElementById('diff-to').textContent   = extras.schema_diff.to;
+        const dGrid = document.getElementById('diff-grid');
+        [['added','Added',extras.schema_diff.added],
+         ['removed','Removed',extras.schema_diff.removed],
+         ['changed','Behavior changes',extras.schema_diff.behavior_changes]].forEach(([cls,label,arr]) => {
+            const col = document.createElement('div');
+            col.className = 'diff-col ' + cls;
+            col.innerHTML = `<h4>${esc(label)}</h4><ul>${arr.map(x => '<li>' + esc(x) + '</li>').join('')}</ul>`;
+            dGrid.appendChild(col);
+        });
+
+        // ── Script generator ──
+        const genLang = document.getElementById('gen-lang');
+        const genOut  = document.getElementById('gen-output');
+        function buildStarter() {
+            const sc = extras.scenarios.find(s => s.key === genScenario.value);
+            if (!sc) return;
+            const lang = genLang.value;
+            const fields = sc.fields;
+            const wh = sc.filter
+                .replace(/IS NOT NULL/g, 'IS NOT NULL')
+                .replace(/AND/g, 'and').replace(/OR/g, 'or')
+                .replace(/RecordType=261/g, "RecordType == '261'")
+                .replace(/=/g, ' == ').replace(/<>/g, ' != ');
+            let out = '';
+            switch (lang) {
+                case 'KQL':
+                    out = `// Scenario: ${sc.title}\nPAX\n| where UserType !in ('4','5','6','System','Application','ServicePrincipal')\n| summarize arg_max(CreationTime, *) by RecordId\n| where ${sc.filter.replace(/RecordType=261/g,"RecordType == '261'").replace(/=/g,' == ').replace(/<>/g,' != ').replace(/IS NOT NULL/g,'isnotempty(')}\n| project ${fields.join(', ')}`;
+                    break;
+                case 'T-SQL':
+                    out = `-- Scenario: ${sc.title}\nWITH clean AS (\n  SELECT *, ROW_NUMBER() OVER (PARTITION BY RecordId ORDER BY CreationTime DESC) rn\n  FROM dbo.PAX\n  WHERE UserType NOT IN ('4','5','6','System','Application','ServicePrincipal')\n)\nSELECT ${fields.map(f => '[' + f + ']').join(', ')}\nFROM clean\nWHERE rn = 1\n  AND ${sc.filter};`;
+                    break;
+                case 'SPL':
+                    out = `index=pax sourcetype=pax_purview\n| search NOT UserType IN (4,5,6,"System","Application","ServicePrincipal")\n| dedup RecordId sortby -CreationTime\n| search ${sc.filter.replace(/=/g,'=').replace(/IS NOT NULL/g,'=*').replace(/AND/gi,' ').replace(/OR/gi,' OR ').replace(/IN \(/g,'IN(')}\n| table ${fields.join(' ')}`;
+                    break;
+                case 'Pandas':
+                    out = `# Scenario: ${sc.title}\nimport pandas as pd\ndf = pd.read_csv('Purview_Audit_UsageActivity_*.csv')\ndf = df[~df['UserType'].astype(str).isin(['4','5','6','System','Application','ServicePrincipal'])]\ndf = df.sort_values('CreationTime').drop_duplicates('RecordId', keep='last')\n# Filter (review/edit): ${sc.filter}\nout = df[[${fields.map(f => "'" + f + "'").join(', ')}]]\nprint(out.head(50))`;
+                    break;
+            }
+            genOut.textContent = out;
+        }
+        genScenario.addEventListener('change', buildStarter);
+        genLang.addEventListener('change', buildStarter);
+        document.querySelectorAll('.copy-snippet[data-copy-target]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tgt = document.getElementById(btn.dataset.copyTarget);
+                if (tgt) copyText(tgt.textContent, 'Copied');
+            });
+        });
+        if (extras.scenarios.length) { genScenario.value = extras.scenarios[0].key; buildStarter(); }
+
+        // ── Section / column rendering (mapping tables) ──
         const SECTIONS = [
             { key: 'csv_envelope',                 title: 'CSV envelope',                  note: 'Fields from the CSV row returned by the Graph audit query (outside the AuditData JSON blob).' },
             { key: 'audit_data_root',              title: 'AuditData root scalars',        note: 'Top-level fields lifted directly from AuditData.*' },
@@ -793,55 +1669,61 @@
             { key: 'user_enrichment_join',         title: 'User enrichment join',          isSubMappings: true }
         ];
 
-        // ── Conventions block ──
+        // Facet tagging (heuristic).
+        const COPILOT_SECTIONS = new Set(['copilot_scalar_root','copilot_event_data_scalars','copilot_model_fields','copilot_token_usage','copilot_arrays_exploded']);
+        function facetsFor(col, sectionKey) {
+            const tags = [];
+            if (COPILOT_SECTIONS.has(sectionKey)) tags.push('copilot');
+            if (sectionKey === 'rollup_provenance_columns') tags.push('provenance');
+            if (sectionKey === 'user_enrichment_join') tags.push('enrichment');
+            if (/^(UserId|UserKey|UserType|ActorContextId|TargetContextId|OrganizationId|ApplicationId)$/.test(col)) tags.push('identity');
+            if (/^(Tokens|Duration|TurnNumber|RetryCount|ErrorNumber)/.test(col)) tags.push('metric');
+            if (/^(CreationDate|CreationTime)$/.test(col) || /Time$/.test(col)) tags.push('timestamp');
+            if (/^(Workload|Operation|AppHost|ClientPlatform|MessageType|Role|Type|ItemType|EventSource|ModelName|ModelVendor)$/.test(col) || /\]\.Type$/.test(col)) tags.push('enum');
+            return tags;
+        }
+
+        // Conventions block
         const convList = document.getElementById('convention-list');
-        const conv = data.$conventions || {};
-        Object.entries(conv).forEach(([k, v]) => {
+        Object.entries(data.$conventions || {}).forEach(([k, v]) => {
             const li = document.createElement('li');
             li.innerHTML = '<strong>' + esc(k) + ':</strong> ' + esc(v);
             convList.appendChild(li);
         });
 
-        // ── Render sections ──
         const sectionsEl = document.getElementById('sections');
         let totalRows = 0;
         const allRowEls = [];
+        const colNameToRow = {};
 
         SECTIONS.forEach(sec => {
             const node = data[sec.key];
             if (!node) return;
-
             const section = document.createElement('section');
             section.className = 'section';
+            section.id = 'section-' + slugify(sec.title);
             section.dataset.title = sec.title.toLowerCase();
 
             const h2 = document.createElement('h2');
-            h2.innerHTML = esc(sec.title) + ' <span class="count" data-count></span>';
+            h2.innerHTML = esc(sec.title) + ' <span class="count" data-count></span>'
+                          + ' <a class="anchor" href="#' + section.id + '">#</a>';
             section.appendChild(h2);
 
             const noteText = sec.note || (node && node.$note) || '';
             if (noteText) {
                 const p = document.createElement('p');
-                p.className = 'note';
-                p.textContent = noteText;
+                p.className = 'note'; p.textContent = noteText;
                 section.appendChild(p);
             }
 
-            // Collect rows (either an array of {column,source,transform},
-            // a wrapper {$note, mappings:[...]}, or a grouped {arr1:[], arr2:[]} for arrays section)
             const tables = [];
-            if (Array.isArray(node)) {
-                tables.push({ title: null, rows: node });
-            } else if (sec.isArrays) {
+            if (Array.isArray(node)) tables.push({ title: null, rows: node });
+            else if (sec.isArrays) {
                 Object.entries(node).forEach(([sub, val]) => {
                     if (sub === '$note') return;
-                    if (Array.isArray(val)) {
-                        tables.push({ title: prettifyArrayKey(sub), rows: val });
-                    }
+                    if (Array.isArray(val)) tables.push({ title: sub.replace(/_/g,' ').replace(/\b\w/g, m => m.toUpperCase()), rows: val });
                 });
-            } else if (node.mappings) {
-                tables.push({ title: null, rows: node.mappings });
-            }
+            } else if (node.mappings) tables.push({ title: null, rows: node.mappings });
 
             let sectionRowCount = 0;
             tables.forEach(t => {
@@ -854,54 +1736,88 @@
                 const table = document.createElement('table');
                 table.className = 'mapping';
                 table.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th style="width:24%">Output column</th>
-                            <th style="width:46%">JSON source path</th>
-                            <th style="width:30%">Transform / notes</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>`;
+                    <thead><tr>
+                        <th style="width:24%">Output column</th>
+                        <th style="width:46%">JSON source path</th>
+                        <th style="width:30%">Transform / notes</th>
+                    </tr></thead><tbody></tbody>`;
                 const tbody = table.querySelector('tbody');
                 t.rows.forEach(r => {
                     const e = lookupEnrich(r.column);
-                    const hasDetail = !!e;
+                    const hasDetail = true; // always expandable so we can show copy-as buttons
+                    const tags = facetsFor(r.column, sec.key);
+                    const colId = 'col-' + slugify(r.column || ('row' + totalRows));
                     const tr = document.createElement('tr');
-                    tr.className = hasDetail ? 'has-detail' : 'no-detail';
-                    tr.dataset.search = ((r.column || '') + ' ' + (r.source || '') + ' ' + (r.transform || '') + ' ' + (e ? (e.description || '') + ' ' + (e.values || '') : '')).toLowerCase();
+                    tr.className = 'has-detail';
+                    tr.id = colId;
+                    tr.dataset.tags = tags.join(',');
+                    tr.dataset.search = (
+                      (r.column || '') + ' ' + (r.source || '') + ' ' + (r.transform || '') + ' '
+                      + (e ? (e.description || '') + ' ' + (e.values || '') : '')
+                    ).toLowerCase();
                     tr.innerHTML = `
-                        <td class="col-column"><span class="caret">›</span>${esc(r.column || '')}</td>
+                        <td class="col-column"><span class="caret">›</span>${esc(r.column || '')}<a class="anchor" href="#${colId}">#</a></td>
                         <td class="col-source"><code>${esc(r.source || '')}</code></td>
                         <td class="col-transform">${esc(r.transform || '')}</td>`;
                     tbody.appendChild(tr);
+                    if (r.column && !colNameToRow[r.column]) colNameToRow[r.column] = tr;
+
                     const detailTr = document.createElement('tr');
                     detailTr.className = 'detail-row hidden';
-                    detailTr.innerHTML = '<td colspan="3">' + (hasDetail
-                        ? '<div class="detail-block">'
-                            + '<span class="label">What this is</span>'
-                            + '<div class="desc">' + esc(e.description || '') + '</div>'
-                            + '<span class="label">Possible values</span>'
-                            + '<div class="values">' + esc(e.values || '') + '</div>'
-                          + '</div>'
-                        : '<div class="detail-block no-enrich">No description or value list catalogued for this field yet.</div>')
-                        + '</td>';
+                    const enrichBlock = e
+                        ? '<span class="label">What this is</span>'
+                          + '<div class="desc">' + esc(e.description || '') + '</div>'
+                          + '<span class="label">Possible values</span>'
+                          + '<div class="values">' + esc(e.values || '') + '</div>'
+                        : '<div class="no-enrich">No description or value list catalogued for this field yet.</div>';
+                    detailTr.innerHTML = '<td colspan="3"><div class="detail-block">'
+                        + enrichBlock
+                        + '<div class="copy-as-row"><span class="label">Copy path as</span>'
+                        + ['JSONPath','KQL','M','Python','SPL'].map(f =>
+                            '<button class="copy-as-btn" data-fmt="' + f + '" data-src="' + esc(r.source || '') + '">' + f + '</button>'
+                          ).join('')
+                        + '</div></div></td>';
                     tbody.appendChild(detailTr);
-                    if (hasDetail) {
-                        tr.addEventListener('click', () => {
-                            const open = tr.classList.toggle('expanded');
-                            detailTr.classList.toggle('hidden', !open);
+
+                    tr.addEventListener('click', (ev) => {
+                        if (ev.target.closest('a.anchor')) return; // let anchor links work
+                        const open = tr.classList.toggle('expanded');
+                        detailTr.classList.toggle('hidden', !open);
+                    });
+                    detailTr.querySelectorAll('.copy-as-btn').forEach(btn => {
+                        btn.addEventListener('click', (ev) => {
+                            ev.stopPropagation();
+                            const expr = pathToFormat(btn.dataset.src, btn.dataset.fmt);
+                            copyText(expr, btn.dataset.fmt + ' copied');
                         });
-                    }
+                    });
+
                     allRowEls.push(tr);
                     tr._detailRow = detailTr;
-                    sectionRowCount++;
-                    totalRows++;
+                    sectionRowCount++; totalRows++;
                 });
                 section.appendChild(table);
             });
-
             h2.querySelector('[data-count]').textContent = sectionRowCount + (sectionRowCount === 1 ? ' field' : ' fields');
             sectionsEl.appendChild(section);
+        });
+
+        // Scenario chip jumps
+        document.querySelectorAll('.scenario-card .chip[data-jump]').forEach(c => {
+            c.addEventListener('click', () => {
+                const name = c.dataset.jump;
+                const target = colNameToRow[name] || colNameToRow[name.replace(/\[\d+\]/g,'[0]')] || null;
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.style.transition = 'background 0.3s ease';
+                    const original = target.style.background;
+                    target.style.background = '#fff3a3';
+                    setTimeout(() => target.style.background = original, 1200);
+                    if (!target.classList.contains('expanded')) target.click();
+                } else {
+                    toast('Field "' + name + '" not in mapping table');
+                }
+            });
         });
 
         // ── Dropped paths panel ──
@@ -909,41 +1825,69 @@
         if (dropped && Array.isArray(dropped.examples)) {
             const div = document.createElement('div');
             div.className = 'dropped section';
-            div.innerHTML = `
-                <h2>Dropped / unmapped JSON paths</h2>
-                <p style="color:var(--text-secondary);font-size:0.92rem;">
-                    ${esc(dropped.$note || '')}
-                </p>
-                <ul>${dropped.examples.map(e => '<li>' + esc(e) + '</li>').join('')}</ul>`;
+            div.innerHTML = `<h2>Dropped / unmapped JSON paths</h2>
+              <p style="color:var(--text-secondary);font-size:0.92rem;">${esc(dropped.$note || '')}</p>
+              <ul>${dropped.examples.map(e => '<li>' + esc(e) + '</li>').join('')}</ul>`;
             sectionsEl.appendChild(div);
         }
 
-        // ── Stats block ──
+        // ── Stats ──
         const statsEl = document.getElementById('stats');
         const cc = data.$column_count || {};
-        const statDefs = [
+        [
             { num: totalRows,                                 lbl: 'Total mapped fields on this page' },
             { num: cc.unified_base_row || 153,                lbl: 'Columns in unified base row' },
             { num: cc.appended_when_minus_AppendFile ?? cc['appended_when_-AppendFile'] ?? 3, lbl: 'Provenance columns under -AppendFile' },
             { num: 'v1.11.2',                                 lbl: 'PAX script version' }
-        ];
-        statDefs.forEach(s => {
-            const d = document.createElement('div');
-            d.className = 'stat';
+        ].forEach(s => {
+            const d = document.createElement('div'); d.className = 'stat';
             d.innerHTML = '<span class="num">' + esc(String(s.num)) + '</span><span class="lbl">' + esc(s.lbl) + '</span>';
             statsEl.appendChild(d);
         });
 
-        // ── Filter ──
-        const filter = document.getElementById('filter');
+        // ── Facets ──
+        const FACET_DEFS = [
+            { key: 'copilot',    label: 'Copilot only' },
+            { key: 'identity',   label: 'Identity' },
+            { key: 'metric',     label: 'Numeric metric' },
+            { key: 'enum',       label: 'Enum / categorical' },
+            { key: 'timestamp',  label: 'Timestamp (UTC)' },
+            { key: 'provenance', label: 'Provenance' },
+            { key: 'enrichment', label: 'User enrichment' }
+        ];
+        const facetsEl = document.getElementById('facets');
+        const activeFacets = new Set();
+        FACET_DEFS.forEach(f => {
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'facet-chip'; b.textContent = f.label;
+            b.addEventListener('click', () => {
+                if (activeFacets.has(f.key)) { activeFacets.delete(f.key); b.classList.remove('active'); }
+                else                          { activeFacets.add(f.key);    b.classList.add('active'); }
+                applyFilter();
+            });
+            facetsEl.appendChild(b);
+        });
+        const clearBtn = document.createElement('button');
+        clearBtn.type = 'button'; clearBtn.className = 'facet-chip'; clearBtn.textContent = 'Clear';
+        clearBtn.addEventListener('click', () => {
+            activeFacets.clear();
+            facetsEl.querySelectorAll('.facet-chip').forEach(c => c.classList.remove('active'));
+            document.getElementById('filter').value = '';
+            applyFilter();
+        });
+        facetsEl.appendChild(clearBtn);
+
+        // ── Filter (search + facets combined) ──
+        const filter  = document.getElementById('filter');
         const counter = document.getElementById('counter');
-        const updateCounter = (shown) => counter.textContent = shown + ' / ' + totalRows + ' fields';
-        updateCounter(totalRows);
-        filter.addEventListener('input', () => {
+        function applyFilter() {
             const q = filter.value.trim().toLowerCase();
             let shown = 0;
             allRowEls.forEach(tr => {
-                const match = !q || tr.dataset.search.includes(q);
+                const matchText = !q || tr.dataset.search.includes(q);
+                const trTags = (tr.dataset.tags || '').split(',').filter(Boolean);
+                const matchFacet = activeFacets.size === 0 || [...activeFacets].every(f => trTags.includes(f));
+                const match = matchText && matchFacet;
                 tr.classList.toggle('hidden', !match);
                 if (tr._detailRow && !match) {
                     tr.classList.remove('expanded');
@@ -951,25 +1895,19 @@
                 }
                 if (match) shown++;
             });
-            // Hide empty sections + their preceding tables / headings
-            document.querySelectorAll('.section').forEach(sec => {
-                const visible = sec.querySelectorAll('tbody tr:not(.hidden)').length;
-                const isDropped = sec.classList.contains('dropped');
-                sec.classList.toggle('hidden', !isDropped && visible === 0 && q.length > 0);
+            document.querySelectorAll('#sections .section').forEach(sec => {
+                const visible = sec.querySelectorAll('tbody tr:not(.detail-row):not(.hidden)').length;
+                sec.classList.toggle('hidden', visible === 0 && (q.length > 0 || activeFacets.size > 0));
             });
-            updateCounter(shown);
-        });
-
-        // ── Helpers ──
-        function esc(s) {
-            return String(s)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
+            counter.textContent = shown + ' / ' + totalRows + ' fields';
         }
-        function prettifyArrayKey(k) {
-            return k.replace(/_/g, ' ').replace(/\b\w/g, m => m.toUpperCase());
+        filter.addEventListener('input', applyFilter);
+        applyFilter();
+
+        // Deep-link: if URL has a hash matching a row id, expand it.
+        if (location.hash && location.hash.startsWith('#col-')) {
+            const t = document.getElementById(location.hash.slice(1));
+            if (t) { setTimeout(() => { t.click(); t.scrollIntoView({block:'center'}); }, 100); }
         }
     })();
     </script>
