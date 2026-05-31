@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recital 2026 — Pas De Deux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --paper: #f7f1e6;
+    --paper-deep: #efe6d3;
+    --rose: #c14953;
+    --gold: #b8893a;
+    --highlight: #fff3a8;
+    --highlight-border: #d4a017;
+    --muted: #6b5d4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    padding: 2rem 1rem 4rem;
+    background-image:
+      radial-gradient(at 20% 10%, rgba(193, 73, 83, 0.04) 0%, transparent 50%),
+      radial-gradient(at 80% 90%, rgba(184, 137, 58, 0.05) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 3rem 2.5rem;
+    border: 1px solid rgba(26, 20, 16, 0.08);
+    box-shadow: 0 1px 3px rgba(26, 20, 16, 0.04);
+  }
+
+  header {
+    text-align: center;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(26, 20, 16, 0.15);
+    margin-bottom: 2.5rem;
+  }
+
+  .studio-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 0.5rem 0;
+    color: var(--ink);
+  }
+
+  .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--rose);
+    margin-top: 0.75rem;
+  }
+
+  .ornament {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 1em;
+    margin: 2rem 0;
+  }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 3rem 0 1.5rem;
+    color: var(--ink);
+    position: relative;
+  }
+
+  h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0.75rem auto 0;
+  }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 2.5rem 0 1rem;
+    color: var(--rose);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .piece {
+    margin: 2rem 0;
+    padding: 0;
+  }
+
+  .piece-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+
+  .cast {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--ink);
+    max-width: 90%;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .soloist {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .highlight {
+    background: linear-gradient(transparent 30%, var(--highlight) 30%, var(--highlight) 90%, transparent 90%);
+    padding: 0 4px;
+    font-weight: 600;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  .break {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin: 3rem 0;
+    padding: 1rem;
+    border-top: 1px dashed rgba(184, 137, 58, 0.4);
+    border-bottom: 1px dashed rgba(184, 137, 58, 0.4);
+  }
+
+  .links {
+    text-align: center;
+    margin: 1.5rem 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+
+  .links a {
+    color: var(--rose);
+    text-decoration: none;
+    margin: 0 1rem;
+    border-bottom: 1px solid rgba(193, 73, 83, 0.3);
+    padding-bottom: 2px;
+  }
+
+  .links a:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .seniors-note {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  .legend {
+    background: var(--paper-deep);
+    border-left: 3px solid var(--highlight-border);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .legend .highlight {
+    font-style: normal;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 2rem 1.25rem; }
+    h1 { font-size: 2.75rem; }
+    h2 { font-size: 1.85rem; }
+    .piece-title { font-size: 1.25rem; }
+    .cast { font-size: 0.9rem; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="studio-name">Pas De Deux</div>
+  <h1>Recital 2026</h1>
+  <div class="date">May 30th, 2026</div>
+  <div class="links">
+    <a href="https://pasdedeuxstudio.com/2025-seniors/">Seniors</a>
+    <a href="https://mrvideo.tv/dance/page/pdd">Order Video</a>
+  </div>
+</header>
+
+<div class="legend">
+  Names of <span class="highlight">Scarlett King</span>, <span class="highlight">Marian Paitz</span>, <span class="highlight">Ruby Schmitt</span>, <span class="highlight">Alicia King</span>, and <span class="highlight">Haddie Wolff</span> are highlighted throughout the program.
+</div>
+
+<div class="ornament">✦ ✦ ✦</div>
+
+<h2>Act 1</h2>
+
+<div class="piece">
+  <div class="piece-title">Crazy Train</div>
+  <div class="cast">Moriah Bender, Emilyn Changstrom, Maggie Dee, Pixie Devitt, Karstyn Dolezal, Steely Fair, Sophia Jackson, Jozy LaFleur, Lola Langer, Cecilia Martinez, Lydia Nuttleman, River Nuttleman, Mihana Olson, Sydnee Patras, Gabriella Reichmuth, Susannah Schulte, Finley Shaffer, Ella Staehr, Alayna Wagner, Lyra Walsh, Grace Warwick, Tessa Wilhelm, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">I Don't Dance</div>
+  <div class="cast">Josie Gau, Beckett Martin, Parker Matzen, Pippa Medinger, Avery Meyer, Emma Mundil, Jubilee Nuttleman, Ava Prokop, Isabella Rathje, Reagan Romshek, Bergan Rote, Mosley Waite, Brea Watson</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Rollin in the Deep</div>
+  <div class="cast">Isla Bonsall, Kinsley Cox, Megan Johnson, Kennedy Long, Jacquelynn McDaniel, Frances Medinger, Evelyn Ong, Penny Pacini, Annabelle Rathe, Calla Rempe, Ava Steinblock, Claire Stratman, Aubrey Weiler</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Wooden Soldiers</div>
+  <div class="cast">Maura Anderson, Olivia Carpenter, Josie Gau, Aubrey Lockard, Beckett Martin, Avery Meyer, Olivia Morris, Emma Mundil, Jubilee Nuttleman, Ava Prokop, Isabella Rathje, Kayla Rogers, Reagan Romshek, Bergan Rote, Isabelle Tesch, Brea Watson</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">A Dream Is a Wish</div>
+  <div class="cast">Rowyn Badberg, Nyah Barrera, Lexi Damgaard, Kate Jakub, Autumn Johnson, Cadence Kellison, Sophia Mantey Smith, Hannah Morris, Astrid Mueller, Hazel Ong, Maizee Rexilius, Lydia Seifert, Gracelyn Smith, Eleanor (Ellie) Wiltse, <span class="highlight">Haddie Wolff</span></div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Every Girl Can Be a Princess</div>
+  <div class="cast">Milena Amparan, Brynn Arens, Vivian Barner, Grace Beller, Isla Bruce, Rayan Bruce, Rowyn Caves, Mera Crawford, Leah Florian, Mallory Garrett, Harlow Hughes, Kaelyn Johnson, Alexis Kalin, Charlie Kanter, Aurora Kingsley, Allison Mlinar, Olivia Mundil, Ruby Posvar, Lilah Rockey, Lucy Summers, Lucy Wahlmeier</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Keep Holding On</div>
+  <div class="cast">Olivia Carpenter, Maggie Dee, Aubrey Lockard, Beckett Martin, Cecilia Martinez, Isabella Rathje, Bergan Rote, Isabelle Tesch, Mosley Waite, Grace Warwick</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">You Stole the Show</div>
+  <div class="cast">Addison Biba, Margo Cole, Kinsley Cox, Gianna Donner, Josie Gau, Nora Hoehne, Nora Hofker, Mara Hostetler, Ava Krienert, Kennedy Long, Kate Meyers, Kaylee Noecker, Ava Prokop, Calla Rempe, Reagan Romshek, Emma Shields</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">We're All in This Together</div>
+  <div class="cast">Ren Aldag, Mabel Andreesen, Eden Ashelford, Reece Badberg, Nora Bahensky, Caroline Byrd, Olivia Carpenter, Emilyn Changstrom, Remi Duryea, Nola Edwards, Gracie Freitag, Bria Fryar, Leightyn Fryar, Jayla Greer, Lily Grundmayer, Selah Heim, Olivia Hofker, Thea Israel, Sloan Jolkowski, <span class="highlight">Scarlett King</span>, Ayla Lenhoff, Cora Lessor, Mary Mortensen, Mia Mundil, Aven Neukirch, Madison Ripa, Hannah Roberts, Presley Sanders, Isabelle Tesch, Jaxson Tesch, Amira Turk, Braelyn Van Winkle, <span class="highlight">Haddie Wolff</span></div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Set It All Free</div>
+  <div class="cast">Ella Bergman, Kateri Cumro, Esme Flores, Thea Freitag, Clara Hines, Evelyn Hofferber, Nora Muehlmeier, Hadlee Peters, Kinzlee Peters, Elizabeth Reeser, Olivia Reeser, Kendal Reeves, Emma Stratman, Emmarie Wetzel</div>
+</div>
+
+<h3>Land of the Sweets</h3>
+
+<div class="piece">
+  <div class="piece-title">The Candyman</div>
+  <div class="cast">Gigi Blahak, Caroline Byrd, Lillian Ellis, Jayla Greer, Lily Heim, Olivia Hofker, Sloan Jolkowski, Winnie Knowles, Annie Morrow, Mary Mortensen, Hannah Roberts, Weslie Schleppenbach, Lyra Summers, Amira Turk, Everly Whitefoot</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Lollipop</div>
+  <div class="cast">Thea Freitag, Brinley Griffin, Coralee Hanson, Weslee Heckman, Reese Logsdon, Charlie Morten, Zosia Morten, Mercy Nuttleman, Linden O'Neill, Maeve Olson, Kalleigh Parson, Emmarie Wetzel</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Sugar</div>
+  <div class="cast">Hattie Cooper, Kateri Cumro, Esme Flores, Clara Hines, Evelyn Hofferber, Margaret Kane, Lucy Litt, Rylie Meirose, <span class="highlight">Marian Paitz</span>, Peyton Pomajzl, Ashtyn Romshek, Claire Saalfeld, Agnes Verhoeff, Avila Verhoeff, Etta Warren</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Peppermint Twist</div>
+  <div class="cast">Mabel Andreesen, Daphne Bruntz, Marcella Ferretti, Bria Fryar, Lily Grundmayer, Amelia Hoang, Thea Israel, Lucia Martinez, Nova Morten, Aven Neukirch, Skylar Nguyen, Cherish Nuttleman, Kaycee Ortlieb, Annelise Schoenauer</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Sugartown</div>
+  <div class="cast">Charlie Basurto, Victoria Heim, Blair Israel, Donovan Miller, Madelynn Schoenauer, Hazel Wetzel</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Good Ship Lollipop</div>
+  <div class="cast">Azailya Brubacher, Tessa Cooper, Jamie Free, Selah Heim, Scarlett Hoehne, Parker Hostetler, Clara Kane, Georgia Leif, Remy Meirose, Stella Muehlmeier, Cecilia Verhoeff, Kalee Warren, Evelyn Wiltse, Emery Wobig</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Marshmallow World</div>
+  <div class="cast">Lily Biba, Laurel Cuddeford, Lilly Geier, Addison Greer, Elizabeth (Libby) Hayden, Lucy Meyers, Lorna Murphy, Elsie Rexilius, Mya Sinclair, Elliot Stille, June Stille, Grace Wagner, Madalyn Yates</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Sugar Sugar</div>
+  <div class="cast">Jovee Antes, Ella Bergman, Evie Cox, Thea Khoo, Lucy Olive, Emmy Perrine, Hadlee Peters, Kinzlee Peters, Ava Stier, Tessa Travers</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Licorice Twist</div>
+  <div class="cast">Isla Bruce, Rayan Bruce, Leah Florian, Mallory Garrett, Harlow Hughes, Kaelyn Johnson, Alexis Kalin, Aurora Kingsley, Ruby Posvar, Lucy Summers</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">The Gingerbread House</div>
+  <div class="cast">Georgia Bartels, Felicity Burnett, Bee Chisam, Bennett Fellers, Everly Krienert, Blake Payton, Willa Peterson, Io Purbaugh, Margo Reinbold, Emmalynn Walkinshaw</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Gummy Bear</div>
+  <div class="cast">Milena Amparan, Brynn Arens, Vivian Barner, Grace Beller, Rowyn Caves, Mera Crawford, Charlie Kanter, Allison Mlinar, Olivia Mundil, Lilah Rockey, Lucy Wahlmeier</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Pure Imagination</div>
+  <div class="cast">Sydnee Patras</div>
+</div>
+
+<h3>Curtain Call</h3>
+
+<div class="piece">
+  <div class="piece-title">Talk That Talk</div>
+  <div class="cast"><em>Hannah Carlson*</em>, Edysen Dolezal, Steely Fair, Sophia Fox, Sophia Jackson, Jozy LaFleur, Lola Langer, Mihana Olson, Gabriella Reichmuth, Ella Schenk, Finley Shaffer, Ella Stutheit</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Handel's Hornpipe</div>
+  <div class="cast">Ainsley Brooks, Kinsley Cox, Bridget Frey, Nora Hoehne, Nora Hofker, Mara Hostetler, Kate Meyers, Evelyn Ong, Kendal Reeves, Calla Rempe, <span class="highlight">Ruby Schmitt</span>, Rebekah Schulte, Aubrey Wiechman, Norah Wiles</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Bang Dem Sticks</div>
+  <div class="cast">Eden Ashelford, Harper Bartholomew, Hope Burnett, Esther Colbert, Hazel Costenbader, Evie Cox, Nola Edwards, Gracie Freitag, Bria Fryar, Autumn Johnson, Sophia Mantey Smith, Lucia Martinez, Sadie Paprocki, Brooklyn Rasmussen, Madison Ripa, Amelia Travers, Braelyn Van Winkle, Etta Warren, Aubrey Weiler, <span class="highlight">Haddie Wolff</span></div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Man, I Feel Like a Woman</div>
+  <div class="cast">Isla Bonsall, Kinsley Cox, Anabelle Lightbody, Jacquelynn McDaniel, Frances Medinger, Oona Morten, Emma Mundil, Mia Mundil, Brielle O'Neill, Olivia Opperman, Leighton Podany, Elizabeth Reeser, Olivia Reeser, Brylie Whitenack</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">The Winner Is</div>
+  <div class="cast">Evelyn Chesebro, Lundy Dell, Claire Halverson, Bryar Hughes, Anneliese Khoo, Abigail Lockard, Sadie Lockard, Allison Policky, Emmelyn Prokop, Vivian Rathje, Mila Stoll, Ellie Summers, Monroe Tarnick, Amelia Travers, Aubrey Weiler</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Snow on the Beach</div>
+  <div class="cast">Alexis Beals, Hope Burnett, Isabella Christolear, Ruby D'Amour, Gracie Freitag, Leightyn Fryar, Rosalie Hanson, Olivia Heim, Lynnlee Higgins, Frances Medinger, Madison Ripa, Ava Steinblock</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Dive in the Pool</div>
+  <div class="cast">Maura Anderson, Moriah Bender, Emilyn Changstrom, Maggie Dee, <em>Edysen Dolezal*</em>, Karstyn Dolezal, <em>Steely Fair*</em>, <em>Sophia Fox*</em>, Sophia Jackson, <em>Jozy LaFleur*</em>, <em>Lola Langer*</em>, Cecilia Martinez, Raina Medinger, Lydia Nuttleman, River Nuttleman, Mihana Olson, <em>Sydnee Patras*</em>, Gabriella Reichmuth, Susannah Schulte, Finley Shaffer, Ella Staehr, <em>Ella Stutheit*</em>, Alayna Wagner, Lyra Walsh, Grace Warwick, Tessa Wilhelm, Kendall Woita</div>
+  <div class="seniors-note">* Denotes Seniors</div>
+</div>
+
+<div class="break">— 5 minute break —</div>
+
+<h2>Act 2</h2>
+
+<div class="piece">
+  <div class="piece-title">The One</div>
+  <div class="cast">Kinsley Cox, Lexi Damgaard, Liv Essay, Laramie Fuehrer, Josie Hall, Bryar Hughes, Kate Jakub, Cadence Kellison, Brynnley Kelsey, Kennedy Long, Saige Marshbanks, Jacquelynn McDaniel, Frances Medinger, Kendall Partch, Nadia Plagge, Leighton Podany, Ellie Pomajzl, Annabelle Rathe, Vivian Rathje, Calla Rempe, Callie Rottler, Brylie Whitenack</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Rockin Robin</div>
+  <div class="cast">Jovee Antes, Ella Bergman, Evie Cox, Thea Khoo, Lucy Olive, Emmy Perrine, Hadlee Peters, Kinzlee Peters, Ava Stier, Tessa Travers</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Rubberneckin</div>
+  <div class="cast">Kasey Albers, Harper Bartholomew, Gigi Blahak, Ainsley Brooks, Hattie Cooper, Lillian Ellis, Sloan Jolkowski, Sophia Mantey Smith, Hannah Morris, Mary Mortensen, Lydia Seifert, Braelyn Van Winkle, Everly Whitefoot, Eleanor (Ellie) Wiltse</div>
+</div>
+
+<h3>We the People</h3>
+
+<div class="piece">
+  <div class="piece-title">The Thunderer</div>
+  <div class="cast">Moriah Bender, Emilyn Changstrom, Maggie Dee, Pixie Devitt, Karstyn Dolezal, Sophia Jackson, Jozy LaFleur, Lola Langer, Cecilia Martinez, Lydia Nuttleman, River Nuttleman, Mihana Olson, Sydnee Patras, Gabriella Reichmuth, Susannah Schulte, Finley Shaffer, Ella Staehr, Alayna Wagner, Lyra Walsh, Grace Warwick, Tessa Wilhelm, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">USA</div>
+  <div class="cast">Rowyn Badberg, Nyah Barrera, Lexi Damgaard, Kate Jakub, Autumn Johnson, Cadence Kellison, Sophia Mantey Smith, Hannah Morris, Astrid Mueller, Hazel Ong, Maizee Rexilius, Lydia Seifert, Gracelyn Smith, Eleanor (Ellie) Wiltse, <span class="highlight">Haddie Wolff</span></div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">The Washington Post</div>
+  <div class="cast">Maura Anderson, Olivia Carpenter, Josie Gau, Aubrey Lockard, Beckett Martin, Avery Meyer, Olivia Morris, Emma Mundil, Jubilee Nuttleman, Ava Prokop, Isabella Rathje, Kayla Rogers, Reagan Romshek, Bergan Rote, Isabelle Tesch, Brea Watson</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Yankee Doodle Dandy</div>
+  <div class="cast">Kasey Albers, Eden Ashelford, Addison Biba, Grace Burnett, Margo Cole, Gianna Donner, Stella Duval, Nola Edwards, Reagan Essink, Kennedy Frantz, Megan Johnson, <span class="highlight">Scarlett King</span>, Ava Krienert, Kennedy Long, Parker Matzen, Hadleigh Meals, Pippa Medinger, Isabella Miller, Jensen Mueller, Kaylee Noecker, Sadie Paprocki, Khloe Portwood, Annabelle Rathe, Emma Shields, Adrielle Skinner, Mosley Waite, Madelyn Winder, Ava Yates</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">America the Beautiful</div>
+  <div class="cast">Raina Medinger, Mihana Olson, Ella Schenk, Lyra Walsh</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">R.O.C.K in the USA</div>
+  <div class="cast">Gigi Blahak, Caroline Byrd, Lillian Ellis, Jayla Greer, Lily Heim, Olivia Hofker, Sloan Jolkowski, Winnie Knowles, Annie Morrow, Mary Mortensen, Hannah Roberts, Weslie Schleppenbach, Lyra Summers, Amira Turk, Everly Whitefoot</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">In Flander's Fields</div>
+  <div class="cast">Maggie Dee, Stella Duval, Cecilia Martinez, Jubilee Nuttleman, Lydia Nuttleman, Evelyn Ong, Isabella Rathje, Isabelle Tesch, Alayna Wagner, Mosley Waite</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">God Bless America</div>
+  <div class="soloist">Soloist: Jozy LaFleur</div>
+  <div class="cast">Azailya Brubacher, Tessa Cooper, Jamie Free, Thea Freitag, Brinley Griffin, Coralee Hanson, Weslee Heckman, Selah Heim, Scarlett Hoehne, Parker Hostetler, Clara Kane, Jozy LaFleur, Georgia Leif, Reese Logsdon, Remy Meirose, Charlie Morten, Zosia Morten, Stella Muehlmeier, Mercy Nuttleman, Linden O'Neill, Maeve Olson, Kalleigh Parson, Cecilia Verhoeff, Kalee Warren, Emmarie Wetzel, Evelyn Wiltse, Emery Wobig</div>
+</div>
+
+<h3>Irish</h3>
+
+<div class="piece">
+  <div class="piece-title">Lord of the Dance</div>
+  <div class="cast">Steely Fair</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Renegade</div>
+  <div class="cast">Claire Halverson, Rosalie Hanson, Lynnlee Higgins, Sophia Mantey Smith, Oona Morten, Olivia Opperman, Vivian Rathje, Amelia Schoenauer</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Kings</div>
+  <div class="cast">Maura Anderson, Olivia Carpenter, Maggie Dee, Steely Fair, <em>Paige Kampfe*</em>, Norah Liesveld, Beckett Martin, Isabella Rathje, Isabelle Tesch, Brylie Whitenack, Celia Winder, Madelyn Winder</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Rio</div>
+  <div class="cast">Claire Bahensky, Ainsley Brooks, Hadleigh Meals, Annabelle Rathe, Callie Rottler</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Western Isle</div>
+  <div class="cast">Claire Halverson, Rosalie Hanson, Lynnlee Higgins, Sophia Mantey Smith, Oona Morten, Olivia Opperman, Vivian Rathje, Amelia Schoenauer</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Gone Fishing</div>
+  <div class="cast">Maura Anderson, Olivia Carpenter, Maggie Dee, Steely Fair, Paige Kampfe, Norah Liesveld, Beckett Martin, Isabella Rathje, Isabelle Tesch, Brylie Whitenack, Celia Winder, Madelyn Winder</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Max Reel</div>
+  <div class="cast">Claire Bahensky, Ainsley Brooks, Hadleigh Meals, Annabelle Rathe, Callie Rottler</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Fair Wind</div>
+  <div class="cast"><em>Finale</em></div>
+</div>
+
+<div class="break">— 5 minute break —</div>
+
+<h2>Act 3</h2>
+
+<div class="piece">
+  <div class="piece-title">Loud</div>
+  <div class="cast">Addison Armstrong, Adyson Auman, Ella Bonness, Katie Bonness, Riley Brown, Gwyneth Gray, Kayla Hans, Bailey Kalkowski, Andrea Miller, Brooke Nelson, Hannah Rutt, Tannah Schopp, Anna Stephenson, Jordyn Zehr</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Fix You</div>
+  <div class="cast">Emilyn Changstrom, Sophia Jackson, Jozy LaFleur, River Nuttleman, Mihana Olson, Gabriella Reichmuth, Finley Shaffer, Ella Staehr</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Shake It Up</div>
+  <div class="cast">Kennedy Frantz, Claire Halverson, Lily Heim, Olivia Heim, Nora Hoehne, Mara Hostetler, Abigail Lockard, Kendal Reeves, Rebekah Schulte, Mila Stoll, Emma Stratman, Amelia Travers, Etta Warren</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Romeo and Juliet</div>
+  <div class="cast">Kasey Albers, Grace Burnett, Stella Duval, Reagan Essink, Megan Johnson, Kennedy Long, Parker Matzen, Pippa Medinger, Jensen Mueller, Annabelle Rathe, Adrielle Skinner, Mosley Waite, Madelyn Winder</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Freeway of Love</div>
+  <div class="cast">Eden Ashelford, Rowyn Badberg, Nyah Barrera, Gianna Donner, Cecilia Duell, Nora Hofker, Kate Jakub, Hadleigh Meals, Maizee Rexilius, Madison Ripa, <span class="highlight">Ruby Schmitt</span>, Grace Whitehill, <span class="highlight">Haddie Wolff</span>, Ava Yates</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Ruby Blue</div>
+  <div class="cast">Jenny Beals, Shelley Cuddeford, Allison Ellis, Alyssa Freitag, Jaci Grimes, Cassy Heller, Molly Hofker, <span class="highlight">Alicia King</span>, Sara Lockard, Kathy Logsdon, Megan Miller, Katherine Morten, Alyssa Mortensen, Nicole Mueller, Andrea Stiles, Edel Summers</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Beautiful People</div>
+  <div class="cast">Grace Burnett, Olivia Carpenter, Stella Duval, Reagan Essink, Norah Liesveld, Aubrey Lockard, Olivia Morris, Kayla Rogers, Adrielle Skinner, Isabelle Tesch, Madelyn Winder</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Archie</div>
+  <div class="cast">Heide Bosn, Kinsley Cox, Hannah Hensley, Kennedy Long, Parker Matzen, Pippa Medinger, Avery Meyer, Jensen Mueller</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Maybe</div>
+  <div class="cast">Mabel Andreesen, Daphne Bruntz, Marcella Ferretti, Bria Fryar, Lily Grundmayer, Amelia Hoang, Thea Israel, Lucia Martinez, Nova Morten, Aven Neukirch, Skylar Nguyen, Cherish Nuttleman, Kaycee Ortlieb, Annelise Schoenauer</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Everybody Wants to Rule the World</div>
+  <div class="cast">Ainsley Brooks, Hannah Carlson, Olivia Carpenter, Steely Fair, Paige Kampfe, Lola Langer, Norah Liesveld, Isabelle Tesch, Tessa Wilhelm</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Songs from a Secret Garden</div>
+  <div class="cast">Eden Ashelford, Addison Biba, Margo Cole, Gianna Donner, Nola Edwards, Kennedy Frantz, <span class="highlight">Scarlett King</span>, Ava Krienert, Hadleigh Meals, Isabella Miller, Kaylee Noecker, Sadie Paprocki, Khloe Portwood, Emma Shields, Ava Yates</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Magnets</div>
+  <div class="cast">Faridat Bakare, Kinsley Cox, Lexi Damgaard, Bridget Frey, Kathryn Hupka, Brynnley Kelsey, Frances Medinger, Evelyn Ong, Allison Policky, Kendal Reeves, Madison Ripa, Callie Rottler, Lyra Walsh, Grace Whitehill, Brylie Whitenack</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Larger Than Life</div>
+  <div class="cast">Moriah Bender, Olivia Carpenter, Maggie Dee, Makayla Heigel, Lizzy Jakub, Beckett Martin, Cecilia Martinez, Ella Staehr, Isabelle Tesch, Mosley Waite, Tessa Wilhelm, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Girls Just Wanna Have Fun</div>
+  <div class="cast">Esther Colbert, Mariah Cranford, Ruby D'Amour, Lundy Dell, Remi Duryea, Leightyn Fryar, Cherish Nuttleman, Amelia Schoenauer, Amira Turk</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Dandelions</div>
+  <div class="cast">Addison Biba, Isla Bonsall, Hope Burnett, Megan Johnson, Brynnley Kelsey, <span class="highlight">Scarlett King</span>, Abigail Lockard, Sadie Lockard, Jacquelynn McDaniel, Frances Medinger, Brielle O'Neill, Evelyn Ong, Calla Rempe, Brylie Whitenack, Aubrey Wiechman</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Pump It Up</div>
+  <div class="cast">Eden Ashelford, Claire Bahensky, Heide Bosn, Cecilia Duell, Reagan Essink, Hannah Hensley, Annabelle Rathe, Isabella Rathje, Madison Ripa, Callie Rottler, Isabelle Tesch, Mosley Waite</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">If You Can't Rock Me</div>
+  <div class="cast">Ainsley Brooks, Kinsley Cox, Bridget Frey, Nora Hoehne, Nora Hofker, Mara Hostetler, Kate Meyers, Evelyn Ong, Kendal Reeves, Calla Rempe, <span class="highlight">Ruby Schmitt</span>, Rebekah Schulte, Aubrey Wiechman, Norah Wiles</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">When I Fall</div>
+  <div class="cast">Moriah Bender, Emilyn Changstrom, Steely Fair, Sophia Jackson, Lizzy Jakub, Jozy LaFleur, Lola Langer, Raina Medinger, Gabriella Reichmuth, Ella Schenk, Adrielle Skinner, Tessa Wilhelm, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Sh-Boom</div>
+  <div class="cast">Hattie Cooper, Kateri Cumro, Esme Flores, Clara Hines, Evelyn Hofferber, Margaret Kane, Lucy Litt, Rylie Meirose, <span class="highlight">Marian Paitz</span>, Peyton Pomajzl, Ashtyn Romshek, Claire Saalfeld, Agnes Verhoeff, Avila Verhoeff, Etta Warren</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Treasure</div>
+  <div class="cast">Faridat Bakare, Isla Bonsall, Bridget Frey, Josie Gau, Norah Liesveld, Parker Matzen, Pippa Medinger, Wyatt Patras</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Clap Your Hands</div>
+  <div class="cast">Alexis Beals, Hope Burnett, Evelyn Chesebro, Isabella Christolear, Ruby D'Amour, Lundy Dell, Gracie Freitag, Leightyn Fryar, Claire Halverson, Rosalie Hanson, Olivia Heim, Lynnlee Higgins, Bryar Hughes, Anneliese Khoo, Abigail Lockard, Sadie Lockard, Frances Medinger, Allison Policky, Emmelyn Prokop, Vivian Rathje, Madison Ripa, Ava Steinblock, Mila Stoll, Ellie Summers, Monroe Tarnick, Amelia Travers, Aubrey Weiler</div>
+</div>
+
+<h3>Grease</h3>
+
+<div class="soloist" style="margin-bottom: 1.5rem;">Tricia Aldag and Jamie Tesch 2018/2026</div>
+
+<div class="piece">
+  <div class="piece-title">Grease</div>
+  <div class="cast">Maura Anderson, Addie Armstrong, Ady Auman, Moriah Bender, Ella Bonness, Katie Bonness, Olivia Carpenter, Maggie Dee, Karstyn Dolezal, Reagan Essink, Gwyneth Gray, Kayla Hans, Sophia Jackson, Jozy LaFleur, Lola Langer, Aubrey Lockard, Beckett Martin, Cecilia Martinez, Avery Meyer, Andrea Miller, Olivia Morris, Emma Mundil, Mihana Olson, Sydnee Patras, Ava Prokop, Isabella Rathje, Gabriella Reichmuth, Kayla Rogers, Reagan Romshek, Bergan Rote, Hannah Rutt, Susannah Schulte, Adrielle Skinner, Ella Staehr, Anna Stephenson, Isabelle Tesch, Alayna Wagner, Mosley Waite, Lyra Walsh, Grace Warwick, Brea Watson, Tessa Wilhelm, Madelyn Winder, Kendall Woita, Jordyn Zehr</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Maybe Baby</div>
+  <div class="cast">Moriah Bender, Olivia Carpenter, Maggie Dee, Karstyn Dolezal, Reagan Essink, Sophia Jackson, Jozy LaFleur, Lola Langer, Aubrey Lockard, Cecilia Martinez, Olivia Morris, Mihana Olson, Sydnee Patras, Ava Prokop, Gabriella Reichmuth, Kayla Rogers, Susannah Schulte, Adrielle Skinner, Ella Staehr, Isabelle Tesch, Alayna Wagner, Lyra Walsh, Grace Warwick, Tessa Wilhelm, Madelyn Winder, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Shaking at the High School Hop</div>
+  <div class="cast">Addison Armstrong, Adyson Auman, Ella Bonness, Katie Bonness, Riley Brown, Gwyneth Gray, Kayla Hans, Bailey Kalkowski, Andrea Miller, Hannah Rutt, Tannah Schopp, Anna Stephenson, Jordyn Zehr</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Summer Nights</div>
+  <div class="cast">Maura Anderson, Beckett Martin, Avery Meyer, Emma Mundil, Ava Prokop, Isabella Rathje, Reagan Romshek, Bergan Rote, Mosley Waite, Brea Watson</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Greased Lightning</div>
+  <div class="cast">Ren Aldag, Alexander Kingsley, Oliver Logsdon, Wyatt Patras, Ewan Purbaugh, Jaxson Tesch</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Born to Hand Jive</div>
+  <div class="cast">Moriah Bender, Maggie Dee, Karstyn Dolezal, Sophia Jackson, Jozy LaFleur, Lola Langer, Cecilia Martinez, Mihana Olson, Sydnee Patras, Gabriella Reichmuth, Susannah Schulte, Ella Staehr, Alayna Wagner, Lyra Walsh, Grace Warwick, Tessa Wilhelm, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Rock and Roll Is Here to Stay</div>
+  <div class="cast">Olivia Carpenter, Reagan Essink, Aubrey Lockard, Olivia Morris, Kayla Rogers, Adrielle Skinner, Isabelle Tesch, Madelyn Winder</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Hopelessly Devoted</div>
+  <div class="cast">Sophia Jackson, Gabriella Reichmuth, Susannah Schulte, Ella Staehr, Tessa Wilhelm, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Beauty School Dropout</div>
+  <div class="soloist">Soloist: Lola Langer</div>
+  <div class="cast">Maura Anderson, Beckett Martin, Avery Meyer, Emma Mundil, Ava Prokop, Isabella Rathje, Reagan Romshek, Bergan Rote, Mosley Waite, Brea Watson</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">You're the One That I Want</div>
+  <div class="cast">Edysen Dolezal</div>
+  <div class="soloist">*Special Guest Landon Reichmuth</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">We Go Together</div>
+  <div class="cast">Moriah Bender, Olivia Carpenter, Maggie Dee, Karstyn Dolezal, Reagan Essink, Sophia Jackson, Jozy LaFleur, Lola Langer, Aubrey Lockard, Cecilia Martinez, Olivia Morris, Mihana Olson, Sydnee Patras, Gabriella Reichmuth, Kayla Rogers, Susannah Schulte, Adrielle Skinner, Ella Staehr, Isabelle Tesch, Alayna Wagner, Lyra Walsh, Grace Warwick, Tessa Wilhelm, Madelyn Winder, Kendall Woita</div>
+</div>
+
+<div class="piece">
+  <div class="piece-title">Grease Megamix</div>
+  <div class="cast"><em>All Cast</em></div>
+</div>
+
+<div class="ornament">✦ ✦ ✦</div>
+
+<div class="piece">
+  <div class="piece-title" style="color: var(--rose);">Curtain Call</div>
+</div>
+
+<div class="links" style="margin-top: 3rem;">
+  <a href="https://pasdedeuxstudio.com">pasdedeuxstudio.com</a>
+</div>
+
+</div>
+</body>
+</html>
