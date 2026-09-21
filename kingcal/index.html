@@ -98,8 +98,9 @@ header.top{
 .cell.has-boy{border-color:var(--boy)}
 .cell.has-girl{border-color:var(--girl)}
 .cell.has-both{border-color:transparent; background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(120deg,var(--boy),var(--girl)); background-origin:border-box; background-clip:padding-box,border-box; border-width:2px}
-.daynum{font-size:12px; font-weight:700; color:var(--muted)}
+.daynum{font-size:12px; font-weight:700; color:var(--muted); display:flex; align-items:center; gap:5px}
 .cell.today .daynum{color:var(--accent)}
+.gameday-tag{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:#fff; background:#f59e0b; padding:1px 6px; border-radius:999px; white-space:nowrap}
 .chip{
   text-align:start; inline-size:100%; border:0; border-inline-start:3px solid var(--border);
   border-radius:6px; padding:3px 6px; font-size:11.5px; line-height:1.25;
@@ -437,6 +438,9 @@ function kidsOn(dateStr){
   eventsOn(dateStr).forEach(function(e){ s[e.kid] = true; });
   return s;
 }
+function hasGame(dateStr){
+  return eventsOn(dateStr).some(function(e){ return e.type === "Game"; });
+}
 
 /* ============ RENDER ============ */
 function render(){
@@ -482,7 +486,7 @@ function renderMonth(){
     if (d.getMonth() !== cursor.getMonth()) cls += " out";
     if (ds === iso(today)) cls += " today";
     cls += kidClass(kidsOn(ds));
-    html += '<div class="'+cls+'"><div class="daynum">'+d.getDate()+'</div>';
+    html += '<div class="'+cls+'"><div class="daynum">'+d.getDate()+(hasGame(ds) ? '<span class="gameday-tag">Gameday</span>' : '')+'</div>';
     evs.slice(0,3).forEach(function(e){ html += chipHtml(e); });
     if (evs.length > 3) html += '<button type="button" class="more" data-day="'+ds+'">+'+(evs.length-3)+' more</button>';
     html += '</div>';
