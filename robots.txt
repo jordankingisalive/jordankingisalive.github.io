@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /kingcal/
+Disallow: /kingcal
+
+# Keep the family calendar out of all search engines.
+User-agent: Googlebot
+Disallow: /kingcal/
+
+User-agent: Bingbot
+Disallow: /kingcal/

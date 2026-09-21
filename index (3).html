@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>King Family Calendar</title>
+<style>
+:root{
+  --bg:#f4f6fb; --surface:#ffffff; --surface-2:#f8fafc; --border:#e2e8f0;
+  --text:#0f172a; --muted:#64748b; --accent:#4f46e5;
+  --boy:#2563eb; --boy-soft:#e8f0ff;
+  --girl:#ec4899; --girl-soft:#ffe9f4;
+  --radius:14px; --shadow:0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1020; --surface:#131a2b; --surface-2:#182136; --border:#27324a;
+    --text:#e8edf7; --muted:#97a3bb; --accent:#8b8cf7;
+    --boy-soft:#16243f; --girl-soft:#3a1730;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px; line-height:1.45; -webkit-text-size-adjust:100%;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* ---------- Passcode gate ---------- */
+#gate{
+  position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center;
+  padding:24px; background:linear-gradient(135deg,#2563eb,#7c3aed 45%,#ec4899);
+}
+.gate-card{
+  background:var(--surface); border-radius:20px; box-shadow:var(--shadow);
+  padding:32px 28px; inline-size:min(380px,100%); text-align:center;
+}
+.gate-card h1{margin:0 0 4px; font-size:22px}
+.gate-card p{margin:0 0 20px; color:var(--muted); font-size:13px}
+.gate-emoji{font-size:34px; letter-spacing:4px; display:block; margin-block-end:10px}
+#code{
+  inline-size:100%; padding:12px 14px; font-size:16px; text-align:center;
+  border:1px solid var(--border); border-radius:10px; background:var(--surface-2); color:var(--text);
+}
+#gate button{
+  margin-block-start:12px; inline-size:100%; padding:12px; border:0; border-radius:10px;
+  background:var(--accent); color:#fff; font-weight:600;
+}
+#gateMsg{min-block-size:20px; color:#dc2626; font-size:13px; margin-block-start:10px}
+.gate-remember{display:flex;align-items:center;justify-content:center;gap:8px;margin-block-start:14px;color:var(--muted);font-size:13px}
+
+/* ---------- Shell ---------- */
+#app{display:none}
+.wrap{max-inline-size:1180px; margin-inline:auto; padding:16px}
+header.top{
+  background:var(--surface); border-block-end:1px solid var(--border);
+  position:sticky; inset-block-start:0; z-index:20;
+}
+.top-inner{max-inline-size:1180px; margin-inline:auto; padding:12px 16px; display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+.brand{font-weight:700; font-size:18px; display:flex; align-items:center; gap:8px; margin-inline-end:auto}
+.brand small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+.nav{display:flex; align-items:center; gap:6px}
+.btn{
+  border:1px solid var(--border); background:var(--surface); border-radius:10px;
+  padding:7px 12px; font-size:14px; white-space:nowrap;
+}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent); color:#fff; border-color:transparent}
+.seg{display:flex; border:1px solid var(--border); border-radius:10px; overflow:hidden}
+.seg button{border:0; background:var(--surface); padding:7px 14px; font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--accent); color:#fff}
+#periodLabel{font-size:17px; font-weight:700; min-inline-size:190px}
+.filters{display:flex; flex-wrap:wrap; gap:8px; padding:0 16px 12px; max-inline-size:1180px; margin-inline:auto}
+.chipf{
+  border:1.5px solid var(--border); background:var(--surface); border-radius:999px;
+  padding:5px 12px; font-size:13px; display:inline-flex; align-items:center; gap:6px;
+}
+.chipf[aria-pressed="false"]{opacity:.42}
+.chipf[data-kid="julian"][aria-pressed="true"]{border-color:var(--boy); background:var(--boy-soft)}
+.chipf[data-kid="scarlett"][aria-pressed="true"]{border-color:var(--girl); background:var(--girl-soft)}
+
+/* ---------- Month grid ---------- */
+.dow{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-block-end:6px}
+.dow div{text-align:center; font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
+.month{display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
+.cell{
+  background:var(--surface); border:1.5px solid var(--border); border-radius:12px;
+  min-block-size:104px; padding:6px; display:flex; flex-direction:column; gap:4px; overflow:hidden;
+}
+.cell.out{opacity:.45}
+.cell.today{box-shadow:0 0 0 2px var(--accent) inset}
+.cell.has-boy{border-color:var(--boy)}
+.cell.has-girl{border-color:var(--girl)}
+.cell.has-both{border-color:transparent; background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(120deg,var(--boy),var(--girl)); background-origin:border-box; background-clip:padding-box,border-box; border-width:2px}
+.daynum{font-size:12px; font-weight:700; color:var(--muted)}
+.cell.today .daynum{color:var(--accent)}
+.chip{
+  text-align:start; inline-size:100%; border:0; border-inline-start:3px solid var(--border);
+  border-radius:6px; padding:3px 6px; font-size:11.5px; line-height:1.25;
+  background:var(--surface-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.chip.k-julian{border-inline-start-color:var(--boy); background:var(--boy-soft)}
+.chip.k-scarlett{border-inline-start-color:var(--girl); background:var(--girl-soft)}
+.more{font-size:11px; color:var(--muted); text-align:start; background:none; border:0; padding:0 6px}
+
+/* ---------- Week / Day lists ---------- */
+.week{display:grid; grid-template-columns:repeat(7,1fr); gap:8px}
+.wcol{background:var(--surface); border:1.5px solid var(--border); border-radius:12px; padding:8px; min-block-size:150px}
+.wcol.today{box-shadow:0 0 0 2px var(--accent) inset}
+.wcol.has-both{border-color:transparent; background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(120deg,var(--boy),var(--girl)); background-origin:border-box; background-clip:padding-box,border-box; border-width:2px}
+.wcol.has-boy{border-color:var(--boy)} .wcol.has-girl{border-color:var(--girl)}
+.wcol h3{margin:0 0 6px; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
+.wcol h3 b{display:block; font-size:18px; color:var(--text)}
+.ev{
+  inline-size:100%; text-align:start; background:var(--surface-2); border:0;
+  border-inline-start:4px solid var(--border); border-radius:8px; padding:8px 10px; margin-block-end:6px;
+}
+.ev.k-julian{border-inline-start-color:var(--boy); background:var(--boy-soft)}
+.ev.k-scarlett{border-inline-start-color:var(--girl); background:var(--girl-soft)}
+.ev .t{font-weight:600; font-size:13px}
+.ev .m{font-size:12px; color:var(--muted)}
+.daylist{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px}
+.daylist .ev{padding:12px 14px}
+.daylist .ev .t{font-size:15px}
+.empty{color:var(--muted); font-size:14px; padding:18px; text-align:center}
+
+/* ---------- Modal ---------- */
+#modal{position:fixed; inset:0; z-index:60; display:none; align-items:flex-end; justify-content:center; background:rgba(15,23,42,.45); padding:0}
+#modal.open{display:flex}
+@media (min-width:640px){ #modal{align-items:center; padding:24px} }
+.sheet{
+  background:var(--surface); inline-size:min(520px,100%); border-radius:18px 18px 0 0;
+  max-block-size:92vh; overflow:auto; box-shadow:var(--shadow);
+}
+@media (min-width:640px){ .sheet{border-radius:18px} }
+.sheet-hd{padding:18px 20px 12px; border-block-end:1px solid var(--border)}
+.sheet-hd .eyebrow{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em}
+.sheet-hd h2{margin:4px 0 6px; font-size:19px}
+.sheet-bd{padding:16px 20px}
+.row{display:flex; gap:10px; padding:8px 0; align-items:flex-start; font-size:14px}
+.row .ic{inline-size:22px; text-align:center}
+.row .lbl{color:var(--muted); font-size:12px}
+.actions{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; padding:4px 20px 20px}
+.actions .btn{padding:11px; text-align:center; display:flex; align-items:center; justify-content:center; gap:7px}
+.actions .btn.wide{grid-column:1 / -1}
+.closeX{position:sticky; inset-block-start:0; float:inline-end; border:0; background:transparent; font-size:22px; padding:10px 14px; color:var(--muted)}
+#toast{
+  position:fixed; inset-block-end:24px; inset-inline:0; margin-inline:auto; inline-size:fit-content;
+  background:#0f172a; color:#fff; padding:10px 18px; border-radius:999px; font-size:14px;
+  opacity:0; pointer-events:none; transition:opacity .2s; z-index:90;
+}
+#toast.show{opacity:1}
+footer.foot{text-align:center; color:var(--muted); font-size:12px; padding:20px}
+@media (max-width:760px){
+  .month{gap:3px} .cell{min-block-size:76px; padding:4px; border-radius:9px}
+  .chip{font-size:10px; padding:2px 4px}
+  .week{grid-template-columns:1fr}
+  #periodLabel{min-inline-size:auto; font-size:15px}
+  .brand{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <span class="gate-emoji">👦⚽ 👧🩰</span>
+    <h1>King Family Calendar</h1>
+    <p>Private family page — enter the code to continue.</p>
+    <input id="code" type="password" inputmode="text" autocomplete="off" placeholder="Enter code" aria-label="Access code">
+    <button id="gateBtn" type="button">Unlock</button>
+    <label class="gate-remember"><input id="remember" type="checkbox" checked> Remember me on this device</label>
+    <div id="gateMsg" role="status"></div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand">👨‍👧‍👦 King Family Calendar<small>Julian &amp; Scarlett</small></div>
+      <div class="nav">
+        <button class="btn" id="prev" type="button" aria-label="Previous">‹</button>
+        <button class="btn" id="today" type="button">Today</button>
+        <button class="btn" id="next" type="button" aria-label="Next">›</button>
+      </div>
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" data-view="day">Day</button>
+        <button type="button" data-view="week">Week</button>
+        <button type="button" data-view="month" aria-pressed="true">Month</button>
+      </div>
+      <div id="periodLabel"></div>
+      <button class="btn" id="jump" type="button">Jump to…</button>
+    </div>
+    <div class="filters" id="filters">
+      <button class="chipf" type="button" data-kid="julian" aria-pressed="true">👦 Julian</button>
+      <button class="chipf" type="button" data-kid="scarlett" aria-pressed="true">👧 Scarlett</button>
+      <button class="chipf" type="button" data-act="soccer" aria-pressed="true">⚽ Soccer</button>
+      <button class="chipf" type="button" data-act="taekwondo" aria-pressed="true">🥷 Taekwondo</button>
+      <button class="chipf" type="button" data-act="dance" aria-pressed="true">🩰 Dance</button>
+      <button class="chipf" type="button" data-act="other" aria-pressed="true">📌 Other</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="view"></div>
+  </main>
+  <footer class="foot">Private family calendar · not listed, not indexed</footer>
+</div>
+
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="sheet">
+    <button class="closeX" id="mClose" type="button" aria-label="Close">×</button>
+    <div class="sheet-hd">
+      <div class="eyebrow" id="mEyebrow"></div>
+      <h2 id="mTitle"></h2>
+      <div class="m" id="mWhen" style="color:var(--muted);font-size:13px"></div>
+    </div>
+    <div class="sheet-bd" id="mBody"></div>
+    <div class="actions" id="mActions"></div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============ ACCESS CODE ============ */
+var CODE = "Maack2026";
+var KEY  = "kingcal.ok.v1";
+
+function unlock(){
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  render();
+}
+function tryCode(){
+  var v = document.getElementById("code").value.trim();
+  if (v === CODE){
+    if (document.getElementById("remember").checked){
+      try { localStorage.setItem(KEY,"1"); } catch(e){}
+    }
+    unlock();
+  } else {
+    document.getElementById("gateMsg").textContent = "That code isn't right — try again.";
+    document.getElementById("code").value = "";
+    document.getElementById("code").focus();
+  }
+}
+document.getElementById("gateBtn").addEventListener("click", tryCode);
+document.getElementById("code").addEventListener("keydown", function(e){ if(e.key === "Enter") tryCode(); });
+
+/* ============ REFERENCE DATA ============ */
+var KIDS = {
+  julian:   { name:"Julian",   emoji:"👦", color:"#2563eb" },
+  scarlett: { name:"Scarlett", emoji:"👧", color:"#ec4899" }
+};
+var ACTS = {
+  soccer:    { label:"Soccer",    emoji:"⚽" },
+  taekwondo: { label:"Taekwondo", emoji:"🥷" },
+  dance:     { label:"Dance",     emoji:"🩰" },
+  other:     { label:"Other",     emoji:"📌" }
+};
+var VENUES = {
+  sv:      { name:"Speedway Village",                   addr:"345 Speedway Cir, Lincoln, NE 68502" },
+  lsf:     { name:"Lincoln Sports Foundation (LSF Campus)", addr:"7600 N 70th St, Lincoln, NE 68517" },
+  fremont: { name:"Fremont-Christensen Soccer Complex", addr:"" }
+};
+
+/* ============ EVENTS ============
+   id, kid, act, type, title, date(YYYY-MM-DD), start, end, venue, field, notes */
+var EVENTS = [
+  {id:"j1",  kid:"julian", act:"soccer", type:"Game",     title:"Away @ EFC — Eagles FCU8",              date:"2026-09-20", start:"12:00", end:"13:00", venue:"sv",      field:"Field 9 C",     notes:"Navy jersey · Arrive by 11:15 AM"},
+  {id:"j2",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-21", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
+  {id:"j3",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-23", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
+  {id:"j4",  kid:"julian", act:"soccer", type:"Game",     title:"Away @ FSC — FSC United U8 Gold",       date:"2026-09-26", start:"12:00", end:"13:00", venue:"fremont", field:"Field 6 MW",    notes:"Navy jersey · Arrive by 11:15 AM"},
+  {id:"j5",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-28", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
+  {id:"j6",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-30", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
+  {id:"j7",  kid:"julian", act:"soccer", type:"Game",     title:"Home vs STING — Sting NE B2018/19 Maganda", date:"2026-10-03", start:"10:30", end:"11:30", venue:"sv", field:"Field 9 C", notes:"White jersey · Arrive by 9:45 AM"},
+  {id:"j8",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-05", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
+  {id:"j9",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-07", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
+  {id:"j10", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-12", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
+  {id:"j11", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-14", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
+  {id:"j12", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-19", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
+  {id:"j13", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-21", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
+  {id:"j14", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-26", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
+  {id:"j15", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-28", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"}
+];
+
+/* ============ HELPERS ============ */
+var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+var DOWS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+function pad(n){ return (n<10?"0":"")+n; }
+function iso(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function parseISO(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+function addDays(d,n){ var x=new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+function startOfWeek(d){ return addDays(d, -d.getDay()); }
+function fmt12(hhmm){
+  var p=hhmm.split(":"), h=+p[0], m=p[1], ap = h>=12 ? "PM":"AM";
+  h = h%12; if(h===0) h=12;
+  return h+":"+m+" "+ap;
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+function venueOf(ev){ return VENUES[ev.venue] || {name:"", addr:""}; }
+function placeLine(ev){
+  var v = venueOf(ev);
+  return v.name + (ev.field ? " — " + ev.field : "");
+}
+function fullAddress(ev){
+  var v = venueOf(ev);
+  return v.addr ? v.addr : v.name;
+}
+function mapsUrl(ev){
+  return "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(fullAddress(ev));
+}
+function eventText(ev){
+  var d = parseISO(ev.date);
+  var lines = [
+    KIDS[ev.kid].emoji + " " + KIDS[ev.kid].name + " · " + ACTS[ev.act].emoji + " " + ACTS[ev.act].label + " " + ev.type,
+    ev.title,
+    DOWS[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(),
+    fmt12(ev.start) + " – " + fmt12(ev.end),
+    placeLine(ev)
+  ];
+  if (fullAddress(ev)) lines.push(fullAddress(ev));
+  if (ev.notes) lines.push(ev.notes);
+  return lines.join("\n");
+}
+function icsFor(ev){
+  function stamp(dateStr, hhmm){ return dateStr.replace(/-/g,"") + "T" + hhmm.replace(":","") + "00"; }
+  var body = [
+    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//King Family Calendar//EN","CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    "UID:" + ev.id + "@kingcal",
+    "DTSTART;TZID=America/Chicago:" + stamp(ev.date, ev.start),
+    "DTEND;TZID=America/Chicago:" + stamp(ev.date, ev.end),
+    "SUMMARY:" + KIDS[ev.kid].emoji + " " + KIDS[ev.kid].name + " — " + ev.title,
+    "LOCATION:" + (fullAddress(ev) ? placeLine(ev) + ", " + fullAddress(ev) : placeLine(ev)),
+    "DESCRIPTION:" + (ev.notes || "").replace(/\n/g,"\\n"),
+    "END:VEVENT","END:VCALENDAR"
+  ];
+  return body.join("\r\n");
+}
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._h); toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1900);
+}
+function copyText(txt, okMsg){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast(okMsg); }, function(){ fallbackCopy(txt, okMsg); });
+  } else { fallbackCopy(txt, okMsg); }
+}
+function fallbackCopy(txt, okMsg){
+  var ta = document.createElement("textarea");
+  ta.value = txt; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); toast(okMsg); } catch(e){ toast("Copy not supported here"); }
+  document.body.removeChild(ta);
+}
+
+/* ============ STATE ============ */
+var today = new Date(); today.setHours(0,0,0,0);
+var cursor = new Date(today.getTime());
+var view = "month";
+var MIN = new Date(today.getFullYear()-1, 0, 1);
+var MAX = new Date(today.getFullYear()+12, 11, 31);
+var filters = { julian:true, scarlett:true, soccer:true, taekwondo:true, dance:true, other:true };
+
+function visible(ev){ return filters[ev.kid] && filters[ev.act]; }
+function eventsOn(dateStr){
+  return EVENTS.filter(function(e){ return e.date === dateStr && visible(e); })
+               .sort(function(a,b){ return a.start < b.start ? -1 : 1; });
+}
+function kidsOn(dateStr){
+  var s = {};
+  eventsOn(dateStr).forEach(function(e){ s[e.kid] = true; });
+  return s;
+}
+
+/* ============ RENDER ============ */
+function render(){
+  document.querySelectorAll(".seg button").forEach(function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-view") === view ? "true" : "false");
+  });
+  if (view === "month") renderMonth();
+  else if (view === "week") renderWeek();
+  else renderDay();
+}
+
+function chipHtml(ev){
+  return '<button type="button" class="chip k-'+ev.kid+'" data-id="'+ev.id+'" title="'+esc(ev.title)+'">'
+       + KIDS[ev.kid].emoji + ACTS[ev.act].emoji + " " + esc(fmt12(ev.start)) + " " + esc(ev.type) + '</button>';
+}
+function evHtml(ev){
+  return '<button type="button" class="ev k-'+ev.kid+'" data-id="'+ev.id+'">'
+       + '<div class="t">' + KIDS[ev.kid].emoji + ACTS[ev.act].emoji + " " + esc(ev.title) + '</div>'
+       + '<div class="m">' + esc(fmt12(ev.start)) + " – " + esc(fmt12(ev.end)) + " · " + esc(placeLine(ev)) + '</div>'
+       + '</button>';
+}
+function kidClass(k){
+  if (k.julian && k.scarlett) return " has-both";
+  if (k.julian) return " has-boy";
+  if (k.scarlett) return " has-girl";
+  return "";
+}
+
+function renderMonth(){
+  document.getElementById("periodLabel").textContent = MONTHS[cursor.getMonth()] + " " + cursor.getFullYear();
+  var first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+  var gridStart = startOfWeek(first);
+  var html = '<div class="dow">' + DOWS.map(function(d){ return "<div>"+d+"</div>"; }).join("") + '</div><div class="month">';
+  for (var i=0;i<42;i++){
+    var d = addDays(gridStart, i);
+    var ds = iso(d);
+    var evs = eventsOn(ds);
+    var cls = "cell";
+    if (d.getMonth() !== cursor.getMonth()) cls += " out";
+    if (ds === iso(today)) cls += " today";
+    cls += kidClass(kidsOn(ds));
+    html += '<div class="'+cls+'"><div class="daynum">'+d.getDate()+'</div>';
+    evs.slice(0,3).forEach(function(e){ html += chipHtml(e); });
+    if (evs.length > 3) html += '<button type="button" class="more" data-day="'+ds+'">+'+(evs.length-3)+' more</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  document.getElementById("view").innerHTML = html;
+}
+
+function renderWeek(){
+  var s = startOfWeek(cursor), e = addDays(s,6);
+  document.getElementById("periodLabel").textContent =
+    MONTHS[s.getMonth()].slice(0,3)+" "+s.getDate()+" – "+MONTHS[e.getMonth()].slice(0,3)+" "+e.getDate()+", "+e.getFullYear();
+  var html = '<div class="week">';
+  for (var i=0;i<7;i++){
+    var d = addDays(s,i), ds = iso(d), evs = eventsOn(ds);
+    var cls = "wcol" + (ds===iso(today) ? " today":"") + kidClass(kidsOn(ds));
+    html += '<div class="'+cls+'"><h3>'+DOWS[d.getDay()]+'<b>'+d.getDate()+'</b></h3>';
+    html += evs.length ? evs.map(evHtml).join("") : '<div class="empty" style="padding:6px;font-size:12px">—</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+  document.getElementById("view").innerHTML = html;
+}
+
+function renderDay(){
+  var ds = iso(cursor), evs = eventsOn(ds);
+  document.getElementById("periodLabel").textContent =
+    DOWS[cursor.getDay()]+", "+MONTHS[cursor.getMonth()]+" "+cursor.getDate()+", "+cursor.getFullYear();
+  var html = '<div class="daylist">';
+  html += evs.length ? evs.map(evHtml).join("") : '<div class="empty">Nothing scheduled — enjoy the day off. 🎉</div>';
+  html += '</div>';
+  document.getElementById("view").innerHTML = html;
+}
+
+/* ============ NAVIGATION ============ */
+function clamp(){
+  if (cursor < MIN) cursor = new Date(MIN.getTime());
+  if (cursor > MAX) cursor = new Date(MAX.getTime());
+}
+function step(n){
+  if (view === "month") cursor = new Date(cursor.getFullYear(), cursor.getMonth()+n, 1);
+  else if (view === "week") cursor = addDays(cursor, 7*n);
+  else cursor = addDays(cursor, n);
+  clamp(); render();
+}
+document.getElementById("prev").addEventListener("click", function(){ step(-1); });
+document.getElementById("next").addEventListener("click", function(){ step(1); });
+document.getElementById("today").addEventListener("click", function(){ cursor = new Date(today.getTime()); render(); });
+document.querySelector(".seg").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-view]"); if(!b) return;
+  view = b.getAttribute("data-view"); render();
+});
+document.getElementById("jump").addEventListener("click", function(){
+  var v = window.prompt("Jump to a date (YYYY-MM-DD)\nAnything from "+iso(MIN)+" to "+iso(MAX)+":", iso(cursor));
+  if (!v) return;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) { toast("Use the format YYYY-MM-DD"); return; }
+  cursor = parseISO(v); clamp(); render();
+});
+document.getElementById("filters").addEventListener("click", function(e){
+  var b = e.target.closest(".chipf"); if(!b) return;
+  var k = b.getAttribute("data-kid") || b.getAttribute("data-act");
+  filters[k] = !filters[k];
+  b.setAttribute("aria-pressed", filters[k] ? "true":"false");
+  render();
+});
+document.addEventListener("keydown", function(e){
+  if (document.getElementById("app").style.display !== "block") return;
+  if (e.target.tagName === "INPUT") return;
+  if (e.key === "ArrowLeft") step(-1);
+  else if (e.key === "ArrowRight") step(1);
+  else if (e.key === "m") { view="month"; render(); }
+  else if (e.key === "w") { view="week"; render(); }
+  else if (e.key === "d") { view="day"; render(); }
+  else if (e.key === "Escape") closeModal();
+});
+
+/* ============ EVENT DETAILS ============ */
+document.getElementById("view").addEventListener("click", function(e){
+  var chip = e.target.closest("[data-id]");
+  if (chip) { openEvent(chip.getAttribute("data-id")); return; }
+  var more = e.target.closest("[data-day]");
+  if (more) { cursor = parseISO(more.getAttribute("data-day")); view = "day"; render(); }
+});
+
+function row(icon, label, value){
+  return '<div class="row"><div class="ic">'+icon+'</div><div><div class="lbl">'+esc(label)+'</div><div>'+esc(value)+'</div></div></div>';
+}
+function openEvent(id){
+  var ev = null;
+  for (var i=0;i<EVENTS.length;i++){ if (EVENTS[i].id === id) ev = EVENTS[i]; }
+  if (!ev) return;
+  var d = parseISO(ev.date);
+  var kid = KIDS[ev.kid], act = ACTS[ev.act];
+
+  document.getElementById("mEyebrow").textContent = kid.emoji + " " + kid.name + " · " + act.emoji + " " + act.label + " " + ev.type;
+  document.getElementById("mTitle").textContent = ev.title;
+  document.getElementById("mWhen").textContent =
+    DOWS[d.getDay()]+", "+MONTHS[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear()+" · "+fmt12(ev.start)+" – "+fmt12(ev.end);
+
+  var body = "";
+  body += row("📍","Location", placeLine(ev));
+  body += fullAddress(ev) && VENUES[ev.venue].addr
+        ? row("🗺️","Address", VENUES[ev.venue].addr)
+        : row("🗺️","Address", "Not on file yet — Directions will search by venue name");
+  if (ev.notes) body += row("📝","Details", ev.notes);
+  document.getElementById("mBody").innerHTML = body;
+
+  var acts = document.getElementById("mActions");
+  acts.innerHTML = "";
+  function mk(label, cls, handler){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "btn" + (cls||""); b.textContent = label;
+    b.addEventListener("click", handler); acts.appendChild(b);
+  }
+  mk("🧭 Directions", " primary wide", function(){ window.open(mapsUrl(ev), "_blank", "noopener"); });
+  mk("📋 Copy address", "", function(){ copyText(fullAddress(ev), "Address copied"); });
+  mk("📄 Copy event", "", function(){ copyText(eventText(ev), "Event copied"); });
+  mk("📆 Add to calendar", "", function(){
+    var blob = new Blob([icsFor(ev)], {type:"text/calendar;charset=utf-8"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = (kid.name+"-"+ev.date+".ics").replace(/\s+/g,"-");
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast("Calendar file downloaded");
+  });
+  mk("📤 Send to someone", "", function(){
+    var txt = eventText(ev) + "\n\nDirections: " + mapsUrl(ev);
+    if (navigator.share){
+      navigator.share({ title: kid.name + " — " + ev.title, text: txt }).catch(function(){});
+    } else {
+      window.location.href = "mailto:?subject=" + encodeURIComponent(kid.name+" — "+ev.title)
+                           + "&body=" + encodeURIComponent(txt);
+    }
+  });
+  mk("💬 Text the details", " wide", function(){
+    window.location.href = "sms:?&body=" + encodeURIComponent(eventText(ev) + "\n" + mapsUrl(ev));
+  });
+
+  document.getElementById("modal").classList.add("open");
+}
+function closeModal(){ document.getElementById("modal").classList.remove("open"); }
+document.getElementById("mClose").addEventListener("click", closeModal);
+document.getElementById("modal").addEventListener("click", function(e){
+  if (e.target === document.getElementById("modal")) closeModal();
+});
+
+/* ============ BOOT ============ */
+try { if (localStorage.getItem(KEY) === "1") unlock(); } catch(e){}
+document.getElementById("code").focus();
+})();
+</script>
+</body>
+</html>
