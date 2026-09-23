@@ -132,9 +132,9 @@ header.top{
 .empty{color:var(--muted); font-size:14px; padding:18px; text-align:center}
 
 /* ---------- Modal ---------- */
-#modal{position:fixed; inset:0; z-index:60; display:none; align-items:flex-end; justify-content:center; background:rgba(15,23,42,.45); padding:0}
-#modal.open{display:flex}
-@media (min-width:640px){ #modal{align-items:center; padding:24px} }
+#modal, #addModal{position:fixed; inset:0; z-index:60; display:none; align-items:flex-end; justify-content:center; background:rgba(15,23,42,.45); padding:0}
+#modal.open, #addModal.open{display:flex}
+@media (min-width:640px){ #modal, #addModal{align-items:center; padding:24px} }
 .sheet{
   background:var(--surface); inline-size:min(520px,100%); border-radius:18px 18px 0 0;
   max-block-size:92vh; overflow:auto; box-shadow:var(--shadow);
@@ -157,6 +157,25 @@ header.top{
   opacity:0; pointer-events:none; transition:opacity .2s; z-index:90;
 }
 #toast.show{opacity:1}
+
+/* ---------- Add Event modal ---------- */
+.add-tabs{display:flex; gap:6px; margin-block-end:14px}
+.add-tab{flex:1; border:1.5px solid var(--border); background:var(--surface); border-radius:10px; padding:9px; font-size:13px; text-align:center}
+.add-tab[aria-pressed="true"]{border-color:var(--accent); background:var(--surface-2); font-weight:600; color:var(--accent)}
+.dropzone{border:2px dashed var(--border); border-radius:12px; padding:26px 14px; text-align:center; color:var(--muted); font-size:13px}
+.preview-img{max-inline-size:100%; max-block-size:220px; border-radius:10px; margin-block-end:10px; display:block; margin-inline:auto}
+.add-textarea{inline-size:100%; min-block-size:140px; padding:10px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); color:var(--text); font:inherit; resize:vertical}
+.field{display:flex; flex-direction:column; gap:4px; margin-block-end:12px}
+.field label{font-size:12px; color:var(--muted); font-weight:600}
+.field input, .field select, .field textarea{padding:9px 10px; border:1px solid var(--border); border-radius:9px; background:var(--surface-2); color:var(--text); font:inherit}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.progress-wrap{text-align:center; padding:34px 10px; color:var(--muted); font-size:14px}
+.spinner{inline-size:32px; block-size:32px; border:3px solid var(--border); border-block-start-color:var(--accent); border-radius:50%; margin:0 auto 14px; animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.raw-text-toggle{font-size:12px; color:var(--accent); background:none; border:0; padding:0; text-decoration:underline; margin-block-end:10px; display:block}
+.raw-text-box{background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:10px; font-size:12px; white-space:pre-wrap; color:var(--muted); margin-block-end:12px; max-block-size:180px; overflow:auto}
+.err-msg{color:#dc2626; font-size:13px; margin-block-end:10px}
+
 footer.foot{text-align:center; color:var(--muted); font-size:12px; padding:20px}
 @media (max-width:760px){
   .month{gap:3px} .cell{min-block-size:76px; padding:4px; border-radius:9px}
@@ -197,6 +216,8 @@ footer.foot{text-align:center; color:var(--muted); font-size:12px; padding:20px}
       </div>
       <div id="periodLabel"></div>
       <button class="btn" id="jump" type="button">Jump to…</button>
+      <button class="btn primary" id="addEventBtn" type="button">📤 Add Event</button>
+      <button class="btn" id="ghSetupBtn" type="button" title="Set up auto-save on this device" aria-label="Set up auto-save on this device">⚙️</button>
     </div>
     <div class="filters" id="filters">
       <button class="chipf" type="button" data-kid="julian" aria-pressed="true">👦 Julian</button>
@@ -211,7 +232,7 @@ footer.foot{text-align:center; color:var(--muted); font-size:12px; padding:20px}
   <main class="wrap">
     <div id="view"></div>
   </main>
-  <footer class="foot">Private family calendar · not listed, not indexed<br>v2 · updated Sep 21, 2026 · announcement + jersey/arrival/parking</footer>
+  <footer class="foot">Private family calendar · not listed, not indexed<br>v3 · updated Sep 22, 2026 · Gameday badges + Add Event (scan/paste)</footer>
 </div>
 
 <div id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -227,8 +248,20 @@ footer.foot{text-align:center; color:var(--muted); font-size:12px; padding:20px}
   </div>
 </div>
 
+<div id="addModal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+  <div class="sheet">
+    <button class="closeX" id="addClose" type="button" aria-label="Close">×</button>
+    <div class="sheet-hd">
+      <div class="eyebrow">Add an event</div>
+      <h2 id="addTitle">Scan a screenshot or paste details</h2>
+    </div>
+    <div class="sheet-bd" id="addBody"></div>
+  </div>
+</div>
+
 <div id="toast" role="status"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -240,7 +273,7 @@ var KEY  = "kingcal.ok.v1";
 function unlock(){
   document.getElementById("gate").style.display = "none";
   document.getElementById("app").style.display = "block";
-  render();
+  eventsReady.then(render);
 }
 function tryCode(){
   var v = document.getElementById("code").value.trim();
@@ -276,29 +309,93 @@ var VENUES = {
 };
 
 /* ============ EVENTS ============
+   Loaded at runtime from events.json (same folder) so the "Add Event" flow can
+   commit new events straight to that file via the GitHub API.
    id, kid, act, type, title, date(YYYY-MM-DD), start, end, venue, field,
-   jersey  — e.g. "Navy jersey"  (optional; shown + used in announcement)
-   arrive  — "HH:MM" 24h         (optional; shown + used in announcement)
-   parking — free text           (optional; shown + used in announcement)
-   bring   — free text override  (optional; defaults by activity)
-   notes   — anything else       (optional) */
-var EVENTS = [
-  {id:"j1",  kid:"julian", act:"soccer", type:"Game",     title:"Away @ EFC — Eagles FCU8",              date:"2026-09-20", start:"12:00", end:"13:00", venue:"sv",      field:"Field 9 C",     jersey:"Navy jersey", arrive:"11:15"},
-  {id:"j2",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-21", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
-  {id:"j3",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-23", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
-  {id:"j4",  kid:"julian", act:"soccer", type:"Game",     title:"Away @ FSC — FSC United U8 Gold",       date:"2026-09-26", start:"12:00", end:"13:00", venue:"fremont", field:"Field 6 MW",    jersey:"Navy jersey", arrive:"11:15"},
-  {id:"j5",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-28", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
-  {id:"j6",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-09-30", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
-  {id:"j7",  kid:"julian", act:"soccer", type:"Game",     title:"Home vs STING — Sting NE B2018/19 Maganda", date:"2026-10-03", start:"10:30", end:"11:30", venue:"sv", field:"Field 9 C", jersey:"White jersey", arrive:"9:45"},
-  {id:"j8",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-05", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
-  {id:"j9",  kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-07", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
-  {id:"j10", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-12", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
-  {id:"j11", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-14", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
-  {id:"j12", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-19", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
-  {id:"j13", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-21", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"},
-  {id:"j14", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-26", start:"17:30", end:"18:30", venue:"lsf",     field:"Field 18 North"},
-  {id:"j15", kid:"julian", act:"soccer", type:"Practice", title:"Soccer Practice",                       date:"2026-10-28", start:"17:30", end:"18:30", venue:"sv",      field:"Field 3A"}
-];
+   jersey     — e.g. "Navy jersey"  (optional; shown + used in announcement)
+   arrive     — "HH:MM" 24h         (optional; shown + used in announcement)
+   parking    — free text           (optional; shown + used in announcement)
+   bring      — free text override  (optional; defaults by activity)
+   notes      — anything else       (optional)
+   venueName/venueAddr — optional per-event venue override, used when venue isn't
+                          one of the known VENUES keys (e.g. added via the scan flow) */
+var EVENTS = [];
+var EVENTS_CACHE_KEY = "kingcal.events.cache.v1";
+var EVENTS_URL = "events.json";
+
+function loadEvents(){
+  return fetch(EVENTS_URL, {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw new Error("fetch-failed"); return r.json(); })
+    .then(function(data){
+      EVENTS = data;
+      try { localStorage.setItem(EVENTS_CACHE_KEY, JSON.stringify(data)); } catch(e){}
+    })
+    .catch(function(){
+      try {
+        var cached = localStorage.getItem(EVENTS_CACHE_KEY);
+        if (cached) EVENTS = JSON.parse(cached);
+      } catch(e){}
+    });
+}
+var eventsReady = loadEvents();
+
+/* ============ GITHUB SAVE (Add Event flow) ============
+   Lets the calendar commit new events straight to events.json so they show up
+   for everyone, without a custom backend.
+
+   SETUP (one-time, per device — click the ⚙️ button in the top nav):
+   1. Go to https://github.com/settings/personal-access-tokens/new
+   2. Resource owner: jordankingisalive · Repository access: Only this repository
+      → jordankingisalive.github.io
+   3. Permissions → Repository permissions → Contents: Read and write
+   4. Generate, copy the token, click ⚙️ in the app, and paste it there.
+   The token is stored only in this browser's localStorage — it's never part of
+   the page's source and never committed to the repo (GitHub's push protection
+   blocks secrets in commits anyway), so each device that should be able to
+   auto-save needs the token entered once via ⚙️. */
+var GH_OWNER  = "jordankingisalive";
+var GH_REPO   = "jordankingisalive.github.io";
+var GH_BRANCH = "main";
+var GH_PATH   = "kingcal/events.json";
+var GH_TOKEN_KEY = "kingcal.ghtoken.v1";
+
+function getGhToken(){
+  try { return localStorage.getItem(GH_TOKEN_KEY) || ""; } catch(e){ return ""; }
+}
+function setGhToken(v){
+  try {
+    if (v) localStorage.setItem(GH_TOKEN_KEY, v);
+    else localStorage.removeItem(GH_TOKEN_KEY);
+    return true;
+  } catch(e){ return false; }
+}
+
+function b64EncodeUtf8(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64DecodeUtf8(str){ return decodeURIComponent(escape(atob(str))); }
+
+function saveEventToGitHub(ev){
+  var token = getGhToken();
+  if (!token) return Promise.reject(new Error("no-token"));
+  var apiUrl = "https://api.github.com/repos/"+GH_OWNER+"/"+GH_REPO+"/contents/"+GH_PATH;
+  var ghHeaders = { "Authorization":"Bearer "+token, "Accept":"application/vnd.github+json" };
+  return fetch(apiUrl, { headers: ghHeaders })
+    .then(function(r){ if(!r.ok) throw new Error("Couldn't reach GitHub to save."); return r.json(); })
+    .then(function(file){
+      var current = JSON.parse(b64DecodeUtf8(file.content.replace(/\n/g,"")));
+      current.push(ev);
+      var body = {
+        message: "Add event: " + ev.title + " (" + ev.date + ")",
+        content: b64EncodeUtf8(JSON.stringify(current, null, 2)),
+        sha: file.sha,
+        branch: GH_BRANCH
+      };
+      return fetch(apiUrl, { method:"PUT", headers: Object.assign({"Content-Type":"application/json"}, ghHeaders), body: JSON.stringify(body) });
+    })
+    .then(function(r){
+      if (!r.ok) return r.json().then(function(j){ throw new Error(j.message || "GitHub rejected the save."); });
+      return r.json();
+    });
+}
 
 /* ============ HELPERS ============ */
 var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -317,7 +414,10 @@ function fmt12(hhmm){
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){
   return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
 
-function venueOf(ev){ return VENUES[ev.venue] || {name:"", addr:""}; }
+function venueOf(ev){
+  if (ev.venueName) return { name: ev.venueName, addr: ev.venueAddr || "" };
+  return VENUES[ev.venue] || {name:"", addr:""};
+}
 function placeLine(ev){
   var v = venueOf(ev);
   return v.name + (ev.field ? " — " + ev.field : "");
@@ -560,7 +660,7 @@ document.addEventListener("keydown", function(e){
   else if (e.key === "m") { view="month"; render(); }
   else if (e.key === "w") { view="week"; render(); }
   else if (e.key === "d") { view="day"; render(); }
-  else if (e.key === "Escape") closeModal();
+  else if (e.key === "Escape") { closeModal(); closeAddModal(); }
 });
 
 /* ============ EVENT DETAILS ============ */
@@ -588,8 +688,8 @@ function openEvent(id){
 
   var body = "";
   body += row("📍","Location", placeLine(ev));
-  body += fullAddress(ev) && VENUES[ev.venue].addr
-        ? row("🗺️","Address", VENUES[ev.venue].addr)
+  body += venueOf(ev).addr
+        ? row("🗺️","Address", venueOf(ev).addr)
         : row("🗺️","Address", "Not on file yet — Directions will search by venue name");
   if (ev.arrive)  body += row("⏰","Arrive by", fmt12(ev.arrive));
   if (ev.jersey)  body += row("👕","Wear", ev.jersey);
@@ -635,6 +735,295 @@ function closeModal(){ document.getElementById("modal").classList.remove("open")
 document.getElementById("mClose").addEventListener("click", closeModal);
 document.getElementById("modal").addEventListener("click", function(e){
   if (e.target === document.getElementById("modal")) closeModal();
+});
+
+/* ============ ADD EVENT (scan / paste → confirm → save) ============ */
+function monthIndex(s){
+  var names = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+  return names.indexOf(s.toLowerCase().slice(0,3));
+}
+function to24(s){
+  var m = String(s||"").trim().toLowerCase().match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
+  if (!m) return "";
+  var h = +m[1], min = m[2] || "00", ap = m[3];
+  if (ap === "pm" && h !== 12) h += 12;
+  if (ap === "am" && h === 12) h = 0;
+  return pad(h) + ":" + min;
+}
+function addHour(hhmm){
+  if (!hhmm) return "";
+  var p = hhmm.split(":");
+  return pad((+p[0]+1) % 24) + ":" + p[1];
+}
+function extractDate(text){
+  var m = text.match(/\b(20\d{2})-(\d{1,2})-(\d{1,2})\b/);
+  if (m) return m[1] + "-" + pad(+m[2]) + "-" + pad(+m[3]);
+  m = text.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{2,4})\b/);
+  if (m){
+    var yr = m[3].length === 2 ? "20" + m[3] : m[3];
+    return yr + "-" + pad(+m[1]) + "-" + pad(+m[2]);
+  }
+  var monthRe = "(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)";
+  m = text.match(new RegExp(monthRe + "\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?(?:,?\\s*(\\d{4}))?", "i"));
+  if (m){
+    var mi = monthIndex(m[1]);
+    if (mi >= 0) return (m[3] ? +m[3] : today.getFullYear()) + "-" + pad(mi+1) + "-" + pad(+m[2]);
+  }
+  return "";
+}
+function extractTimes(text){
+  var m = text.match(/(\d{1,2}(?::\d{2})?)\s*(am|pm)?\s*(?:-|–|—|to)\s*(\d{1,2}(?::\d{2})?)\s*(am|pm)/i);
+  if (m) return { start: to24(m[1] + " " + (m[2]||m[4])), end: to24(m[3] + " " + m[4]) };
+  m = text.match(/\b(\d{1,2}(?::\d{2})?)\s*(am|pm)\b/i);
+  if (m){ var st = to24(m[1] + " " + m[2]); return { start: st, end: addHour(st) }; }
+  return { start:"", end:"" };
+}
+function parseScannedText(text){
+  text = text || "";
+  var out = { kid:"", act:"other", type:"", title:"", date:"", start:"", end:"", venue:"", venueName:"", venueAddr:"", field:"", jersey:"", arrive:"", parking:"", notes:"" };
+
+  if (/julian/i.test(text)) out.kid = "julian";
+  else if (/scarlett/i.test(text)) out.kid = "scarlett";
+
+  if (/taekwondo/i.test(text)) out.act = "taekwondo";
+  else if (/dance|recital|ballet/i.test(text)) out.act = "dance";
+  else if (/soccer|\bfc\b|futbol/i.test(text)) out.act = "soccer";
+
+  if (/\bgame\b/i.test(text)) out.type = "Game";
+  else if (/\bpractice\b/i.test(text)) out.type = "Practice";
+  else if (/\btournament\b/i.test(text)) out.type = "Tournament";
+  else if (/\brecital\b/i.test(text)) out.type = "Recital";
+  else if (/\bcompetition\b/i.test(text)) out.type = "Competition";
+  else if (out.act === "taekwondo" && /\btest(ing)?\b/i.test(text)) out.type = "Test";
+
+  out.date = extractDate(text);
+  var times = extractTimes(text);
+  out.start = times.start; out.end = times.end;
+
+  var lower = text.toLowerCase();
+  Object.keys(VENUES).forEach(function(vk){
+    var v = VENUES[vk];
+    if (v.name && lower.indexOf(v.name.toLowerCase()) !== -1) out.venue = vk;
+  });
+  if (!out.venue){
+    if (/speedway/i.test(text)) out.venue = "sv";
+    else if (/lsf|lincoln sports/i.test(text)) out.venue = "lsf";
+    else if (/fremont/i.test(text)) out.venue = "fremont";
+  }
+
+  var fieldMatch = text.match(/field\s*#?\s*([0-9]{1,3}\s*[a-z]{0,3}(?:\s*(?:north|south|east|west|mw|nw|ne|se))?)/i);
+  if (fieldMatch) out.field = "Field " + fieldMatch[1].trim();
+
+  var jerseyMatch = text.match(/\b(navy|white|black|red|blue|gold|yellow|green|orange|gray|grey)\b[^.\n]{0,10}jersey/i);
+  if (jerseyMatch) out.jersey = jerseyMatch[1][0].toUpperCase() + jerseyMatch[1].slice(1).toLowerCase() + " jersey";
+
+  var arriveMatch = text.match(/arrive[^0-9]{0,12}(\d{1,2}(?::\d{2})?\s*(?:am|pm)?)/i);
+  if (arriveMatch) out.arrive = to24(arriveMatch[1]);
+
+  var vsMatch = text.match(/(away\s*@|home\s*vs\.?|vs\.?|versus|@)\s*([A-Za-z0-9 .&'-]{3,45})/i);
+  if (vsMatch) out.title = vsMatch[0].trim().replace(/\s+/g," ");
+
+  return out;
+}
+
+var addState = null;
+function resetAddState(){
+  addState = { step:"input", mode:"upload", file:null, imageUrl:null, rawText:"", parsed:null, showRaw:false, error:"", pendingEvent:null, saveOk:false, saveErrorMsg:"" };
+}
+function openAddModal(){
+  resetAddState();
+  document.getElementById("addModal").classList.add("open");
+  renderAddModal();
+}
+function closeAddModal(){
+  document.getElementById("addModal").classList.remove("open");
+  if (addState && addState.imageUrl) URL.revokeObjectURL(addState.imageUrl);
+}
+function collectFormValues(){
+  if (!addState.parsed) return;
+  document.querySelectorAll("#addBody [name]").forEach(function(el){ addState.parsed[el.name] = el.value; });
+}
+
+function renderAddModal(){
+  var s = addState, html = "";
+  if (s.step === "input"){
+    html += '<div class="add-tabs">'
+      + '<button type="button" class="add-tab" data-action="mode" data-mode="upload" aria-pressed="'+(s.mode==="upload")+'">📷 Upload screenshot</button>'
+      + '<button type="button" class="add-tab" data-action="mode" data-mode="paste" aria-pressed="'+(s.mode==="paste")+'">📋 Paste text</button>'
+      + '</div>';
+    if (s.mode === "upload"){
+      html += '<div class="dropzone" data-action="pick-file" style="cursor:pointer">'
+        + (s.imageUrl ? '<img class="preview-img" src="'+s.imageUrl+'">Tap to choose a different screenshot' : 'Tap to choose a screenshot<br><span style="font-size:11px">team app, text message, email — any screenshot with the details</span>')
+        + '</div><input type="file" id="fileInput" accept="image/*" style="display:none">';
+    } else {
+      html += '<textarea class="add-textarea" id="pasteText" placeholder="Paste the schedule text here — copied from an email, app, or team site">'+esc(s.rawText)+'</textarea>';
+    }
+    if (s.error) html += '<div class="err-msg">'+esc(s.error)+'</div>';
+    html += '<div class="actions"><button type="button" class="btn primary wide" data-action="scan">🔎 Scan &amp; continue</button></div>';
+  }
+  else if (s.step === "scanning"){
+    html = '<div class="progress-wrap"><div class="spinner"></div>Reading the screenshot…</div>';
+  }
+  else if (s.step === "confirm"){
+    var p = s.parsed;
+    var venueOptions = Object.keys(VENUES).map(function(vk){
+      return '<option value="'+vk+'"'+(p.venue===vk?" selected":"")+'>'+esc(VENUES[vk].name)+'</option>';
+    }).join("") + '<option value="__custom__"'+(p.venue==="__custom__"?" selected":"")+'>Other / new venue…</option>';
+    html += '<div class="field"><label>Which kid?</label><select name="kid">'
+      + '<option value="">Choose…</option>'
+      + '<option value="julian"'+(p.kid==="julian"?" selected":"")+'>👦 Julian</option>'
+      + '<option value="scarlett"'+(p.kid==="scarlett"?" selected":"")+'>👧 Scarlett</option>'
+      + '</select></div>'
+      + '<div class="field-row">'
+      + '<div class="field"><label>Activity</label><select name="act">'
+      + Object.keys(ACTS).map(function(ak){ return '<option value="'+ak+'"'+(p.act===ak?" selected":"")+'>'+ACTS[ak].emoji+" "+ACTS[ak].label+'</option>'; }).join("")
+      + '</select></div>'
+      + '<div class="field"><label>Type</label><input name="type" list="typeList" value="'+esc(p.type)+'" placeholder="Game, Practice…"></div>'
+      + '</div>'
+      + '<datalist id="typeList"><option value="Game"><option value="Practice"><option value="Tournament"><option value="Recital"><option value="Test"><option value="Competition"></datalist>'
+      + '<div class="field"><label>Title</label><input name="title" value="'+esc(p.title)+'" placeholder="e.g. Away @ EFC — Eagles FC U8"></div>'
+      + '<div class="field-row">'
+      + '<div class="field"><label>Date</label><input type="date" name="date" value="'+esc(p.date)+'"></div>'
+      + '<div class="field"><label>Start – End</label><div style="display:flex;gap:8px"><input type="time" name="start" value="'+esc(p.start)+'"><input type="time" name="end" value="'+esc(p.end)+'"></div></div>'
+      + '</div>'
+      + '<div class="field"><label>Venue</label><select name="venue" data-action="venue-select"><option value="">Choose…</option>'+venueOptions+'</select></div>';
+    if (p.venue === "__custom__"){
+      html += '<div class="field-row">'
+        + '<div class="field"><label>Venue name</label><input name="venueName" value="'+esc(p.venueName)+'"></div>'
+        + '<div class="field"><label>Address</label><input name="venueAddr" value="'+esc(p.venueAddr)+'"></div>'
+        + '</div>';
+    }
+    html += '<div class="field"><label>Field / court</label><input name="field" value="'+esc(p.field)+'" placeholder="e.g. Field 9 C"></div>'
+      + '<div class="field-row">'
+      + '<div class="field"><label>Jersey / wear</label><input name="jersey" value="'+esc(p.jersey)+'" placeholder="e.g. Navy jersey"></div>'
+      + '<div class="field"><label>Arrive by</label><input type="time" name="arrive" value="'+esc(p.arrive)+'"></div>'
+      + '</div>'
+      + '<div class="field"><label>Parking</label><input name="parking" value="'+esc(p.parking)+'"></div>'
+      + '<div class="field"><label>Notes</label><textarea name="notes" rows="2">'+esc(p.notes)+'</textarea></div>';
+    if (s.rawText) html += '<button type="button" class="raw-text-toggle" data-action="toggle-raw">'+(s.showRaw?"Hide":"Show")+' scanned text</button>';
+    if (s.showRaw) html += '<div class="raw-text-box">'+esc(s.rawText)+'</div>';
+    if (s.error) html += '<div class="err-msg">'+esc(s.error)+'</div>';
+    html += '<div class="actions"><button type="button" class="btn" data-action="back">‹ Back</button><button type="button" class="btn primary" data-action="save">Save event</button></div>';
+  }
+  else if (s.step === "saving"){
+    html = '<div class="progress-wrap"><div class="spinner"></div>Saving…</div>';
+  }
+  else if (s.step === "done"){
+    if (s.saveOk){
+      html = '<div class="progress-wrap">✅ Saved! It\'ll appear for both of you within about a minute.</div>'
+        + '<div class="actions"><button type="button" class="btn primary wide" data-action="close-add">Done</button></div>';
+    } else {
+      html = '<div class="err-msg">'+esc(s.saveErrorMsg)+' It\'s showing on your calendar now, but only on this device until it\'s added to the shared file — copy the details below and send them over.</div>'
+        + '<div class="raw-text-box">'+esc(JSON.stringify(s.pendingEvent, null, 2))+'</div>'
+        + '<div class="actions"><button type="button" class="btn" data-action="copy-event-json">📋 Copy details</button><button type="button" class="btn primary" data-action="close-add">Done</button></div>';
+    }
+  }
+  document.getElementById("addBody").innerHTML = html;
+}
+
+function handleFileChosen(file){
+  if (!file) return;
+  addState.file = file;
+  if (addState.imageUrl) URL.revokeObjectURL(addState.imageUrl);
+  addState.imageUrl = URL.createObjectURL(file);
+  addState.error = "";
+  renderAddModal();
+}
+function finishScan(text){
+  addState.rawText = text;
+  addState.parsed = parseScannedText(text);
+  addState.step = "confirm";
+  addState.showRaw = false;
+  renderAddModal();
+}
+function handleScan(){
+  if (addState.mode === "paste"){
+    var ta = document.getElementById("pasteText");
+    var txt = ta ? ta.value.trim() : "";
+    if (!txt){ addState.error = "Paste some text first."; renderAddModal(); return; }
+    finishScan(txt);
+    return;
+  }
+  if (!addState.file){ addState.error = "Choose a screenshot first."; renderAddModal(); return; }
+  if (typeof Tesseract === "undefined"){
+    addState.error = "The scanner didn't load (check your connection) — try Paste text instead.";
+    renderAddModal(); return;
+  }
+  addState.step = "scanning"; addState.error = ""; renderAddModal();
+  Tesseract.recognize(addState.file, "eng")
+    .then(function(res){ finishScan(res && res.data ? res.data.text : ""); })
+    .catch(function(){
+      addState.step = "input";
+      addState.error = "Couldn't read that image — try Paste text instead.";
+      renderAddModal();
+    });
+}
+function handleSave(){
+  var p = addState.parsed;
+  if (!p.kid || !p.date || !p.start){
+    addState.error = "Please fill in at least kid, date, and start time.";
+    renderAddModal(); return;
+  }
+  var ev = {
+    id: "u" + Date.now().toString(36),
+    kid: p.kid, act: p.act || "other", type: p.type || "",
+    title: p.title || (ACTS[p.act || "other"].label),
+    date: p.date, start: p.start, end: p.end || addHour(p.start),
+    venue: p.venue === "__custom__" ? "" : (p.venue || ""),
+    field: p.field || "", jersey: p.jersey || "", arrive: p.arrive || "",
+    parking: p.parking || "", notes: p.notes || ""
+  };
+  if (p.venue === "__custom__"){ ev.venueName = p.venueName || ""; ev.venueAddr = p.venueAddr || ""; }
+
+  addState.pendingEvent = ev;
+  addState.step = "saving"; addState.error = ""; renderAddModal();
+
+  saveEventToGitHub(ev)
+    .then(function(){
+      EVENTS.push(ev);
+      try { localStorage.setItem(EVENTS_CACHE_KEY, JSON.stringify(EVENTS)); } catch(e){}
+      addState.step = "done"; addState.saveOk = true; renderAddModal(); render();
+    })
+    .catch(function(err){
+      EVENTS.push(ev);
+      try { localStorage.setItem(EVENTS_CACHE_KEY, JSON.stringify(EVENTS)); } catch(e){}
+      addState.step = "done"; addState.saveOk = false;
+      addState.saveErrorMsg = (err && err.message === "no-token") ? "Auto-save isn't set up yet." : "Couldn't save automatically.";
+      renderAddModal(); render();
+    });
+}
+
+document.getElementById("ghSetupBtn").addEventListener("click", function(){
+  var current = getGhToken();
+  var v = window.prompt(
+    "Paste a GitHub token to enable auto-save on THIS device (leave blank + OK to clear).\n\n" +
+    "Stored only in this browser — never sent anywhere but GitHub's API, never saved to the repo.",
+    current
+  );
+  if (v === null) return;
+  v = v.trim();
+  if (setGhToken(v)) toast(v ? "Auto-save enabled on this device" : "Auto-save token cleared");
+  else toast("Couldn't save — storage blocked in this browser");
+});
+document.getElementById("addEventBtn").addEventListener("click", openAddModal);
+document.getElementById("addClose").addEventListener("click", closeAddModal);
+document.getElementById("addModal").addEventListener("click", function(e){
+  if (e.target === document.getElementById("addModal")) closeAddModal();
+});
+document.getElementById("addBody").addEventListener("click", function(e){
+  var el;
+  if ((el = e.target.closest("[data-action='mode']"))){ addState.mode = el.getAttribute("data-mode"); renderAddModal(); return; }
+  if ((el = e.target.closest("[data-action='pick-file']"))){ document.getElementById("fileInput").click(); return; }
+  if ((el = e.target.closest("[data-action='scan']"))){ handleScan(); return; }
+  if ((el = e.target.closest("[data-action='back']"))){ collectFormValues(); addState.step = "input"; renderAddModal(); return; }
+  if ((el = e.target.closest("[data-action='save']"))){ collectFormValues(); handleSave(); return; }
+  if ((el = e.target.closest("[data-action='toggle-raw']"))){ addState.showRaw = !addState.showRaw; renderAddModal(); return; }
+  if ((el = e.target.closest("[data-action='copy-event-json']"))){ copyText(JSON.stringify(addState.pendingEvent, null, 2), "Event details copied"); return; }
+  if ((el = e.target.closest("[data-action='close-add']"))){ closeAddModal(); return; }
+});
+document.getElementById("addBody").addEventListener("change", function(e){
+  if (e.target.id === "fileInput"){ handleFileChosen(e.target.files[0]); return; }
+  if (e.target.name === "venue"){ collectFormValues(); renderAddModal(); }
 });
 
 /* ============ BOOT ============ */
